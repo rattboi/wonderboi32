@@ -75,7 +75,7 @@ CFLAGS			=	-marm \
 				-I./gplibs
  
 LIBDIRS			=	-L$(GPSDK)/lib -L./gplibs -L./zlib
-GP_LIBS                 =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
+GP_LIBS         =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
 LIBS			=	-lz -lm -lc
  
 LDFLAGS			=	$(LDSPECS) \
