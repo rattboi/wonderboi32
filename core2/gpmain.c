@@ -4,19 +4,19 @@
 #include <gpmain.h>
 #include <gpfont.h>
 
-#include "../misc_str_func.h" // by YoYoFr
+#include "misc_str_func.h" // by YoYoFr
 
-#include "../OKF/global.h"
-#include "../OKF/clock.h"
-#include "../OKF/graphics16.h"
-#include "../OKF/okf.h"
+#include "OKF/global.h"
+#include "OKF/clock.h"
+#include "OKF/graphics16.h"
+#include "OKF/okf.h"
 
-#include "../OKF/fonts/verdana8b_pm.h"
-#include "../OKF/fonts/verdana8b_pm.c"
+#include "OKF/fonts/verdana8b_pm.h"
+#include "OKF/fonts/verdana8b_pm.c"
 
-#include "../menu.h"
-#include "../setcpuspeed.h"
-#include "../file_dialog.h"
+#include "menu.h"
+#include "setcpuspeed.h"
+#include "file_dialog.h"
 
 
 #include "unzip.h"

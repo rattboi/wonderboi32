@@ -7,17 +7,17 @@
 #include <gpmain.h>
 #include <gpfont.h>
 
-#include "../OKF/global.h"
-#include "../OKF/clock.h"
-#include "../OKF/graphics16.h"
-#include "../OKF/okf.h"
+#include "OKF/global.h"
+#include "OKF/clock.h"
+#include "OKF/graphics16.h"
+#include "OKF/okf.h"
 
-#include "../file_dialog.h"
+#include "file_dialog.h"
 
 #include "WSDraw.h"
 #include "WS.h"
 
-#include "../render.h"
+#include "render.h"
 
 //#define DRAW_DEBUG
 

@@ -7,11 +7,11 @@
 	.GLOBAL		WBTitle
 	
 WSCBmp_horz:
-	.INCBIN "../wsc_horz.raw"
+	.INCBIN "wsc_horz.raw"
 	
 WSCBmp_vert:
-	.INCBIN "../wsc_vert.raw"
-
+	.INCBIN "wsc_vert.raw"
+	
 WBTitle:
-	.INCBIN "../title.raw"
+	.INCBIN "title.raw"
 

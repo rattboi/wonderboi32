@@ -32,7 +32,7 @@ OBJCOPY			=	arm-elf-objcopy
 					vert_render_normal.s \
 					horz_render_hstretch.s \
 					horz_render_hvstretch.s \
-					../cpuspeed.s
+					cpuspeed.s
  
 .CFILES			=	gpstart.c \
 					gpmain.c \
@@ -40,23 +40,23 @@ OBJCOPY			=	arm-elf-objcopy
 					WSDraw.c \
 					WSInput.c \
 					WSSound.c \
-                    nec/nec.c \
-					../OKF/global.c \
-					../OKF/clock.c \
-					../OKF/graphics16.c \
-					../OKF/okf.c \
-					../OKF/list.c \
-					../OKF/folder.c \
-					../file_dialog.c \
-					../setcpuspeed.c \
-					../menu.c \
-					../misc_str_func.c \
-					../zlib/unzip.c \
-					../selector.c \
-					../OKF/fileSelector.c \
-					../filecache.c 
+					nec/nec.c \
+					OKF/global.c \
+					OKF/clock.c \
+					OKF/graphics16.c \
+					OKF/okf.c \
+					OKF/list.c \
+					OKF/folder.c \
+					OKF/fileSelector.c \
+					zlib/unzip.c \
+					file_dialog.c \
+					setcpuspeed.c \
+					menu.c \
+					misc_str_func.c \
+					selector.c \
+					filecache.c 
 
-.CXXFILES		=	Profiler.cpp
+.CXXFILES			=	Profiler.cpp
 
 OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o) $(.CXXFILES:.cpp=.o)
  
@@ -73,44 +73,29 @@ CFLAGS			=	-marm \
 		       		-Wno-multichar \
 				-I$(GPSDK)/include \
 				-I. \
-                                -I../zlib \
+                                -I./zlib \
                                 -I./nec \
-                                -I../gplibs
+                                -I./gplibs
 
-CXXFLAGS			=	-marm \
-				-march=armv4t \
-		       		-mapcs \
-		       		-O2 \
-	       			-fomit-frame-pointer \
-	       			-finline-functions \
-		       		-fshort-enums \
-		       		-ffast-math \
-	       			-mstructure-size-boundary=8 \
-		       		-mno-thumb-interwork \
-		       		-Wno-multichar \
-				-I$(GPSDK)/include \
-				-I. \
-                                -I../zlib \
-                                -I./nec \
-                                -I../gplibs
+CXXFLAGS			=	$(CFLAGS)
 
-LIBDIRS                 =       -L$(GPSDK)/lib -L../gplibs -L../zlib
-GP_LIBS         =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
+LIBDIRS           =       -L$(GPSDK)/lib -L./gplibs -L./zlib
+GP_LIBS        	=       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
 LIBS			=	-lz -lm -lc
  
-LDFLAGS			=	$(LDSPECS) \
+LDFLAGS		=	$(LDSPECS) \
 				-Wl,-Map,$(MAPFILE) \
 				$(LIBDIRS) \
 				$(GP_LIBS) \
 				$(LIBS)
  
-LDSPECS			=	-specs=gp32_gpsdk.specs
+LDSPECS		=	-specs=gp32_gpsdk.specs
  
 LINK			=	$(LD) -o $(GP_OBJS) $@ $^ $(LDFLAGS) 
  
 # Outputs
 ELF			=	$(TARGET).elf
-MAPFILE			=	$(TARGET).map
+MAPFILE		=	$(TARGET).map
 BIN			=	$(TARGET).bin
 GXB			=	$(TARGET).gxb
 FXE			=	$(TARGET).fxe
