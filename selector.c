@@ -51,18 +51,20 @@ int DoFileSelector(char *filename)
 	fileSelector.selectionMargin = 3;
 	
 	fileSelector.showExtensions = TRUE;
-	fileSelector.showSeparationLines = FALSE;	
+	fileSelector.showSeparationLines = FALSE;
+
+	fileSelector.options = FLD_FILES;
 	
 //	fileSelector.pathFont = 5;
 //	fileSelector.folderFont = 4;
 //	fileSelector.fileFont = 3;
 //	fileSelector.sizesFont = 6;
 //	fileSelector.totalsFont = 5;
-	
-	fileSelector.pBackground = (unsigned short *) FileBG;
 //	fileSelector.backColor = RGB(0, 0, 0);
-	fileSelector.selectionColor = RGB(00, 31, 00);
 //	fileSelector.selectionIntensity = 16;
+
+	fileSelector.pBackground = (unsigned short *) FileBG;
+	fileSelector.selectionColor = RGB(00, 31, 00);
 	fileSelector.scrollBarColor = RGB(00, 31, 00);
 	
 	result = FileSelector(&fileSelector);
