@@ -460,6 +460,8 @@ void GpMain(void *arg)
 		LoadConfig("gp:\\GPMM\\WB32\\CFG\\DEFAULT.CFG");
 	}
 	
+	WsSoundCreate();
+
     result = MENU_MAIN_LOAD_ROM; // start by loading a ROM
     
 	while(1)

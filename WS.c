@@ -16,12 +16,9 @@
 
 #include "necintrf.h"
 
-//#define SOUND_DEBUG
-//#define PCM_DEBUG
-//#define SOUND_SPRITE	
-
 //---------------------------------------------------------------------------
-int SoundOn[7]={1,1,1,1,1,1,1};
+//int SoundOn[7]={1,1,1,1,1,1,1};
+int SoundOn[7]={0,0,0,0,0,0,0};
 int FrameSkip=4;
 int SkipCnt=0;
 
@@ -78,16 +75,6 @@ const static struct BYTE2INT ROMBanksTable[] = {
 uint8 SRAM[0x10000];		// Holds map of all SAVE RAM banks (only one entry ever)
 int RAMSize;				// Size of Save Ram
 int RAMEnable;
-
-/*
-const static struct BYTE2INT RAMBanksTable[] = {
-	{0x01, 1},				// [Header 4] identifies RAM type and size
-	{0x02, 1},
-	{0x10, 1},
-	{0x20, 1},
-	{NULL, NULL}
-};
-*/
 
 const static struct BYTE2INT RAMSizeTable[] = {
 	{0x01, 0x2000},			// [Header 4] identifies RAM type and size
@@ -269,16 +256,11 @@ static void WriteIRam(unsigned A, byte V)
 		if (IRAM[(A&0xFFFF)]!=V)
 			wsc_modified_tile[((A&0x3fff)>>5)+512]=1;
 	}
-/*
+
 	if(!((A-WaveMap) &0xFFC0))
 	{
-	#ifdef SOUND_DEBUG
-	GPSPRINTF(str,"%05d-\t\t\t\t\t(%02X) %02X\n", GetTickCount() &0xFFFF, A&0x003F, V);
-	LogFile(LK_SOUND, str);
-	#endif
 		SetSoundPBuf(A&0x003F, V);
 	}
-*/
 	IRAM[A&0xFFFF]=V;
 }
 
@@ -296,10 +278,6 @@ void  WriteIO(unsigned A, byte V)
 	{
 		case 0x00:break;
 		case 0x01:
-#ifdef SOUND_SPRITE
-GPSPRINTF(str,"(%02X) %02X\n", A, V);
-LogFile(LK_SPRITE, str);
-#endif
 					break;
 		case 0x02:
 		case 0x03:
@@ -354,10 +332,6 @@ LogFile(LK_SPRITE, str);
 						SetPalette(i++, (byte) j);
 						SetPalette(i++, (byte) j);
                     }
-#ifdef SOUND_SPRITE
-GPSPRINTF(str,"\t(%02X) %02X\n", A, V);
-LogFile(LK_SPRITE, str);
-#endif
 					break;
 
 		case 0x20:
@@ -401,10 +375,6 @@ LogFile(LK_SPRITE, str);
 					j=MonoColor[(V>>4) &0x07];
 					SetPalette(i++, (byte) j);
 					SetPalette(i++, (byte) j);
-#ifdef SOUND_SPRITE
-GPSPRINTF(str,"\t\t(%02X) %02X\n", A, V);
-LogFile(LK_SPRITE, str);
-#endif
 					break;
 
 		case 0x40:
@@ -494,161 +464,97 @@ LogFile(LK_SPRITE, str);
 		case 0x6B:break;
 
 		case 0x80:
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t(p) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x81:
 					i=((V&0x07)<<8) +IO[0x80];
-//					SetSoundFreq(0, i);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t(P) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundFreq(0, i);
 					break;
 		case 0x82:
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t(p) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x83:
 					i=((V&0x07)<<8) +IO[0x82];
-//					SetSoundFreq(1, i);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t(P) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundFreq(1, i);
 					break;
 		case 0x84:
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t(p) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x85:
 					i=((V&0x07)<<8) +IO[0x84];
-//					SetSoundFreq(2, i);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t(P) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundFreq(2, i);
 					break;
 		case 0x86:
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t\t(p) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x87:
 					i=((V&0x07)<<8) +IO[0x86];
-//                    SetSoundFreq(5, i);
-//                    SetSoundFreq(3, i);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t\t(P) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+                    SetSoundFreq(5, i);
+                    SetSoundFreq(3, i);
 					break;
 		case 0x88:
-//					SetSoundPan(0, (V&0xF0)>>4, V&0x0F);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t(v) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundPan(0, (V&0xF0)>>4, V&0x0F);
 					break;
 		case 0x89:
         			if(!(SNDMOD&0x20))
                     {
-//						SetSoundPan(1, (V&0xF0)>>4, V&0x0F);
+						SetSoundPan(1, (V&0xF0)>>4, V&0x0F);
                     }
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t(v) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x8A:
-//					SetSoundPan(2, (V&0xF0)>>4, V&0x0F);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t(v) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundPan(2, (V&0xF0)>>4, V&0x0F);
 					break;
 		case 0x8B:
-//                    SetSoundPan(5, (V&0xF0)>>4, V&0x0F);
-//                    SetSoundPan(3, (V&0xF0)>>4, V&0x0F);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t\t(v) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+                    SetSoundPan(5, (V&0xF0)>>4, V&0x0F);
+                    SetSoundPan(3, (V&0xF0)>>4, V&0x0F);
 					break;
 		case 0x8C:
 					SwpStep=V;
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t(s) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x8D:
 					SwpTime=(V+1)<<5;
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t(t) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x8E:
-//					SetSoundPData(5, V&0x07);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-\t\t\t\t(n) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundPData(5, V&0x07);
 					break;
 		case 0x8F:
 					WaveMap=V<<6;
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-(m) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x90:
 					if((V&0x01)&&!(SNDMOD&0x01))
 					{
-//                        if(SoundOn[0])
-//						WsSoundPlay(0);
+						if(SoundOn[0])
+							WsSoundPlay(0);
 					}
 					else if(!(V&0x01)&&(SNDMOD&0x01))
 					{
-//						WsSoundStop(0);
+						WsSoundStop(0);
 					}
 
 					if(((V&0x22)==0x02)&&((SNDMOD&0x22)!=0x02))
 					{
-//                       if(SoundOn[1])
-//						WsSoundPlay(1);
+						if(SoundOn[1])
+							WsSoundPlay(1);
 					}
 					else if(((V&0x22)!=0x02)&&((SNDMOD&0x22) ==0x02))
 					{
-//						WsSoundStop(1);
+						WsSoundStop(1);
 					}
 
 					if((V&0x04)&&!(SNDMOD&0x04))
 					{
-//                       if(SoundOn[2])
-//						WsSoundPlay(2);
+						if(SoundOn[2])
+							WsSoundPlay(2);
 					}
 					else if(!(V&0x04)&&(SNDMOD&0x04))
 					{
-//						WsSoundStop(2);
+						WsSoundStop(2);
 					}
 
 					if(((V&0x88)==0x08)&&((SNDMOD&0x88)!=0x08))
 					{
-//                       if(SoundOn[3])
-//						WsSoundPlay(3);
+						if(SoundOn[3])
+							WsSoundPlay(3);
 					}
 					else if(((V&0x88)!=0x08)&&((SNDMOD&0x88)==0x08))
 					{
-//						WsSoundStop(3);
+						WsSoundStop(3);
 					}
 
 					if(((V&0x22)==0x22)&&((SNDMOD&0x22)!=0x22))
@@ -662,18 +568,13 @@ LogFile(LK_SOUND, str);
 
 					if(((V&0x88)==0x88)&&((SNDMOD&0x88)!=0x88))
 					{
-//                       if(SoundOn[4])
-//						WsSoundPlay(5);
+						if(SoundOn[4])
+							WsSoundPlay(5);
 					}
 					else if(((V&0x88)!=0x88)&&((SNDMOD&0x88)==0x88))
 					{
-//						WsSoundStop(5);
+						WsSoundStop(5);
 					}
-
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-(c) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
 					break;
 		case 0x91:
 					MainVol=0;
@@ -682,11 +583,7 @@ LogFile(LK_SOUND, str);
 		case 0x92:
 		case 0x93:break;
 		case 0x94:
-//					SetSoundPan(4, V&0x0F, V&0x0F);
-#ifdef SOUND_DEBUG
-GPSPRINTF(str,"%05d-(? ) %02X\n", GetTickCount() &0xFFFF, V);
-LogFile(LK_SOUND, str);
-#endif
+					SetSoundPan(4, V&0x0F, V&0x0F);
 					break;
 
 		case 0xA0:V=0x02;break;
@@ -943,15 +840,15 @@ void WsReset (void)
     Page[0xF]=ROMMap[0xF|j];
     WriteIO(0xC2, 0xFF);
     WriteIO(0xC3, 0xFF);
-//  SetSoundFreq(4,0);
-//  SetSoundFreq(4,1792);
+	SetSoundFreq(4,0);
+	SetSoundFreq(4,1792);
 	WaveMap=-1;
-//	WsSoundClear(0);
-//	WsSoundClear(1);
-//	WsSoundClear(2);
-//	WsSoundClear(3);
-//	WsSoundClear(4);
-//	WsSoundClear(5);
+	WsSoundClear(0);
+	WsSoundClear(1);
+	WsSoundClear(2);
+	WsSoundClear(3);
+	WsSoundClear(4);
+	WsSoundClear(5);
 
 	JoyState=0x0000;
 
@@ -1318,7 +1215,7 @@ void WsRelease(void)
 	F_HANDLE *F;
 	int i;
 
-//    WsSoundStop(4);
+    WsSoundStop(4);
 
 //	for(i=0;i<RAMBanks;i++)
 //	if (RAMEnable)
@@ -1375,7 +1272,7 @@ int Interrupt(void)
 
 			break;
 		case 2:
-			/* Skip Sound Interrupts for now
+//			Skip Sound Interrupts for now
 			i=WsSoundInt();
             PCSRL=(byte)(i&0xFF);
             PCSRH=(byte)((i>>8) &0xFF);
@@ -1400,7 +1297,7 @@ int Interrupt(void)
                 SDMACH=(byte)((i>>8) &0xFF);
                 SDMACL=(byte)(i&0xFF);
             }
-            else if((SNDMOD&0x22) ==0x22)
+            else if((SNDMOD&0x22)==0x22)
             {
                 b=IO[0x89];
                 if(!SoundOn[5])
@@ -1410,10 +1307,6 @@ int Interrupt(void)
             {
                 b=0x80;
             }
-#ifdef PCM_DEBUG
-GPSPRINTF(str,"%d\n", b);
-LogFile(LK_SOUND, str);
-#endif
             b>>=1;
             b+=0x40;
             if(b>0xAA)
@@ -1424,9 +1317,9 @@ LogFile(LK_SOUND, str);
             {
                 b=0x55;
             }
-		       SetPCM(b);
-		*/
-            break;
+			SetPCM(b);
+
+			break;
 		case 4:
             if(RSTRL==140)
             {

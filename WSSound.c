@@ -6,6 +6,9 @@
 #include <gpfont.h>
 
 #include "WSSound.h"
+#include "pcm.h"
+#include "sound.h"
+#include "gp32_snd.h"
 
 #include "types.h"
 
@@ -24,15 +27,13 @@
 #define PH POFF+PDIV*8
 #define PL POFF-PDIV*7
 
-int* lpDS=NULL;				// DirectSound됫후″시″크트
-int* lpDSB[6];			// 하″크하″파 0 됫후″시″크트
-
 int ChPerInit;							// 설정의 주기
 int SwpTime;							// 스이후˚시간
 int SwpStep;							// 스이후˚주기 스텟후˚
 int SwpCurPeriod;						// 현재의 스이후˚주기
 
 int MainVol;							// 현재의 메인 호″류무
+int Verbose = 0;
 
 int ChCurVol[6]={-1,-1,-1,-1,-1,-1};	// 현재의 채널호″류무
 int ChCurPer[6]={-1,-1,-1,-1,-1,-1};	// 현재의 채널 주기
@@ -59,7 +60,6 @@ const long TblMainVol[4]={				// 1,1/2,1/4,1/8
 void  SetSoundFreq(int Channel, int Period);
 void  SetSoundVol(int Channel, int Vol);
 void  SetSoundPData(int Channel, int Index);
-void  SoundErr(char* Msg);
 
 #define BIT(n) (1<<n)
 
@@ -138,12 +138,17 @@ unsigned int Mrand(unsigned int Degree)
 
 	return ShiftReg;
 }
+
+struct pcm pcm;
+struct snd snd;
+
 //---------------------------------------------------------------------------
 int WsSoundCreate()
 {
 //	Debug=(void*) TblChVol;
 
 	//set up sound format
+
 /*
     GPMEMSET(&PCMWF, 0, sizeof(PCMWAVEFORMAT));
     PCMWF.wf.wFormatTag=WAVE_FORMAT_PCM;
@@ -159,6 +164,27 @@ int WsSoundCreate()
     DSBD.lpwfxFormat=(LPWAVEFORMATEX) &PCMWF;
 */
 
+	pcm.hz = 22050;
+	pcm.stereo = 0;
+	pcm.len = 22050/60;
+	pcm.buf = gm_malloc(pcm.len);
+	pcm.pos = 0;
+	GPMEMSET(pcm.buf, 0, pcm.len);
+
+	sndbuf.freq=PCM_M22; 
+	sndbuf.format=PCM_8BIT; 
+	sndbuf.samples=22050/60;
+	sndbuf.userdata=NULL;
+	sndbuf.callback=NULL;//audio_callback;
+	sndbuf.pollfreq=100;
+
+	snd.ch[0].on = 0;
+	snd.ch[1].on = 0;
+	snd.ch[2].on = 0;
+	snd.ch[3].on = 0;
+	snd.ch[4].on = 0;
+	snd.ch[5].on = 0;
+
     int i, j;
 
     for(i=0;i<4;i++)
@@ -166,29 +192,29 @@ int WsSoundCreate()
 		// create the sound buffers for 4 channels
 
 		/*
-		result=lpDS->CreateSoundBuffer(&DSBD, &lpDSB[i], NULL);
+		result=lpDS->CreateSoundBuffer(&DSBD, &snd.ch[i], NULL);
     	if(result!=DS_OK)
     	{
-			SoundErr("하″크하″파를 작성 할 수 없습니다");
+			// SoundErr("하″크하″파를 작성 할 수 없습니다");
     		WsSoundRelease();
     		return -1;
     	}
-		WsSoundClear(i);
 		*/
+		WsSoundClear(i);
     }
 
 	//create a sixth channel (for what?)
 
 /*	DSBD.dwBufferBytes=BUFSIZEN;
-	result=lpDS->CreateSoundBuffer(&DSBD, &lpDSB[5], NULL);
+	result=lpDS->CreateSoundBuffer(&DSBD, &snd.ch[5], NULL);
 	if(result!=DS_OK)
 	{
-		SoundErr("하″크하″파를 작성 할 수 없습니다");
+		// SoundErr("하″크하″파를 작성 할 수 없습니다");
 		WsSoundRelease();
 		return -1;
 	}
-	WsSoundClear(5);
 */
+	WsSoundClear(5);
 
 	// create a fifth channel (for what?)
 /*
@@ -196,17 +222,17 @@ int WsSoundCreate()
     PCMWF.wf.nAvgBytesPerSec=PCMWF.wf.nSamplesPerSec*PCMWF.wf.nBlockAlign;
    	DSBD.dwFlags=DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME;
     DSBD.dwBufferBytes=(BUFSIZEP<<4) *PCMWF.wf.nBlockAlign;
-    result=lpDS->CreateSoundBuffer(&DSBD, &lpDSB[4], NULL);
+    result=lpDS->CreateSoundBuffer(&DSBD, &snd.ch[4], NULL);
     if(result!=DS_OK)
     {
-    	SoundErr("하″크하″파를 작성 할 수 없습니다");
+    	// SoundErr("하″크하″파를 작성 할 수 없습니다");
         WsSoundRelease();
         return -1;
     }
-	WsSoundClear(4);
 */
+	WsSoundClear(4);
 
-    int rand;
+	int rand;
 	for(i=0;i<8;i++)
 	{
     	for(j=0;j<BUFSIZEN;j++)
@@ -235,20 +261,22 @@ void WsSoundRelease(void)
 {
 	int i;
 
-	if(lpDS!=NULL)
-    {
+//	if(lpDS!=NULL)
+    //{
     	for(i=0;i<6;i++)
         {
 			//close all 6 sound channels (4 standard + 2 voice?)
-/*
-			if(lpDSB[i]!=NULL)
+
+			if(snd.ch[i].on)
         	{
-				lpDSB[i]->Stop();
-            	lpDSB[i]->Release();
-            	lpDSB[i]=NULL;
-        	}
+/*				snd.ch[i]->Stop();
+            	snd.ch[i]->Release();
+            	snd.ch[i]=NULL;
 */
-        }
+				snd.ch[i].on = 0; // turn it off
+        	}
+
+//        }
 //        lpDS->Release();
 //        lpDS=NULL;
     }
@@ -258,47 +286,32 @@ void WsSoundRelease(void)
 int WsSoundPlay(int Channel)
 {
 	// Play sound
-/*
+
 	int result;
 
-    if(lpDSB[Channel]==NULL)
+    if(snd.ch[Channel].on == 0) // channel is off
     {
-    	if(Verbose)
-			SoundErr("하″크하″파가 없습니다");
     	return -1;
     }
 
-	result=lpDSB[Channel]->Play(0,0, DSBPLAY_LOOPING);
-    if(result!=DS_OK)
-    {
-    	SoundErr("하″크하″파를 재생 할 수 없습니다");
-    	return -1;
-    }
-*/
-    return 0;
+	snd.ch[Channel].on = 1; 
+
+	return 0;
 }
 
 //---------------------------------------------------------------------------
 int WsSoundStop(int Channel)
 {
 	// Stop sound
-/*
-    HRESULT result;
 
-    if(lpDSB[Channel]==NULL)
+    int result;
+
+    if(snd.ch[Channel].on == 0) // channel is off
     {
-    	if(Verbose)
-		SoundErr("하″크하″파가 없습니다");
     	return -1;
     }
 
-	result=lpDSB[Channel]->Stop();
-    if(result!=DS_OK)
-    {
-    	SoundErr("하″크하″파를 정지 할 수 없습니다");
-    	return -1;
-    }
-*/
+	snd.ch[Channel].on = 0;
 
     return 0;
 }
@@ -307,15 +320,13 @@ int WsSoundStop(int Channel)
 void WsSoundClear(int Channel)
 {
 	// Clear Sound
-/*
-    HRESULT result;
-    LPVOID ptr1, ptr2;
-    DWORD len1, len2, size;
 
-    if(lpDSB[Channel]==NULL)
+    int		result;
+    int*	ptr1, ptr2;
+    uint32	len1, len2, size;
+
+    if(snd.ch[Channel].on == 0)
     {
-    	if(Verbose)
-		SoundErr("하″크하″파가 없습니다");
     	return;
     }
 
@@ -330,30 +341,15 @@ void WsSoundClear(int Channel)
 	else if(Channel==4)
 	{
 		size=BUFSIZEP<<4;
-        memset(PDataP, PL, BUFSIZEP<<4);
+        GPMEMSET(PDataP, PL, BUFSIZEP<<4);
 	}
 	else
 	{
 		size=BUFSIZE;
-        memset(PData[Channel], PL, BUFSIZE);
+        GPMEMSET(PData[Channel], PL, BUFSIZE);
 	}
 
-	result=lpDSB[Channel]->Lock(0, size, &ptr1, &len1, &ptr2, &len2, 0);
-    if(result!=DS_OK)
-    {
-    	SoundErr("하″크하″파를 락 할 수 없지 않습니다");
-    	return;
-    }
-
-    memset(ptr1, PL, size);
-
-    result=lpDSB[Channel]->Unlock(ptr1, len1, ptr2, len2);
-    if(result!=DS_OK)
-    {
-    	SoundErr("하″크하″파를 언로크 할 수 없지 않습니다");
-        return;
-    }
-*/
+    GPMEMCPY(ptr1, PL, size);
 }
 
 //---------------------------------------------------------------------------
@@ -361,14 +357,11 @@ void SetSoundFreq(int Channel, int Period)
 {
 	// Set Sound Frequency
 
-	/*
-    HRESULT result;
-    DWORD Freq;
+    int		result;
+    uint32	Freq;
 
-    if(lpDSB[Channel]==NULL)
+    if(!snd.ch[Channel].on)
     {
-    	if(Verbose)
-		SoundErr("하″크하″파가 없습니다");
     	return;
     }
 
@@ -384,6 +377,7 @@ void SetSoundFreq(int Channel, int Period)
 		ChPerInit=Period;
 		SwpCurPeriod=Period;
 	}
+
     if(Freq>BPSMAX)
 	{
 		Freq=BPSMAX;
@@ -393,28 +387,20 @@ void SetSoundFreq(int Channel, int Period)
 		Freq=BPSMIN;
 	}
 
-	result=lpDSB[Channel]->SetFrequency(Freq);
-	if(result!=DS_OK)
-	{
-    	if(Verbose)
-		SoundErr("하″크하″파의 주파수를 설정 할 수 없습니다");
-		return;
-	}
-*/
+	snd.ch[Channel].freq = Freq;
+
 }
 
 //---------------------------------------------------------------------------
 void SetSoundVol(int Channel, int Vol)
 {
 	// Set Sound Volume
-/*
-    HRESULT result;
+
+    int result;
     long volume;
 
-    if(lpDSB[Channel]==NULL)
+    if(snd.ch[Channel].on == 0)
     {
-    	if(Verbose)
-		SoundErr("하″크하″파가 없습니다");
     	return;
     }
 
@@ -430,13 +416,7 @@ void SetSoundVol(int Channel, int Vol)
     	volume=-10000;
     }
 
-    result=lpDSB[Channel]->SetVolume(volume);
-    if(result!=DS_OK)
-    {
-    	SoundErr("하″크하″파의 호″류무를 설정 할 수 없습니다");
-    	return;
-    }
-	*/
+	snd.ch[Channel].envol = volume;
 }
 
 //---------------------------------------------------------------------------
@@ -444,9 +424,7 @@ void SetSoundPan(int Channel, int Left, int Right)
 {
 	// Set Sound Pan
 
-	/*
-
-    HRESULT result;
+    int result;
     long pan;
 
     const long TblPan[16][16]={
@@ -468,10 +446,8 @@ void SetSoundPan(int Channel, int Left, int Right)
 	{-10000, -2352, -1750, -1398, -1148,  -954,  -796,  -662,  -546,  -444,  -352,  -269,  -194,  -124,   -60,     0},
     };
 
-    if(lpDSB[Channel]==NULL)
+    if(snd.ch[Channel].on == 0)
     {
-    	if(Verbose)
-		SoundErr("하″크하″파가 없습니다");
     	return;
     }
 
@@ -492,10 +468,11 @@ void SetSoundPan(int Channel, int Left, int Right)
     }
     ChCurPan[Channel]=pan;
 
-    result=lpDSB[Channel]->SetPan(pan);
-    if(result!=DS_OK)
+//    result=snd.ch[Channel]->SetPan(pan);
+/*
+	if(result!=DS_OK)
     {
-    	SoundErr("하″크하″파의 하˚를 설정 할 수 없습니다");
+    	// SoundErr("하″크하″파의 하˚를 설정 할 수 없습니다");
         return;
     }
 	*/
@@ -505,16 +482,16 @@ void SetSoundPan(int Channel, int Left, int Right)
 void SetSoundPData(int Channel, int Index)
 {
 	// Set Sound PData
-	/*
-    HRESULT result;
-    LPVOID ptr1, ptr2;
-    DWORD len1, len2, size;
+
+	int		result;
+    int*	ptr1, ptr2;
+    uint32	len1, len2, size;
 	unsigned char *pData;
 
-    if(lpDSB[Channel]==NULL)
+    if(snd.ch[Channel].on == 0)
     {
-    	if(Verbose)
-    	SoundErr("하″크하″파가 없습니다");
+    	// if(Verbose)
+    		// SoundErr("하″크하″파가 없습니다");
     	return;
     }
 
@@ -534,19 +511,21 @@ void SetSoundPData(int Channel, int Index)
 		pData=PData[Channel];
 	}
 
-	result=lpDSB[Channel]->Lock(0, size, &ptr1, &len1, &ptr2, &len2, 0);
+/*
+	result=snd.ch[Channel]->Lock(0, size, &ptr1, &len1, &ptr2, &len2, 0);
     if(result!=DS_OK)
     {
-    	SoundErr("하″크하″파를 락 할 수 없지 않습니다");
+    	// SoundErr("하″크하″파를 락 할 수 없지 않습니다");
     	return;
     }
+*/
+    GPMEMCPY(ptr1, pData, size);
 
-    memcpy(ptr1, pData, size);
-
-    result=lpDSB[Channel]->Unlock(ptr1, len1, ptr2, len2);
+/*
+    result=snd.ch[Channel]->Unlock(ptr1, len1, ptr2, len2);
     if(result!=DS_OK)
     {
-    	SoundErr("하″크하″파를 언로크 할 수 없지 않습니다");
+    	// SoundErr("하″크하″파를 언로크 할 수 없지 않습니다");
         return;
     }
 	*/
@@ -556,7 +535,7 @@ void SetSoundPData(int Channel, int Index)
 void SetSoundPBuf(int Addr, int Data)
 {
 	// Set Sound PBuf
-	/*
+	
 	int i, j;
 
 	i=(Addr&0x30)>>4;
@@ -569,7 +548,6 @@ void SetSoundPBuf(int Addr, int Data)
     {
     	SetSoundPData(i, 0);
     }
-*/
 }
 
 //---------------------------------------------------------------------------
@@ -610,7 +588,7 @@ int WsSoundInt(void)
 	        {
         		value=100;
         	}
-//    		lpDSB[2]->SetFrequency(value); // set frequency of channel 3?
+    		snd.ch[2].freq = value; // set frequency of channel 3?
         }
         CntSwp--;
     }
@@ -640,7 +618,7 @@ void SetPCM(int Data)
         {
         	PcmCount=12000;
         }
-        //lpDSB[4]->SetFrequency(PcmCount); //set frequency of channel 5?
+        snd.ch[4].freq = PcmCount; //set frequency of channel 5?
         PcmCount=0;
     }
 
@@ -665,37 +643,19 @@ void FlashPCM(void)
 		BUFSIZEP*12, BUFSIZEP*13, BUFSIZEP*14, BUFSIZEP*15,
     };
 
-	/*
-    if(lpDSB[4]==NULL)
+    if(!snd.ch[4].on)
 	{
-    	if(Verbose)
-		SoundErr("하″크하″파가 없습니다");
 		return;
 	}
 
-	result=lpDSB[4]->Lock(WrPos[PcmWrPos], BUFSIZEP, &ptr1, &len1, &ptr2, &len2, 0);
-	if(result!=DS_OK)
-	{
-		SoundErr("하″크하″파를 락 할 수 없지 않습니다");
-		return;
-	}
-	*/
-/*
  	GPMEMCPY(ptr1, PDataP, len1);
+
 	if(ptr2!=NULL)
 	{
 		GPMEMCPY(ptr2, PDataP+len1, len2);
 	}
-*/
-//	result=lpDSB[4]->Unlock(ptr1, len1, ptr2, len2);
 
-/*	if(result!=DS_OK)
-	{
-		SoundErr("하″크하″파를 언로크 할 수 없지 않습니다");
-		return;
-	}
-*/
-    PcmWrPos++;
+	PcmWrPos++;
     PcmWrPos&=0xF;
 	GPMEMSET(PDataP, PL, sizeof(PDataP));
 	PCMPos=0;
@@ -704,7 +664,7 @@ void FlashPCM(void)
 
 //---------------------------------------------------------------------------
 /*
-void SoundErr(char* Msg)
+void // SoundErr(char* Msg)
 {
 	//MessageBox(NULL, Msg,"WsSound닝라", MB_ICONEXCLAMATION|MB_OK);
 }
