@@ -75,24 +75,23 @@ void LoadPacked(int skip, int gz_size, int gz_crc)
 
 //ok
 
-void fs_add(char type,unsigned short entry,char *file,unsigned long offset)
+void fs_add(char type,unsigned short entry,char *file,unsigned long offset,unsigned long filesize)
 {
 	ini.game[ini.num_games_in_ini].type=type;
 	ini.game[ini.num_games_in_ini].entry=entry;
 	ini.game[ini.num_games_in_ini].offset=offset;
 	GPSPRINTF(ini.game[ini.num_games_in_ini].file,"%s",file);
 	ini.game[ini.num_games_in_ini].file[12]='\0'; //force string
-
+	ini.game[ini.num_games_in_ini].filesize=filesize;
 	ini.num_games_in_ini++;
 }
 
-int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int force_type) 
+int fs_loadgame(char *dir, char *name, unsigned long *filesize, unsigned long *CRC32, int entry, int force_type) 
 {
 	char filename[255];
 	F_HANDLE file;
 	int i;
 	int test=1;
-
 
 	if(force_type==UNK)
 	{
@@ -136,6 +135,8 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 
 			*CRC32=gz_crc;
 
+			*filesize = MyGameSize;
+
   	  		return 1;
 		}
 		break;
@@ -152,6 +153,8 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 				GetCRC(MyGame[i]);
 
 			*CRC32=CRC;
+
+			*filesize = MyGameSize;
 
   	 		return 1;
 		}
@@ -186,6 +189,8 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 
 			*CRC32=gz_crc;
 			
+			*filesize = MyGameSize;
+
 			return 1;
 		}
 		break;
@@ -201,6 +206,7 @@ void fs_scanfile(char *dir, char *name)
 	F_HANDLE file; 
 	unsigned long crc=0; 
 	int i;
+	unsigned long filesize = 0;
 
 	MyGameSize=0;
 
@@ -213,59 +219,53 @@ void fs_scanfile(char *dir, char *name)
 
 	if(head[0]=='P'&&head[1]=='K') //zip
 	{
-
-		fs_loadgame(dir,name,&crc,0,ZIP);
+		fs_loadgame(dir,name, &filesize, &crc,0,ZIP);
  
-
 		i=DAT_LookFor(crc);
 
 		if(i!=-1) 
 		{
-			fs_add(ZIP,i,name,0);
+			fs_add(ZIP,i,name,0,filesize);
 		}
 		else 
 		{
-			fs_add(ZIP,65535,name,0); //deberia almacenar "real_filename"
+			fs_add(ZIP,65535,name,0,filesize); //deberia almacenar "real_filename"
 		}
 	}
 	else
 	if(head[0]==0x1f&&head[1]==0x8b) //gzip
 	{
-		fs_loadgame(dir,name,&crc,0,GZ);
+		fs_loadgame(dir,name, &filesize, &crc,0,GZ);
  
 		i=DAT_LookFor(crc);
 
 		if(i!=-1)
 		{
-			fs_add(GZ,i,name,0);
+			fs_add(GZ,i,name,0,filesize);
 		}
 		else 
 		{
-			fs_add(GZ,65535,name,0); //deberia almacenar "real_filename"
+			fs_add(GZ,65535,name,0,filesize); //deberia almacenar "real_filename"
 		}
 	}
 	else
 	{
 		{
-			fs_loadgame(dir,name,&crc,0,UNP);
+			fs_loadgame(dir,name,&filesize,&crc,0,UNP);
 
 			i=DAT_LookFor(crc);
 
 			if(i!=-1)
 			{
-				fs_add(UNP,i,name,0);
+				fs_add(UNP,i,name,0,filesize);
 			}
 			else
 			{
-				fs_add(UNP,65535,name,0); //deberia almacenar "name sin ."
+				fs_add(UNP,65535,name,0,filesize); //deberia almacenar "name sin ."
 			}
 		}
 	}
 }
-
-
-
-
 
 //ok
 void fs_write_ini()

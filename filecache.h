@@ -19,6 +19,7 @@ typedef struct {
 	unsigned short entry; 
 	char file[8+3+1+1];
 	unsigned long offset;
+	unsigned long filesize;
 } ini_game; 
 
 typedef struct {
@@ -33,8 +34,8 @@ extern	unsigned char	*MyGame;
 extern	unsigned long	MyGameNo;
 
 void	LoadPacked(int skip, int gz_size, int gz_crc);
-void	fs_add(char type,unsigned short entry,char *file,unsigned long offset);
-int		fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int force_type);
+void	fs_add(char type,unsigned short entry,char *file,unsigned long offset, unsigned long filesize);
+int		fs_loadgame(char *dir, char *name, unsigned long *filesize, unsigned long *CRC32, int entry, int force_type);
 void	fs_scanfile(char *dir, char *name);
 void	fs_write_ini( );
 int		fs_read_ini( );
