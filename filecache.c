@@ -5,6 +5,9 @@
 #include <gpfont.h>
 
 #include "unzip.h"
+
+#include "filecache.h"
+
 #include "crc.h"
 #include "goodwsx.h"
 
@@ -14,17 +17,14 @@ unsigned long	MyGameSize;
 unsigned char	*MyGame; 
 unsigned long	MyGameNo;
 
-#define			MAXFS			11
-
-#define			MAX_COUNT_FILE  10000				//maximum number of file entries in one folder
-#define			MAX_PATH_LEN	255					//maximum length of full path name
-
 ERR_CODE		err;
 char			g_path_curr[MAX_PATH_LEN + 1];		//current path (in full path format)
 GPDIRENTRY		g_list_file[MAX_COUNT_FILE];		//list of files in current path
 unsigned long	g_cnt_file = 0;						//number of files in current path
 
 F_HANDLE		g__file;
+
+inifile			ini;
 
 char szRomName[255];
 
@@ -74,26 +74,6 @@ void LoadPacked(int skip, int gz_size, int gz_crc)
 }
 
 //ok
-enum
-{
-	UNK,
-	UNP,
-	GZ,
-	ZIP
-};
-
-typedef struct {
-	char type;
-	unsigned short entry; 
-	char file[8+3+1+1];
-	unsigned long offset;
-} ini_game; 
-
-struct {
-	int version_ini;
-	int num_games_in_ini;
-	ini_game game[MAX_COUNT_FILE]; //1000 roms max
-} ini;
 
 void fs_add(char type,unsigned short entry,char *file,unsigned long offset)
 {
@@ -387,17 +367,17 @@ void fs_scandir(char *dir, char *name)
 			else
 				GPSPRINTF(temp,"Another emulator version detected\nPress A to force a new scanning");
 
-			PrintMessage(temp,1);
+//			PrintMessage(temp,1);
 		}
 
-		PrintMessage("Reading dir, please wait",1);
+		PrintMessage("Reading dir, please wait",0);
 
 		GpDirEnumList(g_path_curr, 0, MAX_COUNT_FILE, (GPDIRENTRY*)&g_list_file, &g_cnt_file);
 
 		for(i=0;i<g_cnt_file;i++)
 		{
-			GPSPRINTF(temp," Scanning file %04d/%04d (%03d%%) \n",i+1,g_cnt_file,(i+1)*100/g_cnt_file/*,g_list_file[i].name*/);
-			PrintMessage(temp,1);
+			GPSPRINTF(temp," Scanning file %04d/%04d (%03d%%) \n%s",i+1,g_cnt_file,(i+1)*100/g_cnt_file,g_list_file[i].name);
+			PrintMessage(temp,0);
 //			DrawPercentageBar(110, 130, i, 0, g_cnt_file-1);
 //			FlipScreen(1,0);
 
@@ -410,211 +390,14 @@ void fs_scandir(char *dir, char *name)
 
 
 
-void fs(char *title, char *dir, char *name, unsigned char *dest)
+void fs(char *dir, char *name, unsigned char *dest)
 {
-	int choose=-1, needsrepainting=1, firsttime=1;
-	char page[4000],pagetemp[4000];
-	unsigned long crc;
 
 	MyGame=(unsigned char*)dest;
 
 	fs_scandir(dir,name);
 
-	PrintMessage("Finished Scandir",1);
+//	fs_loadgame(dir,"",&crc,choose,UNK);
 
-	GpClockSpeedChange(80000000 , 0x48012, 0);
-
-	while(choose==-1)
-	{
-		static int pos=0, pause=0, touch=0; int max, key; //maxperscreen
-
-		if(ini.num_games_in_ini>16) 
-			max=16; 
-		else 
-			max=ini.num_games_in_ini;
-
-		pagetemp[0]=page[0]='\0';
-
-		if(max>0) 
-		{
-			int i; 
-
-			for(i=pos;i<pos+max;i++)
-			{
-				char datname[255];
-
-				if(i>=ini.num_games_in_ini)
-				{
-//					GPSPRINTF(pagetemp,"%s%c",page,i==pos+max-1?' ':'\n');
-//					GPSPRINTF(page,pagetemp);
-//					PrintMessage(page,0);
-				}
-				else
-				{
-					if(ini.game[i].entry==65535)
-						GPSPRINTF(datname,"%s (CRC unknown)",ini.game[i].file);
-					else
-						GPSPRINTF(datname,"%s",MyDat[ini.game[i].entry].name); 
-
-					{ //removes goodstuff [] (), but keeps version names
-						int h=GPSTRLEN(datname), last_c, last_o;
-
-						do
-						{ 
-							if(datname[h]==')') 
-								last_c=h; 
-							if(datname[h]=='(') 
-								last_o=h; 
-
-							if(datname[h]==']') 
-								last_c=h; 
-							if(datname[h]=='[') 
-								last_o=h; 
-						} while((--h)>4);
-
-// ok: this remove () but region and version
-						if(datname[last_c-1]>='0'||datname[last_c-1]<='9') 
-							datname[last_c+1]='\0';
-						else 
-							datname[last_o-1]='\0';
-
-					}
-
-					datname[50]='\0'; //cut name
-
-					GPSPRINTF(pagetemp,"%s%04d. %s\n",page,i+1,datname);
-					GPSPRINTF(page,pagetemp);
-				}
-			}
-
-			GPSPRINTF(pagetemp," %s\n\n%s",title,page);
-			GPSPRINTF(page,pagetemp);
-
-			if(firsttime)
-			{
-				PrintMessage(page,0);
-				firsttime=0;
-			}
-			else
-			if(needsrepainting)
-			{
-				PrintMessage(page,0);
-				needsrepainting=0;
-			}
-
-			key=GpKeyGet();
-
-			if(key&GPC_VK_FA)
-			{ 
-				choose=pos; 
-				needsrepainting=1; 
-			}
-			else
-			if(key&GPC_VK_UP)   
-			{ 
-				if(pause) 
-				{
-					pause--; 
-				}
-				else 
-				{ 
-					if(pos!=0) 
-					{
-						pos--; 
-					}
-					
-					needsrepainting=1; 
-					
-					if(!touch) 
-					{ 
-						pause=45; 
-						touch=1; 
-					} 
-				} 
-			}
-			else
-			if(key&GPC_VK_DOWN) 
-			{ 
-				if(pause) 
-					pause--; 
-				else 
-				{ 
-					if(pos!=ini.num_games_in_ini-1) 
-						pos++; 
-					needsrepainting=1; 
-					if(!touch) 
-					{ 
-						pause=45; 
-						touch=1; 
-					} 
-				} 
-			}
-			else
-			if(key&GPC_VK_FL)   
-			{ 
-				pos-=16; 
-				if(pos<0) 
-					pos=0; 
-				needsrepainting=1; 
-			}
-			else
-			if(key&GPC_VK_FR)   
-			{ 
-				pos+=16; 
-				if(pos>ini.num_games_in_ini-1) 
-					pos=ini.num_games_in_ini-1; 
-				needsrepainting=1; 
-			}
-			else 
-				pause=touch=0;
-
-			if((key&GPC_VK_FL)&&(key&GPC_VK_FR)||(key&GPC_VK_START)||(key&GPC_VK_SELECT))
-			{
-				while(GpKeyGet());
-
-				PrintMessage("Press START to restart GP32\nPress SELECT to rescan dir\nPress A to continue...",1);
-
-			    while(1)
-				{
-					key=GpKeyGet();
-
-					if(key&GPC_VK_FA)
-					{ 
-						while(GpKeyGet()); 
-						break; 
-					}
-					
-//					if(key&GPC_VK_START)
-//						GP32_System_Reset();
-
-					if(key&GPC_VK_SELECT)
-					{
-						char temp[255];
-						GPSPRINTF(temp,"%s\\%s",dir,name);
-						GpFileRemove(temp);
-       
-						pos=0;
-
-						PrintMessage(page,0);
-
-						fs_scandir(dir,name);
-
-						break;
-					}
-				}
-
-				needsrepainting=1;
-			}
-		}
-	}
-
-	PrintMessage("File Chosen",1);
-
-	fs_loadgame(dir,"",&crc,choose,UNK);
-//	GPSPRINTF(szRomName,"%08x.tmp",crc);
-
-	MyGameNo=choose;
-//	MyGameDatNo=ini.game[choose].entry;
-
-//	GpClockSpeedChange(132000000, 0x3a011, 3); //spiv
+//	MyGameNo=choose;
 }
