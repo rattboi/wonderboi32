@@ -1,19 +1,11 @@
 #include "../types.h"
 
-extern BYTE IO[0x10000];
-
-#define cpu_readop(A)				(ReadMem(A)) 									//8bit　read
-#define cpu_readop_arg(A)			(ReadMem(A)) 									//8bit　read
-#define cpu_readmem20(A)			(ReadMem(A)) 									//8bit　read
-#define cpu_writemem20(A, D) 		(WriteMem((A), (BYTE)(D)))						//8bit　기입
-#define cpu_readport(port)			(IO[(port)])									//8bit　read
-#define cpu_writeport(port, val)		(WriteIO((port), (BYTE)(val)))					//8bit　기입
-#define cpu_readport16(port)		(IO[(port)])									//8bit　read
-#define cpu_writeport16(port, val)	(WriteIO((port), (BYTE)(val)))					//8bit　기입
-
-BYTE  ReadMem(unsigned int A);
-void  WriteMem(unsigned int A, BYTE V);
-void  WriteIO(unsigned A, BYTE V);
+BYTE	cpu_readport(BYTE);
+void cpu_writeport(DWORD,BYTE);
+#define cpu_readop cpu_readmem20	
+#define cpu_readop_arg cpu_readmem20	
+void cpu_writemem20(DWORD,BYTE);
+BYTE cpu_readmem20(DWORD);	
 
 typedef enum { ES, CS, SS, DS } SREGS;
 typedef enum { AW, CW, DW, BW, SP, BP, IX, IY } WREGS;
