@@ -103,6 +103,9 @@ fxe: $(FXE)
 test: $(GXB)
 				pclink -e $(GXB)
 
+upload: $(FXE)
+				pclink -u $(FXE) -p gp:\\gpmm\\
+
 clean:
 				rm -f $(OBJS) $(MAPFILE) $(BIN) $(ELF) $(FXE) $(GXB)
 
