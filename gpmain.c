@@ -576,35 +576,31 @@ void GpMain(void *arg)
 {
 	int result;
 	int running = 0;							// set to 1 if a rom is loaded
-	int forcemode = 0;
 	int vert = 0;
-	F_HANDLE F;
-	
-	char *pext;
 
+	char *pext;
 	char g_string[256];
-	
 	char fname[256];
+
+	F_HANDLE F;
 
 	CPU_alignment_and_cache();					// turn off alignment and turn instruction and data cache on
 
 	InitGraphics(16);							// Init Graphics and Fonts
+
+	ShowTitleScreen();
+
 	giSurface = 1;
 	OkfInitialize(gtSurface, &giSurface);
 
-//	OkfRegister(verdana8_okf);				// Register some fonts (internal)
 	OkfRegister(verdana8b_pm_okf);
-//	OkfRegister(verdana10_okf);
-//	OkfRegister(comicSansMS12b_pm_okf);
 
 	okf.font = 1;								// Use font #1
 	
-	GpFatInit();								//initializes file system
-		
 	WindowInit();								//initializes windowing system
-	
-	ShowTitleScreen();
-	
+
+	GpFatInit();								//initializes file system
+
 	fill_main_menu(&main_menu);					// Init the menus
 	fill_statesconfig_menu(&statesconfig_menu);  
 	fill_videoconfig_menu(&videoconfig_menu);
