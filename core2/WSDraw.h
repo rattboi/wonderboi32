@@ -1,116 +1,37 @@
 //---------------------------------------------------------------------------
 #ifndef WSDrawH
 #define WSDrawH
-//#include <DDraw.h>
 #include "WSHard.h"
 //---------------------------------------------------------------------------
-extern byte *Scr1TMap;							// 스크린 1의 타이르맛후˚호˚인터
-extern byte *Scr2TMap;							// 스크린 2의 타이르맛후˚호˚인터
-extern byte *SprTTMap;							// 스후˚라이트의 선두 타이르맛후˚호˚인터
-extern byte *SprETMap;							// 스후˚라이트의 말미 타이르맛후˚호˚인터
-extern byte SprTMap[512];						// 스후˚라이트의 타이르맛후˚
+extern byte 	*Scr1TMap;
+extern byte 	*Scr2TMap;
+extern byte 	*SprTTMap;
+extern byte 	*SprETMap;
+extern byte 	SprTMap[512];
 
-extern byte *BGndTPal;			// 하″크크″라운트″의 타일하˚렛호˚인터
-extern byte *WndTPal;			// 윈트″우의 타일하˚렛호˚인터
-extern int MaxLine;
-extern int DrawLine;
+extern byte ColTbl[0x210];
+extern byte Palette[16+1][16][4];
 
-extern int DispHeight;		// 테″스후˚레이 높이, 폭
-extern int DispWidth;
-extern int PixelDepth;			// 히˚쿠셀 당의 하″실수
+extern byte 	*BGndTPal;
+extern byte 	*WndTPal;
+extern int 		MaxLine;
+extern int 		DrawLine;
 
-//---------------------------------------------------------------------------
-// WsDrawCreate DirectDraw됫후″시″크트의 생성
-// 인수 hWnd		:윈트″우의 헌트″르
-// 반치 int			:정상 종료 0, 이상종료(ABEND)-1
-//
-// Ws로 사용하는 오프″시″크트, 후˚라이마리서페스, 하″크서페스,
-// 크리하˚, 및 하˚렛도 생성한다.
-// 윈트″우 생성의 이헤″트한트″라 에 실장하는 것이 바람직하다.
-// Create 함수는, 반드시 Release 함수에 의해 오프″시″크트를 개방해야 한다.
-//
-//	예)	WsDrawCreate(Form1->Handle);
-//---------------------------------------------------------------------------
-extern int  WsDrawCreate();
+extern int 		DispHeight;
+extern int 		DispWidth;
+extern int 		PixelDepth;
 
-//---------------------------------------------------------------------------
-// WsDrawCreate DirectDraw됫후″시″크트의 개방
-// 인수 없음
-// 반치없음
-//
-// Ws로 사용하는 오프″시″크트, 후˚라이마리서페스, 하″크서페스,
-// 크리하˚, 및 하˚렛을 해방한다.
-// 윈트″우 소멸의 이헤″트한트″라 에 실장하는 것이 바람직하다.
-// 또, 아후˚리케이션 예외 처리에 실장해 두는 것으로 안전하게 종료 시킬 수가 있다.
-// 벌써 개방 끝난 경우는, 아무것도 하지 않는다.
-//---------------------------------------------------------------------------
-extern  void  WsDrawRelease(void);
+extern int		WsDrawCreate();
 
-//---------------------------------------------------------------------------
-// SetDrawMode DirectDraw됫후″시″크트의 스크리모트″설정
-// 인수 int			:스크리사이스″하˚라메이타
-// 인수 int			:스크리모트″하˚라메이타
-// 반치 int			:정상 종료 0, 이상종료(ABEND)-1
-//
-// DirectDraw됫후″시″크트를 재생성한다.
-//
-//	예)	SetDrawMode(DS_1);
-//---------------------------------------------------------------------------
-#define DS_1 0x01
-#define DS_2 0x02
-#define DS_3 0x03
-#define DS_FULL 0xFF
+extern  void  	WsDrawRelease(void);
 
-extern  int  SetDrawMode(int Mode);
-extern  int  GetDrawMode(void);
+extern  int  	SetDrawMode(int Mode);
+extern  int  	GetDrawMode(void);
 
-//---------------------------------------------------------------------------
-// WsDrawLine 1旒인 묘화
-// 인수 Line		:묘화 라인의 Y좌표(0∼143)
-// 반치 int			:정상 종료 0, 이상종료(ABEND)-1
-//
-// Ws의 HBlank시에 1旒인을 하″크서페스에 묘화 한다.
-// 에뮬레이션 태스크의 부하가 크게 처리 속도를 우선하고 있기 때문에(위해), 안전성이 낮기 때문에 주의.
-//---------------------------------------------------------------------------
-extern  int  WsDrawLine(int Line);
+extern  int  	WsDrawLine(int Line);
+extern  int  	WsDrawFlip(void);
+extern  void  	WsDrawClear(void);
 
-//---------------------------------------------------------------------------
-// WsDrawFlip 하″크서페스로부터 후˚라이마리서페스에 후릿후˚
-// 인수 없음
-// 반치 int			:정상 종료 0, 이상종료(ABEND)-1
-//
-// WsDrawHBlank에 의해 하″크서페스에 묘화를 끝낸 후,
-// 실제로 화면 표시하는 경우에 호출한다.
-//---------------------------------------------------------------------------
-extern  int  WsDrawFlip(void);
-
-//---------------------------------------------------------------------------
-// SetPalette 하˚렛의 설정
-// 인수 Index		:하˚렛의 인테″크스
-// 인수 PalData		:16 bit諫˚렛 포맷에 의한 상위, 하위하″이트테″타
-// 반치없음
-//
-// 16 bit諫˚렛트히″트포맛트는, xxxxRRRRGGGGBBBB
-// 하˚렛트인테″크스는 최대 512(16烱″락×16謎코트″×2艱″실)까지
-//---------------------------------------------------------------------------
-extern  void  SetPalette(int Index, byte PalData);
-
-//---------------------------------------------------------------------------
-// WsDrawClear 화면의 클리어
-// 인수 없음
-// 반치없음
-//
-// 클라이언트 영역을 후″락으로 묘화 한다.
-//---------------------------------------------------------------------------
-extern  void  WsDrawClear(void);
-
-//---------------------------------------------------------------------------
-// GetLine CRT 묘화 라인 취득
-// 인수 없음
-// 반치 int CRT 묘화 라인
-//
-//---------------------------------------------------------------------------
-extern  int  GetLine(void);
-extern  int  VSWStart(void);
+extern  void  	SetPalette(int Index, byte PalData);
 
 #endif

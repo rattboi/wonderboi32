@@ -20,6 +20,7 @@
 #include "unzip.h"
 
 #include "WSDraw.h"
+#include "WS.h"
 
 #include "types.h"
 
@@ -34,6 +35,8 @@ extern int vert;
 ubyte *base_rom;
 uint32 romSize;
 char ws_file[256];
+char basename[256];
+char SaveName[256];
 
 stMenu main_menu;
 stMenu statesconfig_menu;
@@ -202,7 +205,7 @@ void Emulate()
 	
 	SetDrawMode(videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected);
 
-//	fSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected << 1);
+	FrameSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected << 1);
 
 //	if (forcemode == FORCEMODE_BW)
 //			ws_gpu_forceMonoSystem();
@@ -228,7 +231,7 @@ void Emulate()
 
 	GpSurfaceSet(&gtSurface[giSurface]);
 	
-//	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = fSkip >> 1;
+	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = FrameSkip >> 1;
 	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = GetDrawMode();
 	
 	setCpuSpeed(66);
@@ -318,18 +321,32 @@ int	LoadConfig(char *configPath)
 
 	return(1);
 }
+void GetBaseName(char *fname, char *basename)
+{
+	char *pext;
 
+	GPSTRCPY(basename,fname);
+
+	pext = (char*)yo_strrchr(basename, '.'); 	// cut off extension of filename (for use with save states and config files)
+	*pext = '\0';
+	
+	pext = (char*)yo_strrchr(basename, '\\');
+	
+	if (pext)
+		GPSTRCPY(basename,pext+1);
+
+	return;
+}
 void GpMain(void *arg)
 {
 	int i;
+	int first_run = 1;
 	char fname[256];
 	char debugstring[512];
 	char g_string[256];
 	int result;
 	int running = 0;							// set to 1 if a rom is loaded
 	F_HANDLE F;
-
-	char *pext;
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
@@ -352,7 +369,7 @@ void GpMain(void *arg)
 	GpDirCreate("gp:\\GPMM\\WB32", NOT_IF_EXIST);
 	GpDirCreate("gp:\\GPMM\\WB32\\SAV",NOT_IF_EXIST);
 	GpDirCreate("gp:\\GPMM\\WB32\\CFG",NOT_IF_EXIST);
-	GpDirCreate("gp:\\GPMM\\WB32\\SRAM",NOT_IF_EXIST);
+	GpDirCreate("gp:\\GPMM\\WB32\\RAM",NOT_IF_EXIST);
 	GpDirCreate("gp:\\GPMM\\WB32\\ROM",NOT_IF_EXIST);
 
 	base_rom = NULL;
@@ -368,7 +385,13 @@ void GpMain(void *arg)
 	fill_horz_keys_menu(&horz_keys_menu);
 	fill_vert_keys_menu(&vert_keys_menu);
 
-//	WsInputInit();
+	result = GpFileOpen("gp:\\GPMM\\WB32\\CFG\\DEFAULT.CFG",OPEN_R, &F);
+	
+	if (result == SM_OK)
+	{
+		GpFileClose(F);
+		LoadConfig("gp:\\GPMM\\WB32\\CFG\\DEFAULT.CFG");
+	}
 	
     result = MENU_MAIN_LOAD_ROM; // start by loading a ROM
     
@@ -390,16 +413,13 @@ void GpMain(void *arg)
 					WsRelease();
 				}
 									
-//				setCpuSpeed(132);
-
 				if (!LoadRom(fname))
 				{
 					PrintError("Error Loading File!", 1);
-					GpAppExit();
+//					GpAppExit();
+					break;
 				}
 
-//				setCpuSpeed(66);
-				
 				WsCreate(base_rom, romSize);
 				
 				vert = rotated();
@@ -412,28 +432,22 @@ void GpMain(void *arg)
 				else
 					WsInputInit(0);
 				
-				pext = (char*)yo_strrchr(fname, '.'); 	// cut off extension of filename (for use with save states and config files)
-				*pext = '\0';
-				
-				pext = (char*)yo_strrchr(fname, '\\');
-				if (pext)
-					GPSTRCPY(fname,pext+1);
+				GetBaseName(fname, basename);
 
-/*
-				GPSPRINTF(g_string, "gp:\\GPMM\\WB32\\SRAM\\%s.srm",fname); // sram save = filename.srm
+				GPSPRINTF(SaveName, "gp:\\GPMM\\WB32\\RAM\\%s.ram",basename); // ram save = filename.ram
+
+				PrintMessage(SaveName, 0);
 				
-				result = GpFileOpen(g_string,OPEN_R, &F);
-				
+				result = GpFileOpen(SaveName,OPEN_R, &F);
+	
 				if (result == SM_OK)
 				{
 					GpFileClose(F);
-					ws_sram_load(g_string);
-					PrintMessage("Loading SRAM...",0);
-					ws_sram_dirty = 0;
+					PrintMessage("Loading RAM...",0);
+					WsLoadRam(SaveName);
 				}
 
-*/			
-				GPSPRINTF(g_string, "gp:\\GPMM\\WB32\\CFG\\%s.cfg", fname); // config = filename.cfg
+				GPSPRINTF(g_string, "gp:\\GPMM\\WB32\\CFG\\%s.cfg", basename); // config = filename.cfg
 				
 				result = GpFileOpen(g_string,OPEN_R, &F);
 	
@@ -443,6 +457,7 @@ void GpMain(void *arg)
 					LoadConfig(g_string);
 				}
 
+				first_run = 1;
 				running = 1;							// rom was loaded, so set to 1
 				
 			} // Fall through and reset, then emulate
@@ -450,15 +465,15 @@ void GpMain(void *arg)
 			{
 				if (running != 1)
 					break;
-/*
-				if (ws_sram_dirty == 1)
+					
+				if (first_run == 0)
 				{
-					ws_sram_dirty = 0;
-					GPSPRINTF(g_string, "gp:\\GPMM\\WB32\\SRAM\\%s.srm",fname); // sram save = filename.srm
-					PrintMessage("Saving SRAM...",0);
-					ws_sram_save(g_string);
+					GPSPRINTF(SaveName, "gp:\\GPMM\\WB32\\RAM\\%s.ram", basename); // ram save = filename.ram
+					PrintMessage("Saving RAM...",0);
+					WsSaveRam(SaveName);
 				}
-*/
+
+				first_run = 0;
 				
 				WsReset();
 			} // Fall through and emulate
@@ -477,7 +492,7 @@ void GpMain(void *arg)
 				GpAppExit();									// reboot GP32
 			}
 			break;
-/*		case MENU_MAIN_CONFIG_STATES:
+		case MENU_MAIN_CONFIG_STATES:
 			{
 				result = run_menu(&statesconfig_menu);
 				
@@ -490,8 +505,8 @@ void GpMain(void *arg)
 						if (running != 1)						// can't load state if no rom is loaded
 							break;
 
-						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", fname, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
-						ws_loadState(stateName);						// load the state data
+						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
+						WsLoadState(stateName);						// load the state data
 
 						Emulate();										// run
 					}
@@ -503,8 +518,8 @@ void GpMain(void *arg)
 						if (running != 1)							// can't save state if no rom is loaded
 							break;
 
-						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", fname, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
-						ws_saveState(stateName);
+						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
+						WsSaveState(stateName);
 						
 						Emulate();										// run
 					}
@@ -512,8 +527,6 @@ void GpMain(void *arg)
 				}
 			}
 			break;
-*/
-			
 		case MENU_MAIN_CONFIG_VIDEO:
 			{
 				result = 0;
@@ -588,7 +601,7 @@ void GpMain(void *arg)
 				if (running == 0)
 					break;
 
-				GPSPRINTF(g_string,"gp:\\GPMM\\WB32\\CFG\\%s.cfg",fname);
+				GPSPRINTF(g_string,"gp:\\GPMM\\WB32\\CFG\\%s.cfg",basename);
 				
 				main_menu.selected = MENU_MAIN_CPUSPEED;
 				SaveConfig(g_string);

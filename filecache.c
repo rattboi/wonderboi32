@@ -147,6 +147,7 @@ int fs_loadgame(char *dir, char *name, unsigned long *filesize, unsigned long *C
 
 			GpFileOpen(filename, OPEN_R, &file);
 			GpFileRead(file, (void *)&MyGame[0], MyGameSize, &MyGameSize);
+				
 			GpFileClose(file);
 
 			for(CRC=i=0;i<MyGameSize;i++)

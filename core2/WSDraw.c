@@ -21,14 +21,11 @@
 
 #define RGB555(R,G,B) ((((int)(R))<<11)|(((int)(G))<<6)|(((int)(B))<<1))
 
-//---------------------------------------------------------------------------
-// DirectX 하″시″3 이상으로 확인 이 끝난 상태 하″시″2 에서도 동작 가능
-//---------------------------------------------------------------------------
-int DrawMode=-1;							// 묘화 수평 수직 모트″
-int PixelDepth;							// 히˚쿠셀 당의 하″실수
+int DrawMode=-1;
+int PixelDepth;
 
-byte ColTbl[0x210];						// 하˚렛트테″타(16+1후″락, 16쒸트, 2艱″실)
-byte Palette[16+1][16][4];				// 하˚렛(16+1후″락, 16쒸트, 4艱″실)
+byte ColTbl[0x210];
+byte Palette[16+1][16][4];
 
 uint16 screenbuffer[(224+16)*144];
 
@@ -53,14 +50,6 @@ byte SprTMap[512];						// 스후˚라이트의 타이르맛후˚
 byte *BGndTPal=NULL;					// 하″크크″라운트″의 타일하˚렛호˚인터
 byte *WndTPal=NULL;						// 윈트″우의 타일하˚렛호˚인터
 
-//---------------------------------------------------------------------------
-// RefreshLine 1旒인 묘화
-// 인수 Line		:묘화 라인의 Y좌표(0∼143)
-// 인수 lpSurface	:하″크서페스의 메모리호˚인터
-// 반치없음
-//
-// GB의 HBlank시에 1旒인을 하″크서페스에 묘화 한다.
-//---------------------------------------------------------------------------
 void  RefreshLine(int Line, void* lpSurface);
 void  DrawErr(char* Msg);
 
@@ -109,11 +98,7 @@ int  WsDrawLine(int Line)
 {
     int result;
 
-//    byte buf[(224+16)*4];
-
     RefreshLine(Line, &screenbuffer[(224+16)*Line]);
-
-	// Draw buffer here
 
     return 0;
 }
@@ -1303,55 +1288,6 @@ void  DrawErr(char* Msg)
 {
 //	MessageBox(NULL, Msg,"WsDraw닝라", MB_ICONEXCLAMATION|MB_OK);
 }
-
-//---------------------------------------------------------------------------
-
-// I have no idea what this is for 
-
-/*
-int MaxLine=0;
-int DrawLine=0;
-int VSW=0;
-
-
-int  GetLine(void)
-{
-	int i;
-	static int j;
-
-	if(lpDD->GetScanLine(&i) ==DD_OK)
-    {
-		DrawLine=(int) i;
-    }
-    if(DrawLine<j)
-    {
-    	j-=MaxLine;
-    }
-    VSW+=DrawLine-j;
-    j=DrawLine;
-
-    if(DrawLine>MaxLine)
-    {
-    	MaxLine=DrawLine;
-    }
-    return DrawLine;
-}
-
-//---------------------------------------------------------------------------
-extern "C" int  VSWStart(void)
-{
-	int i;
-	GetLine();
-    i=VSW;
-	VSW=0;
-    return i;
-}
-
-//---------------------------------------------------------------------------
-
-
-
-*/
 
 
 

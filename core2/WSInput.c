@@ -8,6 +8,7 @@
 #include <gpfont.h>
 
 #include "WSInput.h"
+#include "WS.h"
 #include "WSHard.h"
 
 #include "../menu.h"
@@ -126,24 +127,24 @@ int DoKeys(uint16 *state)
 			WsInputInit(DrawMode == 3);
 			selectPressed = 1;
 		}
-/*
+
 		if ((ExKey & GPC_VK_LEFT)  && !(LastKey & GPC_VK_LEFT)) // select + LEFT
 		{
-			if (fSkip == 0)
-				fSkip = 12;
-			fSkip -= 2;
+			if (FrameSkip == 0)
+				FrameSkip = 12;
+			FrameSkip -= 2;
 
 			selectPressed = 1;
 		}
 				
 		if ((ExKey & GPC_VK_RIGHT)  && !(LastKey & GPC_VK_RIGHT)) // select + LEFT
 		{
-			fSkip += 2;
-			fSkip %= 12;
+			FrameSkip += 2;
+			FrameSkip %= 12;
 
 			selectPressed = 1;
 		}
-*/
+
 		if (!(ExKey & GPC_VK_START) && (LastKey & GPC_VK_START)) // select + start (stopped pressing)
 		{
 			GpAppExit();									// reboot GP32

@@ -14,7 +14,6 @@
 #include "WSInput.h"
 #include "WSSound.h"
 
-
 #include "necintrf.h"
 
 //#define SOUND_DEBUG
@@ -25,12 +24,18 @@
 int SoundOn[7]={1,1,1,1,1,1,1};
 int FrameSkip=4;
 int SkipCnt=0;
-int TblSkip[5][5]={
-    {1,1,1,1,1},
-    {0,1,1,1,1},
-    {0,1,0,1,1},
-    {0,0,1,0,1},
-    {0,0,0,0,1},
+int TblSkip[11][10]={
+    {1,1,1,1,1,1,1,1,1,1},
+    {0,1,1,1,1,1,1,1,1,1},
+    {0,1,1,1,1,0,1,1,1,1},
+    {0,1,1,0,1,1,1,0,1,1},
+    {0,1,1,0,1,1,0,1,1,0},
+    {0,1,0,1,0,1,0,1,0,1},
+    {0,1,0,0,1,0,1,0,1,0},
+    {1,0,0,1,0,0,1,0,0,0},
+    {0,0,0,0,1,0,0,0,0,1},
+    {0,0,0,0,1,0,0,0,0,0},
+    {0,0,0,0,1,0,0,0,0,0},
 };
 
 int vert;
@@ -41,8 +46,8 @@ void ErrorMsg(char *Msg)
     int i=nec_get_reg(NEC_CS)<<4;
     int j=nec_get_reg(NEC_IP);
 
-//	GPSPRINTF(str,"%s %06X", Msg, i+j);
-//    // MessageBox(NULL, str,"경고", MB_OK);
+	GPSPRINTF(str,"%s %06X", Msg, i+j);
+    PrintMessage(str,1);
     return;
 }
 
@@ -61,16 +66,17 @@ struct WORD2CPTR
 byte *Page[16];				//리트″아트″Respond 공간 0 x10000 단위
 byte IRAM[0x10000];			// 내장 RAM 공간의 64kB
 byte MemDummy[0x10000];		// 더미 공간의 64kB
-byte IO[0x10000];			// IO포토 에리어
+byte IO[0x100];			// IO포토 에리어
+WsRomHeader *WsromHeader;
 
 #define CK_EEP 0x00000001
 int CartKind;
 
-byte *ROMMap[0x100];		// C-ROM艱″크 번호에 대한 C-ROM의 호˚인터(1024까지 사호˚트)
-int ROMBanks;				// C-ROM艱″크 번호의 최대치
+byte *ROMMap[0x100];		// table of ROM banks
+int ROMBanks;				// # of banks of ROM (up to 256)
 const static struct BYTE2INT ROMBanksTable[] = {
-	{0x01, 8},				// [Last-6] C-ROM뺘의자″코트″
-	{0x01, 8},				// [Last-6] C-ROM뺘의자″코트″
+	{0x01, 8},				// [header 3] identifies the size of the ROM (# of banks)
+	{0x01, 8},				
 	{0x02, 8},
 	{0x03, 16},
 	{0x04, 32},
@@ -80,20 +86,22 @@ const static struct BYTE2INT ROMBanksTable[] = {
 	{NULL, NULL}
 };
 
-byte *RAMMap[0x100];		// C-RAM艱″크 번호에 대한 C-RAM의 호˚인터(1024까지 사호˚트)
-int RAMBanks;				// C-RAM艱″크 번호의 최대치
-int RAMSize;				// C-RAM의 최대치
+byte SRAM[0x10000];		// Holds map of all SAVE RAM banks (only one entry ever)
+int RAMSize;				// Size of Save Ram
 int RAMEnable;
+
+/*
 const static struct BYTE2INT RAMBanksTable[] = {
-	{0x01, 1},				// [Last-5] C-RAM뺘의자″코트″
+	{0x01, 1},				// [Header 4] identifies RAM type and size
 	{0x02, 1},
 	{0x10, 1},
 	{0x20, 1},
 	{NULL, NULL}
 };
+*/
 
 const static struct BYTE2INT RAMSizeTable[] = {
-	{0x01, 0x2000},			// [Last-5] C-RAM뺘의자″코트″
+	{0x01, 0x2000},			// [Header 4] identifies RAM type and size
 	{0x02, 0x8000},
 	{0x10, 0x80},
 	{0x20, 0x800},
@@ -117,8 +125,6 @@ byte MonoColor[8];
 uint16 JoyState = 0x0000;		// Joystick state: B.A.START.OPTION.X4.X3.X2.X1.Y4.Y3.Y2.Y1
 
 int WaveMap;
-
-int DrawSkip;
 
 char str[128];
 
@@ -242,12 +248,9 @@ void  WriteMem(unsigned int A, byte V)
 	(*WriteMemFnTable[(A>>16) &0x0F])(A, (byte) V);
 }
 
-//typedef void  (*WriteMemFn) (unsigned int A, byte V);
-
 static void WriteRom(unsigned A, byte V)
 {
-//	if(Verbose)
-//	ErrorMsg("ROM닢리어 기입 위반");
+
 }
 
 static void WriteIRam(unsigned A, byte V)
@@ -734,8 +737,10 @@ LogFile(LK_SOUND, str);
     				Page[0xF]=ROMMap[0xF|j];
 					break;
 		case 0xC1:
-					if(V>=RAMBanks) RAMEnable=0;
-					else Page[1]=RAMMap[V];
+//					if(V>=RAMBanks) RAMEnable=0;
+//					else Page[1]=SRAM;
+					if(RAMEnable)
+						Page[1]=SRAM;
 					break;
 		case 0xC2:
 					Page[2]=ROMMap[V];
@@ -816,12 +821,12 @@ void WsReset (void)
 	if(CartKind&CK_EEP)
 	{
     	Page[0x1]=MemDummy;
-		sCEep.pData=RAMMap[0x00];
+		sCEep.pData=SRAM;
 		sCEep.WrEnable=0;
 	}
 	else
 	{
-    	Page[0x1]=RAMMap[0x00];
+    	Page[0x1]=SRAM;
 		sCEep.pData=NULL;
 		sCEep.WrEnable=0;
 	}
@@ -926,35 +931,31 @@ void WsReset (void)
     IRAM[0x75B3]=0x31;
 }
 
-int WsCreate(ubyte *RomBase, uint32 romSize)
+WsRomHeader	*WsRomGetHeader(uint8 *wsrom, uint32 wsromSize)
+{
+	WsRomHeader *wsromHeader=(WsRomHeader *)GPMALLOC(sizeof(WsRomHeader));
+
+	GPMEMCPY(wsromHeader,wsrom+(wsromSize-10),10);
+	return(wsromHeader);
+}
+
+int WsCreate(uint8 *RomBase, uint32 romSize)
 {
 	int Checksum, i, j;
-	F_HANDLE file;
-//	ulong	sizeread;
-    byte b, buf[10];
+    uint8 b;
 
 	char debugstring[512];
-
-//	GPSPRINTF(debugstring, "Entering WsCreate");
-//	PrintMessage(debugstring,1);
 
 	for(i=0;i<0x100;i++)
 	{
 		ROMMap[i]=MemDummy;
-		RAMMap[i]=MemDummy;
+//		RAMMap[i]=MemDummy;
 	}
 
 	GPMEMSET(IRAM, 0, sizeof(IRAM));
 	GPMEMSET(MemDummy, 0xFF, sizeof(MemDummy));
 	GPMEMSET(IO, 0, sizeof(IO));
 
-//	GPSPRINTF(debugstring, "After MEMSET");
-//	PrintMessage(debugstring,1);
-	
-//	GPSTRCPY(debugstring,CartName);
-//	PrintMessage(debugstring,0);
-
-//	if(GpFileOpen(CartName, OPEN_R, &file)!=SM_OK)
 	if(RomBase == NULL)
 	{
 		GPSPRINTF(debugstring, "RomBase = NULL");
@@ -962,25 +963,14 @@ int WsCreate(ubyte *RomBase, uint32 romSize)
 		return -1;
 	}
 
-//	GpFileSeek (file, FROM_END, -10, NULL);
+	WsromHeader = WsRomGetHeader(RomBase,romSize);
 
-//	GpFileRead(file, (void *)buf, 10, &sizeread);
-
-//	GPSPRINTF(debugstring,"buffer read = %d", sizeread);
-//	PrintMessage(debugstring,0);
-
-//	if(sizeread!=10)
-//	{
-		// MessageBox(NULL,"파일을 읽을 수 없습니다","에러", MB_ICONEXCLAMATION | MB_OK);
-//		return -1;
-//	}
-
-	GPMEMCPY(buf, &RomBase[romSize-10], 10); // Copy header to buffer
-	
 	CartKind=0;
 
-	b=buf[4];
+	b = WsromHeader->romSize;
+	
 	ROMBanks=0;
+	
 	for(i=0;!ROMBanks && ROMBanksTable[i].Value;i++)
 	{
 		if(b==ROMBanksTable[i].Code)
@@ -995,30 +985,17 @@ int WsCreate(ubyte *RomBase, uint32 romSize)
 		return -1;
 	}
 
-//	GPSPRINTF(debugstring,"ROMBanks = %d", ROMBanks);
-//	PrintMessage(debugstring,1);
-
-	b=buf[5];
-	RAMBanks=0;
+	b = WsromHeader->ramSize;
 	RAMSize=0;
-	for(i=0;!RAMBanks && RAMBanksTable[i].Value;i++)
-	{
-		if(b==RAMBanksTable[i].Code)
-		{
-			RAMBanks=RAMBanksTable[i].Value;
-		}
-	}
 
 	for(i=0;!RAMSize && RAMSizeTable[i].Value;i++)
 	{
 		if(b==RAMSizeTable[i].Code)
 		{
 			RAMSize=RAMSizeTable[i].Value;
+			RAMEnable = 1;
 		}
 	}
-
-//	GPSPRINTF(debugstring,"RAMBanks =  %d", RAMBanks);
-//	PrintMessage(debugstring,1);
 
 	for(i=0;!(CartKind&CK_EEP) && RAMKindTable[i]. Value;i++)
 	{
@@ -1028,127 +1005,254 @@ int WsCreate(ubyte *RomBase, uint32 romSize)
 		}
 	}
 
-//	GPSPRINTF(debugstring,"CartKind = %d", CartKind);
-//	PrintMessage(debugstring,1);
-
-    if((buf[0]==0x01)&&(buf[2]==0x16)) //STAR HEARTS ∼별과 다이치의 사자∼
+    if((WsromHeader->developerId==0x01)&&(WsromHeader->cartId==0x16)) //STAR HEARTS ∼별과 다이치의 사자∼
     {
-//		if(Verbose)
-// 			MessageBox(NULL,"256k SRAM에 변경합니다","경고", MB_ICONEXCLAMATION | MB_OK);
-        RAMBanks=1;
         RAMSize=0x8000;
         CartKind=NULL;
     }
 
-	Checksum=(int)((buf[9]<<8)+buf[8]);
-	Checksum+=(int)(buf[9]+buf[8]);
-
 	for(i=ROMBanks-1;i>=0;i--)
 	{
 		ROMMap[0x100-ROMBanks+i] = &RomBase[0x10000 * i];
-/*		GpFileSeek (file, FROM_END, (ROMBanks-i)* -0x10000, NULL);
-
-		if((ROMMap[0x100-ROMBanks+i]=(byte*) GPMALLOC(0x10000))!=NULL)
-		{
-			GpFileRead(file, (void *)ROMMap[0x100-ROMBanks+i], 0x10000, &sizeread);
-			if(sizeread==0x10000)
-			{
-				for(j=0;j<0x10000;j++)
-				{
-					Checksum-=ROMMap[0x100-ROMBanks+i][j];
-				}
-			}
-			else
-			{
-				// MessageBox(NULL,"파일을 읽을 수 없습니다","에러", MB_ICONEXCLAMATION | MB_OK);
-				break;
-			}
-		}
-		else
-		{
-			// MessageBox(NULL,"메모리가 충분하지 않습니다","에러", MB_ICONEXCLAMATION | MB_OK);
-			break;
-		}
-*/
 	}
-//	fclose(F);
 
-	if(i>=0)
+	GPMEMSET(SRAM,0x00,0x10000);
+	
+	WsReset ();
+
+	return 0;
+}
+
+#define MacroStoreNecRegisterToMem(M,R)        \
+		M->R = nec_get_reg(R);
+
+void saveStateToMem(gameState *tempState)
+{
+	MacroStoreNecRegisterToMem(tempState,NEC_IP);
+	MacroStoreNecRegisterToMem(tempState,NEC_AW);
+	MacroStoreNecRegisterToMem(tempState,NEC_BW);
+	MacroStoreNecRegisterToMem(tempState,NEC_CW);
+	MacroStoreNecRegisterToMem(tempState,NEC_DW);
+	MacroStoreNecRegisterToMem(tempState,NEC_CS);
+	MacroStoreNecRegisterToMem(tempState,NEC_DS);
+	MacroStoreNecRegisterToMem(tempState,NEC_ES);
+	MacroStoreNecRegisterToMem(tempState,NEC_SS);
+	MacroStoreNecRegisterToMem(tempState,NEC_IX);
+	MacroStoreNecRegisterToMem(tempState,NEC_IY);
+	MacroStoreNecRegisterToMem(tempState,NEC_BP);
+	MacroStoreNecRegisterToMem(tempState,NEC_SP);
+	MacroStoreNecRegisterToMem(tempState,NEC_FLAGS);
+	MacroStoreNecRegisterToMem(tempState,NEC_VECTOR);
+	MacroStoreNecRegisterToMem(tempState,NEC_PENDING);
+	MacroStoreNecRegisterToMem(tempState,NEC_NMI_STATE);
+	MacroStoreNecRegisterToMem(tempState,NEC_IRQ_STATE);
+
+	GPMEMCPY(tempState->IRAM,		IRAM,		0x10000);
+	GPMEMCPY(tempState->SRAM,		SRAM,		0x10000);
+	GPMEMCPY(tempState->IORam,		IO,			0x00100);
+	GPMEMCPY(tempState->MonoColor,	MonoColor,	8);
+	GPMEMCPY(tempState->ColTbl,		ColTbl,		0x210);
+	GPMEMCPY(tempState->Palette,	Palette,	(16+1)*16*4);
+
+	tempState->RSTRL = RSTRL;
+}
+
+#define MacroLoadNecRegisterFromMem(M,R)        \
+	    nec_set_reg(R,M->R);
+
+void loadStateFromMem(gameState *tempState)
+{
+
+	MacroLoadNecRegisterFromMem(tempState,NEC_IP);
+	MacroLoadNecRegisterFromMem(tempState,NEC_AW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_BW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_CW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_DW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_CS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_DS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_ES);
+	MacroLoadNecRegisterFromMem(tempState,NEC_SS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_IX);
+	MacroLoadNecRegisterFromMem(tempState,NEC_IY);
+	MacroLoadNecRegisterFromMem(tempState,NEC_BP);
+	MacroLoadNecRegisterFromMem(tempState,NEC_SP);
+	MacroLoadNecRegisterFromMem(tempState,NEC_FLAGS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_VECTOR);
+	MacroLoadNecRegisterFromMem(tempState,NEC_PENDING);
+	MacroLoadNecRegisterFromMem(tempState,NEC_NMI_STATE);
+	MacroLoadNecRegisterFromMem(tempState,NEC_IRQ_STATE);
+
+	GPMEMCPY(IRAM,		tempState->IRAM,		0x10000);
+	GPMEMCPY(SRAM,		tempState->SRAM,		0x10000);
+	GPMEMCPY(IO,		tempState->IORam,		0x00100);
+	GPMEMCPY(MonoColor,	tempState->MonoColor,	8);
+	GPMEMCPY(ColTbl,	tempState->ColTbl,		0x210);
+	GPMEMCPY(Palette,	tempState->Palette,		(16+1)*16*4);
+
+	RSTRL = tempState->RSTRL;
+}
+
+int	WsSaveState(char *statepath)
+{
+	F_HANDLE F;
+	uint32 result;
+//	uint16	crc=memory_getRomCrc();
+	unsigned	value;
+	char		newPath[1024];
+	gameState	*saveState;
+	
+	GPSPRINTF(newPath,"%s",statepath);
+
+	result=GpFileCreate(newPath,ALWAYS_CREATE,&F);
+
+	if (result==SM_OK)
 	{
-		return -1;
-	}
-	if(Checksum&0xFFFF)
-	{
-		//if(Verbose)
-		// MessageBox(NULL,"합계 검사 에러","에러", MB_ICONEXCLAMATION | MB_OK);
-	}
+		saveState = GPMALLOC(sizeof(gameState));
 
-	if(RAMBanks)
-	{
-		for(i=0;i<RAMBanks;i++)
+		if (saveState != NULL)
 		{
-			if((RAMMap[i]=(byte*)GPMALLOC(0x10000))!=NULL)
-			{
-				GPMEMSET(RAMMap[i],0x00,0x10000);
-			}
-			else
-			{
-				// MessageBox(NULL,"메모리가 충분하지 않습니다","에러",MB_ICONEXCLAMATION | MB_OK);
-				return -1;
-			}
+			saveStateToMem(saveState);
+//			GpFileWrite(F,&crc,sizeof(crc));
+			GpFileWrite(F,saveState,sizeof(gameState));
 		}
-	}
-
-	if(RAMSize)
-    {
-		/*
-    	AnsiString _SaveName(CartName);
-    	AnsiString str;
-
-    	_SaveName.Delete(_SaveName.LastDelimiter("."),4);
-		_SaveName+=".sav";
-		strncpy (SaveName,_SaveName.c_str(),512);
-    	if((F=fopen(SaveName,"rb"))!=NULL)
-        {
-			for(i=0;i<RAMBanks;i++)
-			{
-				if(RAMSize<0x10000)
-				{
-            		if(fread(RAMMap[i],1,RAMSize,F)!=(size_t)RAMSize)
-            		{
-						fclose(F);
-						// MessageBox(NULL,"세이프″파일이 이상","에러",MB_ICONEXCLAMATION | MB_OK);
-						return -1;
-            		}
-				}
-				else
-				{
-            		if(fread(RAMMap[i],1,0x10000,F)!=0x10000)
-            		{
-						fclose(F);
-						// MessageBox(NULL,"세이프″파일이 이상","에러",MB_ICONEXCLAMATION | MB_OK);
-						return -1;
-            		}
-				}
-			}
-            fclose(F);
-		}
-		*/
+		GpFileClose(F);
 	}
 	else
 	{
-		SaveName[0]='\0';
+//		PrintError("Error Saving\nIs WB32\\SAV directory created?",0);
+//		Delay(1000);
 	}
 
-//	GPSPRINTF(debugstring,"before WsReset()");
-//	PrintMessage(debugstring,0);
+	return(1);
+}
 
-	WsReset ();
+////////////////////////////////////////////////////////////////////////////////
+//
+////////////////////////////////////////////////////////////////////////////////
+//
+//
+//
+//
+//
+//
+//
+////////////////////////////////////////////////////////////////////////////////
+#define MacroLoadNecRegisterFromFile(F,R)        \
+		GpFileRead(F,&value,sizeof(value),&sizeread);		\
+	    nec_set_reg(R,value);
 
-//	GPSPRINTF(debugstring,"after WsReset()");
-//	PrintMessage(debugstring,1);
+int	WsLoadState(char *statepath)
+{
+	F_HANDLE F;
+	uint32 result;
+	ulong sizeread;
 
-	return 0;
+//	uint16	crc=memory_getRomCrc();
+	uint16	newCrc;
+	unsigned	value;
+
+	gameState	*saveState;
+
+	result = GpFileOpen(statepath,OPEN_R, &F);
+	
+	if (result != SM_OK)
+		return(-1);
+
+//	GpFileRead(F, &newCrc, sizeof(newCrc), &sizeread);
+
+//	if (newCrc!=crc)
+//	{
+//		GpFileClose(F);
+//		return(-1);
+//	}
+
+	saveState	=	GPMALLOC(sizeof(gameState));
+
+	if (saveState == NULL)
+	{
+		GpFileClose(F);
+		return(-1);
+	}
+
+	GpFileRead(F, saveState, sizeof(gameState), &sizeread);
+	GpFileClose(F);
+
+	loadStateFromMem(saveState);
+
+	// force a video mode change to make all tiles dirty
+	//	ws_gpu_clearCache();
+	return(1);
+}
+
+void WsSaveRam(char *SaveName)
+{
+	ERR_CODE 	result;
+	F_HANDLE	F;
+	int 		i;
+
+	if(SaveName[0]!='\0' && RAMSize)
+	{
+		result=GpFileCreate(SaveName,ALWAYS_CREATE,&F);
+		
+		if (result==SM_OK)
+		{
+//			for(i=0;i<RAMBanks;i++)
+//			{
+				if(RAMSize<0x10000)
+				{	
+	          		GpFileWrite(F, SRAM,RAMSize);
+				}
+				else
+				{
+	          		GpFileWrite(F, SRAM,0x10000);
+				}
+//			}
+			GpFileClose(F);
+		}
+	}
+}
+
+int WsLoadRam(char *SaveName)
+{
+	ERR_CODE 	result;
+	F_HANDLE	F;
+	ulong 		sizeread;
+	int 		i;
+	char 		debugstring[512];
+	
+    result = GpFileOpen(SaveName,OPEN_R, &F);
+
+	if(result == SM_OK)
+    {
+//		for(i=0;i<RAMBanks;i++)
+//		{
+			if(RAMSize<0x10000)
+			{
+				GpFileRead(F, SRAM,RAMSize,&sizeread);
+				
+        		if(sizeread != RAMSize)
+        		{
+					GpFileClose(F);
+					PrintMessage("ERROR: sizeread != RAMSIZE (< 0x10000)",1);
+					// MessageBox(NULL,"세이프″파일이 이상","에러",MB_ICONEXCLAMATION | MB_OK);
+					return -1;
+        		}
+			}
+			else
+			{
+				GpFileRead(F, SRAM,0x10000,&sizeread);
+				
+        		if(sizeread != 0x10000)
+        		{
+					GpFileClose(F);
+					PrintMessage("ERROR: sizeread != RAMSIZE (0x10000)",1);
+					// MessageBox(NULL,"세이프″파일이 이상","에러",MB_ICONEXCLAMATION | MB_OK);
+					return -1;
+        		}
+			}
+//		}
+		GpFileClose(F);
+	}
 }
 
 void WsRelease(void)
@@ -1157,32 +1261,10 @@ void WsRelease(void)
 	int i;
 
 //    WsSoundStop(4);
-//	if(SaveName[0]!='\0')
-//	{
-//
-//		if((F=fopen(SaveName,"wb"))!=NULL)
-//		{
-			for(i=0;i<RAMBanks;i++)
-			{
-//				if(RAMSize<0x10000)
-//				{
-//          		if(fwrite(RAMMap[i],1,RAMSize,F)!=(size_t)RAMSize)
-//          		{
-//						break;
-//            		}
-//				}
-//				else
-//				{
-//            		if(fwrite(RAMMap[i],1,0x10000,F)!=0x10000)
-//            		{
-//						break;
-//            		}
-//				}
-				GPFREE(RAMMap[i]);
-			}
-//            fclose(F);
-//		}
-//	}
+
+//	for(i=0;i<RAMBanks;i++)
+//	if (RAMEnable)
+//		GPFREE(SRAM);
 
 	for(i=0xFF;i>=0;i--)
 	{
@@ -1190,7 +1272,6 @@ void WsRelease(void)
         {
         	break;
         }
-//		GPFREE(ROMMap[i]);
 		ROMMap[i]=MemDummy;
 	}
 }
@@ -1303,7 +1384,7 @@ LogFile(LK_SOUND, str);
                     SkipCnt--;
                     if(SkipCnt<0)
                     {
-                        SkipCnt=4;
+                        SkipCnt=9;
                     }
                 }
                 if(TblSkip[FrameSkip][SkipCnt])
