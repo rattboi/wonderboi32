@@ -1,3 +1,14 @@
+#include <gpstdlib.h>
+#include <gpstdio.h>
+#include <gpgraphic.h>
+#include <gpmain.h>
+#include <gpfont.h>
+
+#include "unzip.h"
+#include "crc.h"
+#include "goodwsx.h"
+
+#include "types.h"
 
 unsigned long	MyGameSize; 
 unsigned char	*MyGame; 
@@ -15,6 +26,8 @@ unsigned long	g_cnt_file = 0;						//number of files in current path
 
 F_HANDLE		g__file;
 
+char szRomName[255];
+
 void LoadPacked(int skip, int gz_size, int gz_crc)
 {
 	z_stream d_stream; /* decompression stream */
@@ -22,11 +35,11 @@ void LoadPacked(int skip, int gz_size, int gz_crc)
 
     {
 		unsigned long tt; 
-		int lsize=((int)(gm_availablesize()/65536))*65536;
+		int lsize=((int)(GPAVAILABLEMEM()/65536))*65536;
 
 		lsize=8192; //patch for low mem (<512k), used by fGB
 
-		temp=(void *)gm_malloc(lsize+256);  //extra bytes
+		temp=(void *)GPMALLOC(lsize+256);  //extra bytes
 
 		d_stream.zalloc = (alloc_func)0;
 		d_stream.zfree = (free_func)0;
@@ -54,7 +67,7 @@ void LoadPacked(int skip, int gz_size, int gz_crc)
 
 		MyGameSize=gz_size;
 
-		gm_free(temp);
+		GPFREE(temp);
     }
     
     for(CRC=i=0;i<MyGameSize;i++) GetCRC(MyGame[i]);
@@ -87,7 +100,7 @@ void fs_add(char type,unsigned short entry,char *file,unsigned long offset)
 	ini.game[ini.num_games_in_ini].type=type;
 	ini.game[ini.num_games_in_ini].entry=entry;
 	ini.game[ini.num_games_in_ini].offset=offset;
-	gm_sprintf(ini.game[ini.num_games_in_ini].file,"%s",file);
+	GPSPRINTF(ini.game[ini.num_games_in_ini].file,"%s",file);
 	ini.game[ini.num_games_in_ini].file[12]='\0'; //force string
 
 	ini.num_games_in_ini++;
@@ -104,10 +117,10 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 	{
 		test=0;
 		force_type=ini.game[entry].type;
-		gm_sprintf(filename,"%s\\%s",dir,ini.game[entry].file);
+		GPSPRINTF(filename,"%s\\%s",dir,ini.game[entry].file);
 	}
 	else
-		gm_sprintf(filename,"%s\\%s",dir,name);  
+		GPSPRINTF(filename,"%s\\%s",dir,name);  
 
 	switch(force_type)
 	{
@@ -209,7 +222,7 @@ void fs_scanfile(char *dir, char *name)
 
 	MyGameSize=0;
 
-	gm_sprintf(filename,"%s\\%s",dir,name);
+	GPSPRINTF(filename,"%s\\%s",dir,name);
 
 	if(GpFileOpen(filename, OPEN_R, &file)!=SM_OK) return;
 	GpFileRead(file, (void *)&head[0], 4, &crc); //crc unused
@@ -276,7 +289,7 @@ void fs_write_ini(char *dir, char *name)
 	char filename[255]; F_HANDLE file; unsigned long size;
 	int i,j;
 
-	gm_sprintf(filename,"%s\\%s",dir,name);
+	GPSPRINTF(filename,"%s\\%s",dir,name);
 
 	if(GpFileCreate(filename, ALWAYS_CREATE, &file)!=SM_OK) 
 		return;
@@ -295,32 +308,32 @@ void fs_write_ini(char *dir, char *name)
 
 			if(ini.game[i].entry==65535) 
 			{
-				gm_sprintf(str1,ini.game[i].file);
+				GPSPRINTF(str1,ini.game[i].file);
 			}
 			else
 			{
-				gm_sprintf(str1,"%s",MyDat[ini.game[i].entry].name);
+				GPSPRINTF(str1,"%s",MyDat[ini.game[i].entry].name);
 			}
 
 			if(ini.game[j].entry==65535)
 			{
-				gm_sprintf(str2,ini.game[j].file);
+				GPSPRINTF(str2,ini.game[j].file);
 			}
 			else
 			{
-				gm_sprintf(str2,"%s",MyDat[ini.game[j].entry].name);
+				GPSPRINTF(str2,"%s",MyDat[ini.game[j].entry].name);
 			}
 
 			if(strcmp(str1,str2)>0)
 			{
-				gm_memcpy(&k,&ini.game[i],sizeof(ini_game));
-				gm_memcpy(&ini.game[i],&ini.game[j],sizeof(ini_game));
-				gm_memcpy(&ini.game[j],&k,sizeof(ini_game));
+				GPMEMCPY(&k,&ini.game[i],sizeof(ini_game));
+				GPMEMCPY(&ini.game[i],&ini.game[j],sizeof(ini_game));
+				GPMEMCPY(&ini.game[j],&k,sizeof(ini_game));
 			}
 		}
 	}
 
-	ini.version_ini=version_emu;
+	ini.version_ini=1;//version_emu;
 	size=sizeof(int)*2+sizeof(ini.game[0])*ini.num_games_in_ini;
 	GpFileWrite(file, (void *)&size, sizeof(unsigned long));
 	GpFileWrite(file, (void *)&ini, size);
@@ -334,9 +347,9 @@ int fs_read_ini(char *dir, char *name)
 	F_HANDLE file; 
 	unsigned long size,temp;
 
-	gm_memset(&ini,0,sizeof(ini));
+	GPMEMSET(&ini,0,sizeof(ini));
 
-	gm_sprintf(filename,"%s\\%s",dir,name);
+	GPSPRINTF(filename,"%s\\%s",dir,name);
 
 	if(GpFileOpen(filename, OPEN_R, &file)!=SM_OK) 
 		return 0;
@@ -357,43 +370,32 @@ void fs_scandir(char *dir, char *name)
 	int i;
 	char temp[255];
 
-	gm_sprintf(g_path_curr,"%s\\",dir);
+	GPSPRINTF(g_path_curr,"%s\\",dir);
 
 	// GpFatInit();
 
 	if(!fs_read_ini(dir,name))
 	{
-		if(ini.version_ini!=version_emu)
+		if(ini.version_ini!=1)//version_emu)
 		{
 			if(ini.version_ini==0)
-				gm_sprintf(temp,"Welcome!\nPress A for a new scanning");
+				GPSPRINTF(temp,"Welcome!\nPress A for a new scanning");
 			else
-				gm_sprintf(temp,"Another emulator version detected\nPress A to force a new scanning");
+				GPSPRINTF(temp,"Another emulator version detected\nPress A to force a new scanning");
 
-			DrawMessageC(temp);
-			FlipScreen(1,0);
-			DrawMessageC(temp);
-			FlipScreen(1,0);
-
-			while(GpKeyGet()&GPC_VK_FA); DelayA();
+			PrintMessage(temp,1);
 		}
 
-		DrawMessageC("Reading dir, please wait");
-		FlipScreen(1,0);
-		DrawMessageC("Reading dir, please wait");
-		FlipScreen(1,0);
+		PrintMessage("Reading dir, please wait",0);
 
 		GpDirEnumList(g_path_curr, 0, MAX_COUNT_FILE, (GPDIRENTRY*)&g_list_file, &g_cnt_file);
 
 		for(i=0;i<g_cnt_file;i++)
 		{
-			gm_sprintf(temp," Scanning file %04d/%04d (%03d%%) \n",i+1,g_cnt_file,(i+1)*100/g_cnt_file/*,g_list_file[i].name*/);
-			DrawMessageC(temp);
-			DrawPercentageBar(110, 130, i, 0, g_cnt_file-1);
-			FlipScreen(1,0);
-			DrawMessageC(temp);
-			DrawPercentageBar(110, 130, i, 0, g_cnt_file-1);
-			FlipScreen(1,0);
+			GPSPRINTF(temp," Scanning file %04d/%04d (%03d%%) \n",i+1,g_cnt_file,(i+1)*100/g_cnt_file/*,g_list_file[i].name*/);
+			PrintMessage(temp,0);
+//			DrawPercentageBar(110, 130, i, 0, g_cnt_file-1);
+//			FlipScreen(1,0);
 
 			fs_scanfile(dir,g_list_file[i].name);
 		}
@@ -416,7 +418,7 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 	GpClockSpeedChange(80000000 , 0x48012, 0);
 
-	while(choose==-1)
+/*	while(choose==-1)
 	{
 		static int pos=0, pause=0, touch=0; int max, key; //maxperscreen
 
@@ -437,18 +439,18 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 				if(i>=ini.num_games_in_ini)
 				{
-					gm_sprintf(pagetemp,"%s%c",page,i==pos+max-1?' ':'\n');
-					gm_sprintf(page,pagetemp);
+					GPSPRINTF(pagetemp,"%s%c",page,i==pos+max-1?' ':'\n');
+					GPSPRINTF(page,pagetemp);
 				}
 				else
 				{
 					if(ini.game[i].entry==65535)
-						gm_sprintf(datname,"%s (CRC unknown)",ini.game[i].file);
+						GPSPRINTF(datname,"%s (CRC unknown)",ini.game[i].file);
 					else
-						gm_sprintf(datname,"%s",MyDat[ini.game[i].entry].name); 
+						GPSPRINTF(datname,"%s",MyDat[ini.game[i].entry].name); 
 
 					{ //removes goodstuff [] (), but keeps version names
-						int h=gm_lstrlen(datname), last_c, last_o;
+						int h=GPSTRLEN(datname), last_c, last_o;
 
 						do
 						{ 
@@ -473,14 +475,14 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 					datname[50]='\0'; //cut name
 
-					gm_sprintf(pagetemp,"%s%04d. %c %-50s%c",page,i+1,i==pos?'>':' ',datname,i==pos+max-1?' ':'\n');
-					gm_sprintf(page,pagetemp);
+					GPSPRINTF(pagetemp,"%s%04d. %c %-50s%c",page,i+1,i==pos?'>':' ',datname,i==pos+max-1?' ':'\n');
+					GPSPRINTF(page,pagetemp);
 				}
 
 			}
 
-			gm_sprintf(pagetemp," %s\n\n%s",title,page);
-			gm_sprintf(page,pagetemp);
+			GPSPRINTF(pagetemp," %s\n\n%s",title,page);
+			GPSPRINTF(page,pagetemp);
 
 			if(firsttime)
 			{
@@ -591,7 +593,7 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 					if(key&GPC_VK_SELECT)
 					{
 						char temp[255];
-						gm_sprintf(temp,"%s\\%s",dir,name);
+						GPSPRINTF(temp,"%s\\%s",dir,name);
 						GpFileRemove(temp);
        
 						pos=0;
@@ -611,9 +613,10 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 			}
 		}
 	}
+*/
 
 	fs_loadgame(dir,"",&crc,choose,UNK);
-	gm_sprintf(szRomName,"%08x.tmp",crc);
+	GPSPRINTF(szRomName,"%08x.tmp",crc);
 
 	MyGameNo=choose;
 	MyGameDatNo=ini.game[choose].entry;

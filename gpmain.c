@@ -314,9 +314,9 @@ int LoadRom(char *filename)
 
 	pext = (char*)yo_strrchr(filename, '.');
 
-	if (pext) gm_strncpy(ext, pext, sizeof(ext));
+	if (pext) GPSTRNCPY(ext, pext, sizeof(ext));
 	yo_strlwr(ext);
-	if (gm_compare(ext, ".zip") == 0)  
+	if (GPSTRCMP(ext, ".zip") == 0)  
 	{
 		zip_file = unzOpen(filename);
 
@@ -340,9 +340,9 @@ int LoadRom(char *filename)
 
 			p = (char *)yo_strrchr(ws_file, '.');
 
-			if (gm_compare(p, ".wsc") == 0)
+			if (GPSTRCMP(p, ".wsc") == 0)
 				break;
-			if (gm_compare(p, ".ws") == 0)
+			if (GPSTRCMP(p, ".ws") == 0)
 				break;
 			if (unzGoToNextFile(zip_file) != UNZ_OK)
 			{
@@ -422,7 +422,7 @@ int LoadRom(char *filename)
 
 		if (sizeread != filesize)
 		{
-			GPSPRINTF(printString, "Files Are Different Sizes\n %i & %i", sizeread, filesize);
+//			GPSPRINTF(printString, "Files Are Different Sizes\n %i & %i", sizeread, filesize);
 //			PrintError(printString, 1);
 			GpFileClose(F);
 			return 0;
