@@ -126,7 +126,7 @@ void InitVideo(void)
 
 int InitKeys(void)
 {
-	if (screenmode != 3)
+	if (screenmode != 3) // vertical
 	{
 		gp_keys[KEYS_LEFT]	= horz_keys_menu.options[MENU_KEYS_LEFT].selected;
 		gp_keys[KEYS_RIGHT]	= horz_keys_menu.options[MENU_KEYS_RIGHT].selected;
@@ -138,7 +138,7 @@ int InitKeys(void)
 		gp_keys[KEYS_R]		= horz_keys_menu.options[MENU_KEYS_R].selected;
 		gp_keys[KEYS_START]	= horz_keys_menu.options[MENU_KEYS_START].selected;
 	}
-	else
+	else // horizontal
 	{
 		gp_keys[KEYS_LEFT]	= vert_keys_menu.options[MENU_KEYS_LEFT].selected;
 		gp_keys[KEYS_RIGHT]	= vert_keys_menu.options[MENU_KEYS_RIGHT].selected;
@@ -168,13 +168,19 @@ int DoKeys(void)
 	{
 		if ((ExKey & GPC_VK_FL) && !(ExKey & GPC_VK_FR) && !(LastKey & GPC_VK_FL)) // select + L
 		{
-			scroll_x = ((scroll_x < 14) ? scroll_x + 2 : 14);
+			if (screenmode != 0 && screenmode != 3)
+			{
+				scroll_x = ((scroll_x < 14) ? scroll_x + 2 : 14);
+			}
 			selectPressed = 1;
 		}
 		
 		if ((ExKey & GPC_VK_FR) && !(ExKey & GPC_VK_FL) && !(LastKey & GPC_VK_FR)) // select + R
 		{
+			if (screenmode != 0 && screenmode != 3)
+			{
 			scroll_x = ((scroll_x > 0) ? scroll_x - 2 : 0);
+			}
 			selectPressed = 1;
 		}
 
@@ -189,10 +195,11 @@ int DoKeys(void)
 			screenmode += 1;
 			screenmode %= 4;
 			InitVideo();
+			InitKeys();
 			selectPressed = 1;
 		}
 
-		if ((ExKey & GPC_VK_DOWN)  && !(LastKey & GPC_VK_DOWN)) // select + UP
+		if ((ExKey & GPC_VK_DOWN)  && !(LastKey & GPC_VK_DOWN)) // select + DOWN
 		{
 
 			if (screenmode == 0)
@@ -239,7 +246,9 @@ int DoKeys(void)
 				return 1;
 			}
 			else
+			{
 				selectPressed = 0;
+			}
 		}
 	}
 
@@ -247,7 +256,7 @@ int DoKeys(void)
 	return 0;
 }
 		
-void ws_emulate(void)
+void WsEmulate(void)
 {
 	int i = 0;
 	
@@ -471,7 +480,7 @@ void Emulate()
 
 	GpSurfaceSet(&gtSurface[0]);
 	
-	ws_emulate();
+	WsEmulate();
 	
 	GpSurfaceSet(&gtSurface[giSurface]);
 	
@@ -674,6 +683,7 @@ void GpMain(void *arg)
 					GpFileClose(F);
 					ws_sram_load(g_string);
 					PrintMessage("Loading SRAM...",0);
+					ws_sram_dirty = 0;
 				}
 			
 				GPSPRINTF(g_string, "gp:\\GPMM\\WB32\\CFG\\%s.cfg", fname); // config = filename.cfg
