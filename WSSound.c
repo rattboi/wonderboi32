@@ -6,15 +6,16 @@
 #include <gpfont.h>
 
 #include "WSSound.h"
-#include "pcm.h"
+//#include "pcm.h"
 #include "sound.h"
-#include "gp32_snd.h"
+//#include "gp32_snd.h"
 
 #include "types.h"
 
-//---------------------------------------------------------------------------
-// DirectX 하″시″3 이상으로 확인 이 끝난 상태 하″시″2 에서도 동작 가능
-//---------------------------------------------------------------------------
+#define MIXBUF_SIZE    16384
+
+static signed int *mixbuf = NULL;
+
 #define BPS 22050
 #define BPSMAX 100000
 #define BPSMIN 100
@@ -142,16 +143,7 @@ unsigned int Mrand(unsigned int Degree)
 	return ShiftReg;
 }
 
-struct pcm pcm;
 struct snd snd;
-
-void sound_mix();
-
-void audio_callback(void *blah, byte *stream, int len)
-{
-       sound_mix();
-       GPMEMCPY(stream, pcm.buf, len);
-}
 
 //---------------------------------------------------------------------------
 int WsSoundCreate()
@@ -160,20 +152,7 @@ int WsSoundCreate()
 
 	//set up sound format
 
-	pcm.hz = 22050;
-	pcm.stereo = 0;
-	pcm.len = 22050/30;
-	pcm.buf = GPMALLOC(pcm.len);
-	pcm.pos = 0;
-	if (pcm.buf)
-		GPMEMSET(pcm.buf, 0, pcm.len);
-
-	sndbuf.freq=PCM_M22; 
-	sndbuf.format=PCM_8BIT; 
-	sndbuf.samples=22050/30;
-	sndbuf.userdata=NULL;
-	sndbuf.callback=audio_callback;
-	sndbuf.pollfreq=100;
+	mixbuf = GPMALLOC(MIXBUF_SIZE);
 
 	snd.ch[0].on = 1;
 	snd.ch[1].on = 1;
@@ -217,27 +196,15 @@ int WsSoundCreate()
     return 0;
 }
 
-void pcm_open(void)
+
+void pcm_open()
 {
-	if (!pcm.buf)
-		pcm.buf = GPMALLOC(pcm.len);
-	GpSoundBufStart(&sndbuf);
+	gp_initSound(22050, 0);
 }
 
 void pcm_close(void)
 {
-	GpSoundBufStop();
-	if (pcm.buf)
-		GPFREE(pcm.buf);
-}
-
-int pcm_submit()
-{
-	if (!pcm.buf) return 0;
-	if (pcm.pos < pcm.len) return 1;
-
-	pcm.pos = 0;
-	return 1;
+	PcmStop();
 }
 
 //---------------------------------------------------------------------------
@@ -606,68 +573,23 @@ void FlashPCM(void)
 
 }
 
-void sound_mix()
+static void clearmixbuffer(signed int * buf, int n)
+{
+	while((--n)>=0){
+		*buf = 0;
+		++buf;
+	}
+}
+
+void updatemixing(signed char *out_l, int todo)
 {
 	int s, l, r, f, n, i;
-	int gp32sound= 22050/30;
-	while(gp32sound--)
+
+	clearmixbuffer(mixbuf, todo);
+	
+	for( i = 0; i < todo; i++)
 	{
 		l = r = 0;
-
-/*
-		if (snd.ch[0].on)
-		{
-			s = sqwave[R_NR11>>6][(S1.pos>>18)&7] & S1.envol;
-			snd.ch[0].pos += snd.ch[0].freq;
-			if ((R_NR14 & 64) && ((S1.cnt += RATE) >= S1.len))
-				S1.on = 0;
-			if (S1.enlen && (S1.encnt += RATE) >= S1.enlen)
-			{
-				S1.encnt -= S1.enlen;
-				S1.envol += S1.endir;
-				if (S1.envol < 0) S1.envol = 0;
-				if (S1.envol > 15) S1.envol = 15;
-			}
-			if (S1.swlen && (S1.swcnt += RATE) >= S1.swlen)
-			{
-				S1.swcnt -= S1.swlen;
-				f = S1.swfreq;
-				n = (R_NR10 & 7);
-				if (R_NR10 & 8) f -= (f >> n);
-				else f += (f >> n);
-				if (f > 2047)
-					S1.on = 0;
-				else
-				{
-					S1.swfreq = f;
-					R_NR13 = f;
-					R_NR14 = (R_NR14 & 0xF8) | (f>>8);
-					s1_freq_d(2048 - f);
-				}
-			}
-			s <<= 2;
-			if (R_NR51 & 1) r += s;
-			if (R_NR51 & 16) l += s;
-		}
-		
-		if (S2.on)
-		{
-			s = sqwave[R_NR21>>6][(S2.pos>>18)&7] & S2.envol;
-			S2.pos += S2.freq;
-			if ((R_NR24 & 64) && ((S2.cnt += RATE) >= S2.len))
-				S2.on = 0;
-			if (S2.enlen && (S2.encnt += RATE) >= S2.enlen)
-			{
-				S2.encnt -= S2.enlen;
-				S2.envol += S2.endir;
-				if (S2.envol < 0) S2.envol = 0;
-				if (S2.envol > 15) S2.envol = 15;
-			}
-			s <<= 2;
-			if (R_NR51 & 2) r += s;
-			if (R_NR51 & 32) l += s;
-		}
-*/
 		for(i = 0; i < 4; i++)
 		{
 			if (snd.ch[i].on)
@@ -685,52 +607,20 @@ void sound_mix()
 				r += s;
 			}
 		}
-/*
-		if (S4.on)
-		{
-			if (R_NR43 & 8) s = 1 & (noise7[
-				(S4.pos>>20)&15] >> (7-((S4.pos>>17)&7)));
-			else s = 1 & (noise15[
-				(S4.pos>>20)&4095] >> (7-((S4.pos>>17)&7)));
-			s = (-s) & S4.envol;
-			S4.pos += S4.freq;
-			if ((R_NR44 & 64) && ((S4.cnt += RATE) >= S4.len))
-				S4.on = 0;
-			if (S4.enlen && (S4.encnt += RATE) >= S4.enlen)
-			{
-				S4.encnt -= S4.enlen;
-				S4.envol += S4.endir;
-				if (S4.envol < 0) S4.envol = 0;
-				if (S4.envol > 15) S4.envol = 15;
-			}
-			s += s << 1;
-			if (R_NR51 & 8) r += s;
-			if (R_NR51 & 128) l += s;
-		}
-*/		
+
 //		l *= (R_NR50 & 0x07);
 //		r *= ((R_NR50 & 0x70)>>4);
 //		l >>= 4;
 //		r >>= 4;
 		
-		if (l > 127) l = 127;
-		else if (l < -128) l = -128;
-		if (r > 127) r = 127;
-		else if (r < -128) r = -128;
+		if (l > 127)		l = 127;
+		else if (l < -128)	l = -128;
+		if (r > 127)		r = 127;
+		else if (r < -128)	r = -128;
 
-		if (pcm.buf)
-		{
-			if (pcm.pos >= pcm.len)
-				pcm_submit(); 
-			if (pcm.stereo)
-			{
-				pcm.buf[pcm.pos++] = l+128;
-				pcm.buf[pcm.pos++] = r+128;
-			}
-			else   
-			{
-				pcm.buf[pcm.pos++] = ((l+r)>>1)+128;
-			}
-		}
+		mixbuf[i] = ((l+r)>>1)+128;
 	}
+
+	for(i = 0; i < todo; i++) 
+		out_l[i] = mixbuf[i];
 }

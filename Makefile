@@ -53,7 +53,8 @@ OBJCOPY			=	arm-elf-objcopy
 					menu.c \
 					misc_str_func.c \
 					selector.c \
-					filecache.c 
+					filecache.c \
+					init1330.c
 
 .CXXFILES			=	Profiler.cpp
 

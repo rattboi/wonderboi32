@@ -27,8 +27,8 @@
 
 #define MAX_ROM_SIZE 4*1024*1024
 
-char *long_program_version="WonderBoi32 v0.7 (new core)";
-char *short_program_version="WB32 v.7";
+char *long_program_version="WonderBoi32 v0.75";
+char *short_program_version="WB32 v.75";
 
 extern unsigned short WBTitle[];
 extern int vert;
@@ -210,13 +210,13 @@ void Emulate()
 
 	WsInputInit(vert && (GetDrawMode() == 3));
 
-	pcm_open();
+//	pcm_open();
 
 //	PROFILER_START();
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
-	pcm_close();
+//	pcm_close();
 	
 	config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = FrameSkip;
 	config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = GetDrawMode();
@@ -465,7 +465,7 @@ void GpMain(void *arg)
 	
 	WsSoundCreate();
 
-    result = MENU_MAIN_LOAD_ROM; // start by loading a ROM
+	result = MENU_MAIN_LOAD_ROM; // start by loading a ROM
     
 	while(1)
 	{

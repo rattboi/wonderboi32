@@ -18,7 +18,7 @@
 
 //---------------------------------------------------------------------------
 //int SoundOn[7]={1,1,1,1,1,1,1};
-int SoundOn[7]={1,1,1,1,0,0,0};
+int SoundOn[7]={0,0,0,0,0,0,0};
 int FrameSkip=4;
 int SkipCnt=0;
 
@@ -1273,7 +1273,7 @@ int Interrupt(void)
 			break;
 		case 2:
 //			Skip Sound Interrupts for now
-			i=WsSoundInt();
+/*			i=WsSoundInt();
             PCSRL=(byte)(i&0xFF);
             PCSRH=(byte)((i>>8) &0xFF);
             if((SDMACTL&0x88) ==0x80) //STAR HEARTS 금지 패치
@@ -1318,7 +1318,7 @@ int Interrupt(void)
                 b=0x55;
             }
 			SetPCM(b);
-
+	*/
 			break;
 		case 4:
             if(RSTRL==140)

@@ -75,7 +75,8 @@ CFLAGS			=	-marm \
 				-I$(GPSDK)/include \
 				-I. \
 				-I./zlib \
-				-I./gplibs
+				-I./gplibs \
+				-save-temps
 
 CXXFLAGS			=	-marm \
 				-march=armv4t \
