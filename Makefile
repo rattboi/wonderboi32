@@ -14,7 +14,7 @@ AUTHOR		=	Rattboi
 FXETOOL		=	b2fxec
 
 # gpSDK root directory
-GPSDK           =       /d/programming/gp32/devkitARM/gamepark_sdk
+GPSDK           =       /c/devkitARM/gamepark_sdk
 #MAC#			/Users/Bradon/devkitARM/gamepark_sdk
 #HOME#			/c/devkitARM/gamepark_sdk
 #WORK#			/d/devkitARM/gamepark_sdk
@@ -71,9 +71,10 @@ CFLAGS			=	-marm \
 		       		-Wno-multichar \
 				-I$(GPSDK)/include \
 				-I. \
-				-I./zlib
+				-I./zlib \
+				-I./gplibs
  
-LIBDIRS			=	-L$(GPSDK)/lib
+LIBDIRS			=	-L$(GPSDK)/lib -L./gplibs -L./zlib
 GP_LIBS                 =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
 LIBS			=	-lz -lm -lc
  
