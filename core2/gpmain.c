@@ -46,7 +46,9 @@ void GpMain(void *arg)
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
-	setCpuSpeed(132);
+	setCpuSpeed(166);
+
+	PROFILER_START();
 
 	InitGraphics(16);							// Init Graphics and Fonts
 
@@ -76,9 +78,16 @@ void GpMain(void *arg)
 
 		WsRun();
 
+		if (GpKeyGet())
+			break;
+
 //		GPSPRINTF(debugstring,"after WsRun");
 //		PrintMessage(debugstring,0);
 	}
+
+	PROFILER_STOP();
+
+	PROFILER_DUMP();
 
 	return;
 }

@@ -28,7 +28,7 @@ AS			=	arm-elf-as
 OBJCOPY			=	arm-elf-objcopy
  
 .SFILES			=	../wscbmp.s \
-					../horz_render_normal.s \
+					horz_render_normal.s \
 					../cpuspeed.s
  
 .CFILES			=	gpstart.c \
@@ -47,8 +47,9 @@ OBJCOPY			=	arm-elf-objcopy
 					../file_dialog.c \
 					../setcpuspeed.c
 
+.CXXFILES		=	Profiler.cpp
 
-OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o)
+OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o) $(.CXXFILES:.cpp=.o)
  
 CFLAGS			=	-marm \
 				-march=armv4t \
@@ -66,7 +67,24 @@ CFLAGS			=	-marm \
                                 -I../zlib \
                                 -I./nec \
                                 -I../gplibs
- 
+
+CXXFLAGS			=	-marm \
+				-march=armv4t \
+		       		-mapcs \
+		       		-O2 \
+	       			-fomit-frame-pointer \
+	       			-finline-functions \
+		       		-fshort-enums \
+		       		-ffast-math \
+	       			-mstructure-size-boundary=8 \
+		       		-mno-thumb-interwork \
+		       		-Wno-multichar \
+				-I$(GPSDK)/include \
+				-I. \
+                                -I../zlib \
+                                -I./nec \
+                                -I../gplibs
+
 LIBDIRS                 =       -L$(GPSDK)/lib -L../gplibs -L../zlib
 GP_LIBS         =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
 LIBS			=	-lz -lm -lc
