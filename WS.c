@@ -1337,6 +1337,8 @@ void WsRelease(void)
 int selectPressed = 0;
 int savestateMode = 0;
 
+extern int frames_rendered,frames_displayed; 
+
 int Interrupt(void)
 {
 	static int LCount=0, Joyz=0x0000;
@@ -1441,6 +1443,7 @@ LogFile(LK_SOUND, str);
                 if(RSTRL==0)
                 {
                     SkipCnt--;
+					frames_rendered++;
 
 					if (SkipCnt < 0)
 	                    SkipCnt=FrameSkip;
@@ -1454,6 +1457,7 @@ LogFile(LK_SOUND, str);
 					}
 					if(RSTRL==144)
 					{
+						frames_displayed++;
 	                	WsDrawFlip();
 					}
                 }

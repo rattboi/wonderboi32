@@ -234,6 +234,7 @@ int SaveStatesEmulate(char *savestate)
 	int				ExKey				= 0;
 	int				LastKey				= -1;
 	int				loadOK				= 0;
+	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
 
 	asm volatile(
 		"b afterpool\n" 
@@ -296,12 +297,16 @@ int SaveStatesEmulate(char *savestate)
 			}
 			else
 			{
-				GPSPRINTF(printstring, "Slot %d: %s.sa%d", selectedState + 1, basename, selectedState + 1);
-				WsClearGpuCache();
-				RebuildPalette();
+				GPSPRINTF(printstring, "Slot %d", selectedState + 1);//: %s.sa%d", selectedState + 1, basename, selectedState + 1);
 			}
-//			OkfPrintSurface(printstring,giSurface);
+			WsDrawClear();
+			WsClearGpuCache();
+			RebuildPalette();
+			GpTextOut(NULL, &gtSurface[0], 2, 225, printstring, 0xFE);
+			GpTextOut(NULL, &gtSurface[1], 2, 225, printstring, 0xFE);
 		}
+
+		HWPALETTE[0xFE] = 0xFFFF;
 		LastKey = ExKey;
 	}
 

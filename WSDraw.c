@@ -156,29 +156,33 @@ int  WsDrawLine(int Line)
 {
 	if (video_update != NULL)
 	{
-		if (vert == 0)
-			RefreshLine(Line, screenbuffer+(144-Line)); // works for horz
-		else
-			RefreshLine(Line, screenbuffer+(144-Line)); // works for vert
+		RefreshLine(Line, screenbuffer+(144-Line)); // works for horz/vert
 	}
 	else
 	{
 		if (vert == 0)	// horz
 			RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(240-(Line)));
 		else		// vert
-			RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(Line*240));
+			RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*(video_x+Line))+8);
 	}
 
 	return 0;
 }
 
 //---------------------------------------------------------------------------
+
+int tick=0;
+int frames_rendered=0,frames_displayed=0; 
+char fps_string[64];
+
 int  WsDrawFlip(void)
 {
 	int i,j;
+	int ticktemp;
 
 	if (video_update != NULL)
 	{
+//		WsDrawClear();
 		video_update((uint8*)screenbuffer+(8*240)+(scroll_x*240), gtSurface[giSurface].ptbuffer+(240*video_x)+(video_y));
 	}
 	else
@@ -200,13 +204,35 @@ int  WsDrawFlip(void)
 			{
 				for (j = 0; j < 8; j++)
 				{
-					*(gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(i*240)+j) = 0xFF;
-					*(gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(i*240)+j+224+8) = 0xFF;
+					*(gtSurface[giSurface].ptbuffer+(240*(video_x+i))+j+8) = 0xFF;
+					*(gtSurface[giSurface].ptbuffer+(240*(video_x+i))+j+224+8+8) = 0xFF;
 				}
 			}
 		}
 	}
 
+/*	ticktemp=GpTickCountGet()-tick;
+
+//	GPSPRINTF(fps_string,"%d",ticktemp); 
+//	GpTextOut(NULL, &gtSurface[0], 2, 0, fps_string, 0xFE);
+
+	if(ticktemp>1000)
+	{
+		int a,b;
+
+		tick=GpTickCountGet();
+
+		for(a = 0; a < 320; a++)
+			for(b = 0; b < 8; b++)
+				*(gtSurface[giSurface].ptbuffer+(240*a)+240-b) = 0xFF;
+
+		GPSPRINTF(fps_string,"^%04d/%04d/30,%04d%%,%d fskip^",frames_displayed,frames_rendered,((frames_rendered*100)/30)+1,(int)FrameSkip); //60 hz?
+		GpTextOut(NULL, &gtSurface[giSurface], 2, 0, fps_string, 0xFE);
+
+		frames_displayed=0;
+		frames_rendered=0;
+	}
+*/	
 	SurfaceFlip();
 	SetHWPalette();
 	return 0;
@@ -218,7 +244,8 @@ void  WsDrawClear(void)
 	int i;
 	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
 	
-	HWPALETTE[0xFF] = RGB555(0,0,0);
+//	HWPALETTE[254] =	RGB555(31,	31,	31);
+	HWPALETTE[255] =	RGB555(0,	0,	0);
 
 	for (i=(320*240)-1;i>=0;--i)
 	{
@@ -280,8 +307,11 @@ void	SetHWPalette()
 	uint32 *HWPALETTE=(uint32 *)0x14A00400;
 	int i;
 
-	for (i = 0; i < 256; i++)
+	for (i = 0; i < 255; i++)
 		HWPALETTE[i] =	Palette[i];
+
+//	HWPALETTE[254] =	RGB555(31,	31,	31);
+	HWPALETTE[255] =	RGB555(0,	0,	0);
 
 	return;
 }
