@@ -29,10 +29,13 @@ OBJCOPY			=	arm-elf-objcopy
  
 .SFILES			=	
  
-.CFILES			=	WS.c \
+.CFILES			=	gpstart.c \
+					gpmain.c \
+					WS.c \
 					WSDraw.c \
 					WSInput.c \
-					WSSound.c
+					WSSound.c \
+                                        nec/nec.c
 
 
 OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o)
@@ -50,11 +53,11 @@ CFLAGS			=	-marm \
 		       		-Wno-multichar \
 				-I$(GPSDK)/include \
 				-I. \
-				-I./zlib \
-				-I./nec \
-				-I./gplibs
+                                -I../zlib \
+                                -I./nec \
+                                -I../gplibs
  
-LIBDIRS			=	-L$(GPSDK)/lib -L./gplibs -L./zlib
+LIBDIRS                 =       -L$(GPSDK)/lib -L../gplibs -L../zlib
 GP_LIBS         =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
 LIBS			=	-lz -lm -lc
  

@@ -8,12 +8,13 @@
 
 #include "WSHard.h"
 #include "WS.h"
-#include "necintrf.h"
 #include "WSDraw.h"
 #include "WSInput.h"
 #include "WSSound.h"
 
 #include "types.h"
+
+#include "necintrf.h"
 
 //#define SOUND_DEBUG
 //#define PCM_DEBUG
@@ -713,7 +714,7 @@ LogFile(LK_SOUND, str);
 		case 0xC0:
                     if(nec_get_reg(NEC_CS)>=0x4000)
                     {
-					    nec_prefetch();//명 탐정 코난서쪽의 이름 탐정 최대의 위기!?
+//					    nec_prefetch();//명 탐정 코난서쪽의 이름 탐정 최대의 위기!?
                     }
 					j=(V<<4) &0xF0;
     				Page[0x4]=ROMMap[0x4|j];

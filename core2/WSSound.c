@@ -630,7 +630,7 @@ void SetPCM(int Data)
 {
 	DWORD tick;
 	PDataP[PCMPos++]=(unsigned char) Data;
-    tick=GetTickCount();
+    tick=0; //GetTickCount();
     PcmCount++;
     if(tick>=TickZ)
     {
