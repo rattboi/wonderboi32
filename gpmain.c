@@ -205,14 +205,14 @@ void Emulate()
 //	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
 	WsInputInit(vert);
-	GpSurfaceSet(&gtSurface[0]);
+//	GpSurfaceSet(&gtSurface[0]);
 	
 //	PROFILER_START();
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
 
-	GpSurfaceSet(&gtSurface[giSurface]);
+//	GpSurfaceSet(&gtSurface[giSurface]);
 	
 	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = FrameSkip >> 1;
 	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = GetDrawMode();
@@ -246,7 +246,7 @@ int SaveStatesEmulate(char *savestate)
 		SetDrawMode(4);
 
 	StateInputInit();
-	GpSurfaceSet(&gtSurface[0]);
+//	GpSurfaceSet(&gtSurface[0]);
 	
 	while (1)
 	{
