@@ -84,6 +84,7 @@ video_mode video_modes[4] =
 
 int screenmode = 0;
 
+
 void InitVideo(void)
 {
 	int i = 0;
@@ -196,7 +197,6 @@ int DoKeys(void)
 
 		if ((ExKey & GPC_VK_DOWN)  && !(LastKey & GPC_VK_DOWN)) // select + DOWN
 		{
-
 			if (screenmode == 0)
 				screenmode = 4;
 
@@ -205,7 +205,24 @@ int DoKeys(void)
 			InitKeys();
 			selectPressed = 1;
 		}
+
+		if ((ExKey & GPC_VK_LEFT)  && !(LastKey & GPC_VK_LEFT)) // select + LEFT
+		{
+			if (fSkip == 0)
+				fSkip = 12;
+			fSkip -= 2;
+
+			selectPressed = 1;
+		}
 				
+		if ((ExKey & GPC_VK_RIGHT)  && !(LastKey & GPC_VK_RIGHT)) // select + LEFT
+		{
+			fSkip += 2;
+			fSkip %= 12;
+
+			selectPressed = 1;
+		}
+
 		if (!(ExKey & GPC_VK_START) && (LastKey & GPC_VK_START)) // select + start (stopped pressing)
 		{
 			GpAppExit();									// reboot GP32
@@ -482,6 +499,7 @@ void Emulate()
 	
 	GpSurfaceSet(&gtSurface[giSurface]);
 	
+	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = fSkip >> 1;
 	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = screenmode;
 	
 	setCpuSpeed(66);
