@@ -1,4 +1,6 @@
 //---------------------------------------------------------------------------
+#include "types.h"
+
 #include <gpstdlib.h>
 #include <gpstdio.h>
 #include <gpgraphic.h>
@@ -8,314 +10,174 @@
 #include "WSInput.h"
 #include "WSHard.h"
 
-#include "types.h"
+#include "../menu.h"
+
 
 //---------------------------------------------------------------------------
-#define JOYMAX 2
 
-int KeyStat;
-int JoyOn;
-uint32 Joy;
-uint32 ThRight;
-uint32 ThLeft;
-uint32 ThUp;
-uint32 ThDown;
-uint32 NumButton;
+int 	gp_keys[9] = { 0 };
+uint8   ws_keys[11];
 
-char KeyConfig[24][64];
-char JoyConfig[24][64];
+extern stMenu horz_keys_menu;
 
-int KeyMap[256];
-int JoyMap[16];
+#define WS_KEY_H_UP		0
+#define WS_KEY_H_DOWN	1
+#define WS_KEY_H_LEFT	2
+#define WS_KEY_H_RIGHT	3
 
-struct CPTR2INT
-{
-	char *Cptr;
-	int Code;
-};
+#define WS_KEY_V_UP		4
+#define WS_KEY_V_DOWN	5
+#define WS_KEY_V_LEFT	6
+#define WS_KEY_V_RIGHT	7
 
-const static struct CPTR2INT KeyAddr[] = {
-	{ "BS",		0x08},
-	{ "RETURN",	0x0D},
-	{ "SHIFT",	0x10},
-	{ "CONTROL", 0x11},
-	{ "SPACE",	0x20},
-	{ "LEFT",	0x25},
-	{ "UP",		0x26},
-	{ "RIGHT",	0x27},
-	{ "DOWN",	0x28},
-	{ "0",		0x30},
-	{ "1",		0x31},
-	{ "2",		0x32},
-	{ "3",		0x33},
-	{ "4",		0x34},
-	{ "5",		0x35},
-	{ "6",		0x36},
-	{ "7",		0x37},
-	{ "8",		0x38},
-	{ "9",		0x39},
-	{ "A",		0x41},
-	{ "B",		0x42},
-	{ "C",		0x43},
-	{ "D",		0x44},
-	{ "E",		0x45},
-	{ "F",		0x46},
-	{ "G",		0x47},
-	{ "H",		0x48},
-	{ "I",		0x49},
-	{ "J",		0x4A},
-	{ "K",		0x4B},
-	{ "L",		0x4C},
-	{ "M",		0x4D},
-	{ "N",		0x4E},
-	{ "O",		0x4F},
-	{ "P",		0x50},
-	{ "Q",		0x51},
-	{ "R",		0x52},
-	{ "S",		0x53},
-	{ "T",		0x54},
-	{ "U",		0x55},
-	{ "V",		0x56},
-	{ "W",		0x57},
-	{ "X",		0x58},
-	{ "Y",		0x59},
-	{ "Z",		0x5A},
-	{ ":",		0xBA},
-	{ ";",		0xBB},
-	{ "-",		0xBD},
-	{ ". ",		0xBE},
-	{ "/",		0xBF},
-	{ "@",		0xC0},
-	{ "[",		0xDB},
-	{ "\\",		0xDC},
-	{ "]",		0xDD},
-	{ "^",		0xDE},
-	{ NULL, NULL	}
-};
-
-const static struct CPTR2INT JoyAddr[] = {
-	{ "LEFT",	0x01},
-	{ "RIGHT",	0x02},
-	{ "UP",		0x03},
-	{ "DOWN",	0x04},
-	{ "1",	0x05},
-	{ "2",	0x06},
-	{ "3",	0x07},
-	{ "4",	0x08},
-	{ "5",	0x09},
-	{ "6",	0x0A},
-	{ "7",	0x0B},
-	{ "8",	0x0C},
-	{ "9",	0x0D},
-	{ "10",	0x0E},
-	{ "11",	0x0F},
-	{ NULL, NULL	}
-};
+#define WS_KEY_1		8
+#define WS_KEY_2		9
+#define WS_KEY_START	10
 
 //---------------------------------------------------------------------------
 int WsInputInit(void)
 {
-	int result;
-    uint32 JoyId[1]={0};
-    uint32 min, max, value;
-    int i;
-
-    KeyStat=0x0000;
-
-    JoyOn=0;
-    Joy=NULL;
-
-
+		gp_keys[KEYS_LEFT]	= horz_keys_menu.options[MENU_KEYS_LEFT].selected;
+		gp_keys[KEYS_RIGHT]	= horz_keys_menu.options[MENU_KEYS_RIGHT].selected;
+		gp_keys[KEYS_UP]	= horz_keys_menu.options[MENU_KEYS_UP].selected;
+		gp_keys[KEYS_DOWN]	= horz_keys_menu.options[MENU_KEYS_DOWN].selected;
+		gp_keys[KEYS_A]		= horz_keys_menu.options[MENU_KEYS_A].selected;
+		gp_keys[KEYS_B]		= horz_keys_menu.options[MENU_KEYS_B].selected;
+		gp_keys[KEYS_L]		= horz_keys_menu.options[MENU_KEYS_L].selected;
+		gp_keys[KEYS_R]		= horz_keys_menu.options[MENU_KEYS_R].selected;
+		gp_keys[KEYS_START]	= horz_keys_menu.options[MENU_KEYS_START].selected;
 }
 
 //---------------------------------------------------------------------------
-int Joystick(void)
+int DoKeys(uint16 *state)
 {
-	int value;
-	/*
-	MMRESULT result;
-    int value;
-
-    if(JoyOn==0)
-    {
-        return KeyStat;
-    }
-
-	result=joyGetPosEx(Joy,&JIEX);
-    if(result!=JOYERR_NOERROR)
-    {
-        return KeyStat;
-    }
-
-    value=0x0000;
-    if(JIEX.dwXpos<=ThLeft)
-    {
-    	value|=JoyMap[0x01];
-    }
-    if(JIEX.dwXpos>=ThRight)
-    {
-    	value|=JoyMap[0x02];
-    }
-    if(JIEX.dwYpos<=ThUp)
-    {
-    	value|=JoyMap[0x03];
-    }
-    if(JIEX.dwYpos>=ThDown)
-    {
-    	value|=JoyMap[0x04];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON1)
-    {
-    	value|=JoyMap[0x05];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON2)
-    {
-    	value|=JoyMap[0x06];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON3)
-    {
-    	value|=JoyMap[0x07];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON4)
-    {
-    	value|=JoyMap[0x08];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON5)
-    {
-    	value|=JoyMap[0x09];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON6)
-    {
-    	value|=JoyMap[0x0A];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON7)
-    {
-    	value|=JoyMap[0x0B];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON8)
-    {
-    	value|=JoyMap[0x0C];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON9)
-    {
-    	value|=JoyMap[0x0D];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON10)
-    {
-    	value|=JoyMap[0x0E];
-    }
-    if(JIEX.dwButtons&JOY_BUTTON11)
-    {
-    	value|=JoyMap[0x0F];
-    }
-	*/
+	int i 						= 0;
+	static int selectPressed 	= 0;
+	int ExKey					= 0;
+	static int LastKey			= 0;
 	
-	//do input shit here
+	for (i = 0; i < 11; i++)
+		ws_keys[i] = 0;
 
-    return KeyStat|value;
-}
+	GpKeyGetEx(&ExKey);
 
-//---------------------------------------------------------------------------
-void WsKeyDown(short int Key)
-{
-	KeyStat|=KeyMap[Key&0xFF];
-}
-
-//---------------------------------------------------------------------------
-void WsKeyUp(short int Key)
-{
-	KeyStat&=~KeyMap[Key&0xFF];
-}
-
-//---------------------------------------------------------------------------
-void SetKeyMap(int Mode)
-{
-    char *src, *pos;
-    char dest[64];
-	int i, j, index;
-
-	index=Mode? 12:0;
-    memset(KeyMap, 0, sizeof(KeyMap));
-
-    for(i=0;i<12;i++)
-    {
-    	src=KeyConfig[i+index];
-        while(1)
-        {
-    		if(src==NULL)
-    		{
-    			break;
-    		}
-    		pos=strchr(src, ', ');
-    		if(pos)
-    		{
-    			strncpy(dest, src, pos-src);
-                dest[pos-src]='\0';
-    			src=pos+1;
-    		}
-    		else
-    		{
-    			strcpy(dest, src);
-    			src=NULL;
-    		}
-
-    		for(j=0;KeyAddr[j]. Cptr;j++)
-    		{
-        		if(!strcmp(dest, KeyAddr[j]. Cptr))
-        		{
-        			break;
-        		}
-    		}
-    		if(KeyAddr[j]. Cptr)
-    		{
-    			KeyMap[KeyAddr[j]. Code]|=0x01<<i;
-    		}
-        }
-    }
-
-	if(!JoyOn)
+	if (ExKey & GPC_VK_SELECT)
 	{
-		return;
+/*		if ((ExKey & GPC_VK_FL) && !(ExKey & GPC_VK_FR) && !(LastKey & GPC_VK_FL)) // select + L
+		{
+			if (screenmode != 0 && screenmode != 3)
+			{
+				scroll_x = ((scroll_x < 14) ? scroll_x + 2 : 14);
+			}
+			selectPressed = 1;
+		}
+		
+		if ((ExKey & GPC_VK_FR) && !(ExKey & GPC_VK_FL) && !(LastKey & GPC_VK_FR)) // select + R
+		{
+			if (screenmode != 0 && screenmode != 3)
+			{
+			scroll_x = ((scroll_x > 0) ? scroll_x - 2 : 0);
+			}
+			selectPressed = 1;
+		}
+*/
+		if ((ExKey & GPC_VK_FR) && (ExKey & GPC_VK_FL)) // select + L + R
+		{
+			WsReset();
+			selectPressed = 1;
+		}
+/*		
+		if ((ExKey & GPC_VK_UP)  && !(LastKey & GPC_VK_UP)) // select + UP
+		{
+			screenmode += 1;
+			screenmode %= 4;
+			InitVideo();
+			InitKeys();
+			selectPressed = 1;
+		}
+
+		if ((ExKey & GPC_VK_DOWN)  && !(LastKey & GPC_VK_DOWN)) // select + DOWN
+		{
+			if (screenmode == 0)
+				screenmode = 4;
+
+			screenmode -=1;		
+			InitVideo();
+			InitKeys();
+			selectPressed = 1;
+		}
+
+		if ((ExKey & GPC_VK_LEFT)  && !(LastKey & GPC_VK_LEFT)) // select + LEFT
+		{
+			if (fSkip == 0)
+				fSkip = 12;
+			fSkip -= 2;
+
+			selectPressed = 1;
+		}
+				
+		if ((ExKey & GPC_VK_RIGHT)  && !(LastKey & GPC_VK_RIGHT)) // select + LEFT
+		{
+			fSkip += 2;
+			fSkip %= 12;
+
+			selectPressed = 1;
+		}
+*/
+		if (!(ExKey & GPC_VK_START) && (LastKey & GPC_VK_START)) // select + start (stopped pressing)
+		{
+			GpAppExit();									// reboot GP32
+		}
+	}
+	else
+	{
+		if (ExKey & GPC_VK_LEFT)
+			ws_keys[gp_keys[KEYS_LEFT]] = 1;
+		if (ExKey & GPC_VK_RIGHT)
+			ws_keys[gp_keys[KEYS_RIGHT]] = 1;
+		if (ExKey & GPC_VK_UP)
+			ws_keys[gp_keys[KEYS_UP]] = 1;
+		if (ExKey & GPC_VK_DOWN)
+			ws_keys[gp_keys[KEYS_DOWN]] = 1;
+		if (ExKey & GPC_VK_FA)
+			ws_keys[gp_keys[KEYS_A]] = 1;
+		if (ExKey & GPC_VK_FB)
+			ws_keys[gp_keys[KEYS_B]] = 1;
+		if (ExKey & GPC_VK_FL)
+			ws_keys[gp_keys[KEYS_L]] = 1;
+		if (ExKey & GPC_VK_FR)
+			ws_keys[gp_keys[KEYS_R]] = 1;
+		if (ExKey & GPC_VK_START)
+			ws_keys[gp_keys[KEYS_START]] = 1;
+
+		if (LastKey & GPC_VK_SELECT)
+		{
+			if (selectPressed == 0)
+			{
+				selectPressed = 0;
+				LastKey = 0;
+				return 1;
+			}
+			else
+			{
+				selectPressed = 0;
+			}
+		}	
 	}
 
-    memset(JoyMap,0,sizeof(JoyMap));
+	LastKey = ExKey;
+		
+	*state = (ws_keys[WS_KEY_START]	<<9)|
+			(ws_keys[WS_KEY_1]		<<10)|
+			(ws_keys[WS_KEY_2]		<<11)|
+			(ws_keys[WS_KEY_H_UP]	<<4)|
+			(ws_keys[WS_KEY_H_RIGHT]<<5)|
+			(ws_keys[WS_KEY_H_DOWN]	<<6)|
+			(ws_keys[WS_KEY_H_LEFT]	<<7)|
+			(ws_keys[WS_KEY_V_UP]	<<1)|
+			(ws_keys[WS_KEY_V_RIGHT]<<2)|
+			(ws_keys[WS_KEY_V_DOWN]	<<3)|
+			(ws_keys[WS_KEY_V_LEFT]	<<0);
 
-    for(i=0;i<12;i++)
-    {
-    	src=JoyConfig[i+index];
-        while(1)
-        {
-    		if(src==NULL)
-    		{
-    			break;
-    		}
-    		pos=strchr(src,',');
-    		if(pos)
-    		{
-    			strncpy(dest,src,pos-src);
-                dest[pos-src]='\0';
-    			src=pos+1;
-    		}
-    		else
-    		{
-    			strcpy(dest,src);
-    			src=NULL;
-    		}
-
-    		for(j=0;JoyAddr[j].Cptr;j++)
-    		{
-        		if(!strcmp(dest,JoyAddr[j].Cptr))
-        		{
-        			break;
-       			}
-    		}
-    		if(JoyAddr[j].Cptr)
-    		{
-    			JoyMap[JoyAddr[j].Code]|=0x01<<i;
-    		}
-		}
-    }
+    return 0;
 }
-
-//---------------------------------------------------------------------------
-

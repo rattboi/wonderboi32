@@ -18,7 +18,7 @@ extern int FrameSkip;
 // 윈트″우 생성의 이헤″트한트″라 에 실장하는 것이 바람직하다.
 // Create 함수는, 반드시 Release 함수에 의해 오프″시″크트를 개방해야 한다.
 //---------------------------------------------------------------------------
-extern int WsCreate(char *CartName);
+extern int WsCreate(BYTE *RomBase, uint32 romSize);
 
 //---------------------------------------------------------------------------
 // GBRun GB의 실행

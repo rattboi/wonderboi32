@@ -1,4 +1,6 @@
 //---------------------------------------------------------------------------
+#include "types.h"
+
 #include <gpstdlib.h>
 #include <gpstdio.h>
 #include <gpgraphic.h>
@@ -15,7 +17,6 @@
 
 #include "../render.h"
 
-#include "types.h"
 
 //#define DRAW_DEBUG
 

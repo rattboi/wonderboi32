@@ -377,7 +377,9 @@ void fs_scandir(char *dir)
 				GPSPRINTF(temp,"Welcome!\nPress A for a new scanning");
 			else
 				GPSPRINTF(temp,"Another emulator version detected\nPress A to force a new scanning");
+			PrintMessage(temp,1);
 		}
+		
 
 		for(i=0;i<g_cnt_file;i++)
 		{

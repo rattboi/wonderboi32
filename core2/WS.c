@@ -1,4 +1,6 @@
 //---------------------------------------------------------------------------
+#include "types.h"
+
 
 #include <gpstdlib.h>
 #include <gpstdio.h>
@@ -12,7 +14,6 @@
 #include "WSInput.h"
 #include "WSSound.h"
 
-#include "types.h"
 
 #include "necintrf.h"
 
@@ -63,7 +64,7 @@ byte IO[0x10000];			// IO포토 에리어
 #define CK_EEP 0x00000001
 int CartKind;
 
-byte *ROMMap[0x400];		// C-ROM艱″크 번호에 대한 C-ROM의 호˚인터(1024까지 사호˚트)
+byte *ROMMap[0x100];		// C-ROM艱″크 번호에 대한 C-ROM의 호˚인터(1024까지 사호˚트)
 int ROMBanks;				// C-ROM艱″크 번호의 최대치
 const static struct BYTE2INT ROMBanksTable[] = {
 	{0x01, 8},				// [Last-6] C-ROM뺘의자″코트″
@@ -77,7 +78,7 @@ const static struct BYTE2INT ROMBanksTable[] = {
 	{NULL, NULL}
 };
 
-byte *RAMMap[0x400];		// C-RAM艱″크 번호에 대한 C-RAM의 호˚인터(1024까지 사호˚트)
+byte *RAMMap[0x100];		// C-RAM艱″크 번호에 대한 C-RAM의 호˚인터(1024까지 사호˚트)
 int RAMBanks;				// C-RAM艱″크 번호의 최대치
 int RAMSize;				// C-RAM의 최대치
 int RAMEnable;
@@ -111,7 +112,7 @@ byte DefColor[]={	0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x88,
 					0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00};
 byte MonoColor[8];
 
-int JoyState = 0x0000;		// Joystick state: B.A.START.OPTION.X4.X3.X2.X1.Y4.Y3.Y2.Y1
+uint16 JoyState = 0x0000;		// Joystick state: B.A.START.OPTION.X4.X3.X2.X1.Y4.Y3.Y2.Y1
 
 int WaveMap;
 
@@ -923,16 +924,19 @@ void WsReset (void)
     IRAM[0x75B3]=0x31;
 }
 
-int WsCreate(char *CartName)
+int WsCreate(ubyte *RomBase, uint32 romSize)
 {
 	int Checksum, i, j;
 	F_HANDLE file;
-	ulong	sizeread;
+//	ulong	sizeread;
     byte b, buf[10];
 
 	char debugstring[512];
 
-	for(i=0;i<0x400;i++)
+//	GPSPRINTF(debugstring, "Entering WsCreate");
+//	PrintMessage(debugstring,1);
+
+	for(i=0;i<0x100;i++)
 	{
 		ROMMap[i]=MemDummy;
 		RAMMap[i]=MemDummy;
@@ -942,28 +946,35 @@ int WsCreate(char *CartName)
 	GPMEMSET(MemDummy, 0xFF, sizeof(MemDummy));
 	GPMEMSET(IO, 0, sizeof(IO));
 
-	GPSTRCPY(debugstring,CartName);
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring, "After MEMSET");
+//	PrintMessage(debugstring,1);
+	
+//	GPSTRCPY(debugstring,CartName);
+//	PrintMessage(debugstring,0);
 
-	if(GpFileOpen(CartName, OPEN_R, &file)!=SM_OK)
+//	if(GpFileOpen(CartName, OPEN_R, &file)!=SM_OK)
+	if(RomBase == NULL)
 	{
-		// MessageBox(NULL,"파일이 발견되지 않습니다","에러", MB_ICONEXCLAMATION | MB_OK);
+		GPSPRINTF(debugstring, "RomBase = NULL");
+		PrintMessage(debugstring,1);
 		return -1;
 	}
 
-	GpFileSeek (file, FROM_END, -10, NULL);
+//	GpFileSeek (file, FROM_END, -10, NULL);
 
-	GpFileRead(file, (void *)buf, 10, &sizeread);
+//	GpFileRead(file, (void *)buf, 10, &sizeread);
 
-	GPSPRINTF(debugstring,"buffer read = %d", sizeread);
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring,"buffer read = %d", sizeread);
+//	PrintMessage(debugstring,0);
 
-	if(sizeread!=10)
-	{
+//	if(sizeread!=10)
+//	{
 		// MessageBox(NULL,"파일을 읽을 수 없습니다","에러", MB_ICONEXCLAMATION | MB_OK);
-		return -1;
-	}
+//		return -1;
+//	}
 
+	GPMEMCPY(buf, &RomBase[romSize-10], 10); // Copy header to buffer
+	
 	CartKind=0;
 
 	b=buf[4];
@@ -975,14 +986,15 @@ int WsCreate(char *CartName)
 			ROMBanks=ROMBanksTable[i].Value;
 		}
 	}
-	if(ROMBanks==0)
+	if(ROMBanks>64)
 	{
-		// MessageBox(NULL,"ROM艱″크수가 부정합니다","에러", MB_ICONEXCLAMATION | MB_OK);
+		GPSPRINTF(debugstring,"Sorry, Games over 4mb not supported yet");
+		PrintMessage(debugstring,1);
 		return -1;
 	}
 
-	GPSPRINTF(debugstring,"ROMBanks = %d", ROMBanks);
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring,"ROMBanks = %d", ROMBanks);
+//	PrintMessage(debugstring,1);
 
 	b=buf[5];
 	RAMBanks=0;
@@ -1003,8 +1015,8 @@ int WsCreate(char *CartName)
 		}
 	}
 
-	GPSPRINTF(debugstring,"RAMBanks =  %d", RAMBanks);
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring,"RAMBanks =  %d", RAMBanks);
+//	PrintMessage(debugstring,1);
 
 	for(i=0;!(CartKind&CK_EEP) && RAMKindTable[i]. Value;i++)
 	{
@@ -1014,25 +1026,25 @@ int WsCreate(char *CartName)
 		}
 	}
 
-	GPSPRINTF(debugstring,"CartKind = %d", CartKind);
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring,"CartKind = %d", CartKind);
+//	PrintMessage(debugstring,1);
 
     if((buf[0]==0x01)&&(buf[2]==0x16)) //STAR HEARTS ∼별과 다이치의 사자∼
     {
 //		if(Verbose)
-		// MessageBox(NULL,"256k SRAM에 변경합니다","경고", MB_ICONEXCLAMATION | MB_OK);
+// 			MessageBox(NULL,"256k SRAM에 변경합니다","경고", MB_ICONEXCLAMATION | MB_OK);
         RAMBanks=1;
         RAMSize=0x8000;
         CartKind=NULL;
     }
 
 	Checksum=(int)((buf[9]<<8)+buf[8]);
-
 	Checksum+=(int)(buf[9]+buf[8]);
 
 	for(i=ROMBanks-1;i>=0;i--)
 	{
-		GpFileSeek (file, FROM_END, (ROMBanks-i)* -0x10000, NULL);
+		ROMMap[0x100-ROMBanks+i] = &RomBase[0x10000 * i];
+/*		GpFileSeek (file, FROM_END, (ROMBanks-i)* -0x10000, NULL);
 
 		if((ROMMap[0x100-ROMBanks+i]=(byte*) GPMALLOC(0x10000))!=NULL)
 		{
@@ -1055,6 +1067,7 @@ int WsCreate(char *CartName)
 			// MessageBox(NULL,"메모리가 충분하지 않습니다","에러", MB_ICONEXCLAMATION | MB_OK);
 			break;
 		}
+*/
 	}
 //	fclose(F);
 
@@ -1125,13 +1138,13 @@ int WsCreate(char *CartName)
 		SaveName[0]='\0';
 	}
 
-	GPSPRINTF(debugstring,"before WsReset()");
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring,"before WsReset()");
+//	PrintMessage(debugstring,0);
 
 	WsReset ();
 
-	GPSPRINTF(debugstring,"after WsReset()");
-	PrintMessage(debugstring,0);
+//	GPSPRINTF(debugstring,"after WsReset()");
+//	PrintMessage(debugstring,1);
 
 	return 0;
 }
@@ -1175,10 +1188,12 @@ void WsRelease(void)
         {
         	break;
         }
-		GPFREE(ROMMap[i]);
+//		GPFREE(ROMMap[i]);
 		ROMMap[i]=MemDummy;
 	}
 }
+
+int selectPressed = 0;
 
 int Interrupt(void)
 {
@@ -1196,10 +1211,10 @@ int Interrupt(void)
 	switch(LCount)
 	{
 		case 0:
-			// skip input for now
-/*			if(RSTRL==144)
+			if(RSTRL==144)
 			{
- 				JoyState=(word) Joystick();
+ 				selectPressed=DoKeys(&JoyState);
+ 				
 				KEYCTL&=(byte) 0xF0;
 				if(KEYCTL&0x40) KEYCTL|=(byte)((JoyState>>8) &0x0F);
 				if(KEYCTL&0x20) KEYCTL|=(byte)((JoyState>>4) &0x0F);
@@ -1213,7 +1228,7 @@ int Interrupt(void)
                 }
 				Joyz=JoyState;
 			}
-*/
+
 			break;
 		case 2:
 			/* Skip Sound Interrupts for now
@@ -1297,8 +1312,6 @@ LogFile(LK_SOUND, str);
                     }
                     if(RSTRL==144)
                     {
-//						GPSPRINTF(debugstring,"WsDrawFlip");
-//						PrintMessage(debugstring,1);
                 	    WsDrawFlip();
                     }
                 }
@@ -1402,8 +1415,13 @@ int WsRun(void)
 			m+=IRQBSE;
 			nec_int(m<<2);
 		}
+		if (selectPressed == 1)
+		{
+			selectPressed = 0;
+			return 0;
+		}
 	}
-	return 0;
+	return 1;
 }
 
 

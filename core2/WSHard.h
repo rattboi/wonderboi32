@@ -15,8 +15,8 @@ typedef signed char offset;
 //---------------------------------------------------------------------------
 extern void *Debug;
 extern byte *Page[0x10];		//리드 address 공간 0 x10000 단위
-extern byte *ROMMap[0x400];		//C-ROM 뱅크 번호에 대한 C-ROM의 포인터(1024까지 서포트)
-extern byte *RAMMap[0x400];		//C-RAM 뱅크 번호에 대한 C-RAM의 포인터(1024까지 서포트)
+extern byte *ROMMap[0x100];		//C-ROM 뱅크 번호에 대한 C-ROM의 포인터(1024까지 서포트)
+extern byte *RAMMap[0x100];		//C-RAM 뱅크 번호에 대한 C-RAM의 포인터(1024까지 서포트)
 extern byte IRAM[0x10000];		//내장 IO공간의 64kB
 extern byte IO[0x10000];		//IO포토 에리어
 

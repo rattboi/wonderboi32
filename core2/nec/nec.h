@@ -43,9 +43,6 @@ typedef enum { AL,AH,CL,CH,DL,DH,BL,BH,SPL,SPH,BPL,BPH,IXL,IXH,IYL,IYH } BREGS;
 
 #define SetAF(x,y,z)	(I.AuxVal = ((x) ^ ((y) ^ (z))) & 0x10)
 
-
-
-
 #define SetSF(x)		(I.SignVal = (x))
 #define SetZF(x)		(I.ZeroVal = (x))
 #define SetPF(x)		(I.ParityVal = (x))

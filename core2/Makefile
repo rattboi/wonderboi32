@@ -27,7 +27,7 @@ LD			=	arm-elf-gcc
 AS			=	arm-elf-as
 OBJCOPY			=	arm-elf-objcopy
  
-.SFILES			=	../wscbmp.s \
+.SFILES			=	wscbmp.s \
 					horz_render_normal.s \
 					../cpuspeed.s
  
@@ -45,7 +45,13 @@ OBJCOPY			=	arm-elf-objcopy
 					../OKF/list.c \
 					../OKF/folder.c \
 					../file_dialog.c \
-					../setcpuspeed.c
+					../setcpuspeed.c \
+					../menu.c \
+					../misc_str_func.c \
+					../zlib/unzip.c \
+					../selector.c \
+					../OKF/fileSelector.c \
+					../filecache.c 
 
 .CXXFILES		=	Profiler.cpp
 

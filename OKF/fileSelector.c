@@ -33,7 +33,7 @@
 
 #include "fileSelector.h"
 
-#include "filecache.h"
+#include "../filecache.h"
 
 extern struct { int crc; int size; char *name; } MyDat[];
 
