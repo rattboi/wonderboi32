@@ -77,7 +77,9 @@ video_mode video_modes[6] =
 	vert_render_normal,		88,	0,	0			//for savestates
 };
 
-void  RefreshLine(int Line, void* lpSurface);
+#include "newgfxcore.h"
+
+void  (*RefreshLine)(int Line, void* lpSurface);
 
 //---------------------------------------------------------------------------
 int  WsDrawCreate()
@@ -88,7 +90,9 @@ int  WsDrawCreate()
 	video_x = video_modes[DrawMode].video_x;
 	video_y = video_modes[DrawMode].video_y;
 	scroll_x = video_modes[DrawMode].scroll_x;
-		
+
+	RefreshLine = RefreshLineOld;
+
     WsDrawClear();
     return 0;
 }
@@ -132,7 +136,7 @@ void  SetPalette(int Index, byte PalData)
 	return;
 }
 
-void  RefreshLine(int Line, void* buffer)
+void  RefreshLineOld(int Line, void* buffer)
 {
 	uint16	*pSBuf;			// 서페스하″파의 (0, Y) 좌표호˚인터(8艱″실 포함하지 않고)
 	uint16	*pSWrBuf16;

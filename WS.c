@@ -443,7 +443,21 @@ LogFile(LK_SPRITE, str);
 		case 0x52:
 		case 0x53:break;
 
-		case 0x60:break;
+		case 0x60:
+			{
+				switch(V)
+				{
+				case 0xE0:
+					RefreshLine = RefreshLine16Packed;
+					break;
+				case 0xC0:
+					RefreshLine = RefreshLine16Layered;
+					break;
+				default:
+					RefreshLine = RefreshLineOld;
+				}
+			}
+			break;
 
 		case 0x62:break;
 

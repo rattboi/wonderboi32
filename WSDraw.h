@@ -34,4 +34,10 @@ extern  void  	WsDrawClear(void);
 
 extern  void  	SetPalette(int Index, byte PalData);
 
+extern void (*RefreshLine)			(int Line, void *lpSurface);
+
+extern void RefreshLine16Packed		(int Line, void *lpSurface);
+extern void RefreshLine16Layered	(int Line, void *lpSurface);
+extern void RefreshLineOld			(int Line, void *lpSurface);
+
 #endif
