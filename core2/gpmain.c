@@ -42,13 +42,13 @@ void CPU_alignment_and_cache() {
 
 void GpMain(void *arg)
 {
+	int i;
+
 	char debugstring[512];
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
 	setCpuSpeed(166);
-
-	PROFILER_START();
 
 	InitGraphics(16);							// Init Graphics and Fonts
 
@@ -65,29 +65,23 @@ void GpMain(void *arg)
 
 	ShowCredits();								// show the opening dialog
 
-	WsCreate("gp:\\gpmm\\wb32\\rom\\mrdrill.ws");
+	WsCreate("gp:\\gpmm\\wb32\\rom\\ggp1.ws");
 
 	WsDrawCreate();
 
 	GpSurfaceSet(&gtSurface[0]);
 
-	while(1)
+//	PROFILER_START();
+
+//	for(i=0;i<1000;i++)
+	while (1)
 	{
-//		GPSPRINTF(debugstring,"before WsRun");
-//		PrintMessage(debugstring,0);
-
 		WsRun();
-
-		if (GpKeyGet())
-			break;
-
-//		GPSPRINTF(debugstring,"after WsRun");
-//		PrintMessage(debugstring,0);
 	}
 
-	PROFILER_STOP();
+//	PROFILER_STOP();
 
-	PROFILER_DUMP();
+//	PROFILER_DUMP();
 
 	return;
 }

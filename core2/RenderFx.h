@@ -104,15 +104,25 @@ void render16PackedMode(int Line, void *lpSurface) {
 	{
 		if((DSPCTL&0x30) ==0x20)
 		{
-            for(i=0, pW=WBuf+8;i<224;i++) *pW++=1;
+            for(i=0, pW=WBuf+8;i<224;i++)
+				*pW++=1;
 			if((Line>=SCR2WT)&&(Line<=SCR2WB))
-				for(i=SCR2WL, pW=WBuf+8+i;i<=SCR2WR;i++) *pW++=0;
-		} else if((DSPCTL&0x30) ==0x30) {
-            for(i=0, pW=WBuf+8;i<224;i++) *pW++=0;
+				for(i=SCR2WL, pW=WBuf+8+i;i<=SCR2WR;i++)
+					*pW++=0;
+		} 
+		else if((DSPCTL&0x30) ==0x30) 
+		{
+            for(i=0, pW=WBuf+8;i<224;i++)
+				*pW++=0;
 			if((Line>=SCR2WT)&&(Line<=SCR2WB))
-            	for(i=SCR2WL, pW=WBuf+8+i;i<=SCR2WR;i++) *pW++=1;
-		} else for(i=0, pW=WBuf+8;i<0x100;i++) *pW++=0;
-			
+            	for(i=SCR2WL, pW=WBuf+8+i;i<=SCR2WR;i++)
+					*pW++=1;
+		}
+		else 
+		{
+			for(i=0, pW=WBuf+8;i<0x100;i++)
+				*pW++=0;
+		}
 
 		OffsetX=SCR2X&0x07;						// X좌표 오프셋을 설정
 		pSWrBuf=pSBuf-OffsetX;					// 서페스하″파의 기입호˚인터를 X됫후셋트

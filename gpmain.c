@@ -271,11 +271,13 @@ int DoKeys(void)
 void WsEmulate(void)
 {
 	int i = 0;
-	
+	int j;
+
 	InitVideo();
 	InitKeys();
 		
-	while(1)
+//	while(1)
+	for(j = 0; j < 1000; j++)
 	{
 		if (DoKeys())
 			break;
@@ -495,8 +497,13 @@ void Emulate()
 
 	GpSurfaceSet(&gtSurface[0]);
 	
+//	PROFILER_START();
+
 	WsEmulate();
-	
+
+//	PROFILER_STOP();
+//	PROFILER_DUMP();
+
 	GpSurfaceSet(&gtSurface[giSurface]);
 	
 	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = fSkip >> 1;

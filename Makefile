@@ -57,9 +57,27 @@ OBJCOPY			=	arm-elf-objcopy
 					OKF/fileSelector.c \
 					filecache.c
 
-OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o)
- 
+.CXXFILES		=	Profiler.cpp
+
+OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o) $(.CXXFILES:.cpp=.o)
+
 CFLAGS			=	-marm \
+				-march=armv4t \
+		       		-mapcs \
+		       		-O2 \
+	       			-fomit-frame-pointer \
+	       			-finline-functions \
+		       		-fshort-enums \
+		       		-ffast-math \
+	       			-mstructure-size-boundary=8 \
+		       		-mno-thumb-interwork \
+		       		-Wno-multichar \
+				-I$(GPSDK)/include \
+				-I. \
+				-I./zlib \
+				-I./gplibs
+
+CXXFLAGS			=	-marm \
 				-march=armv4t \
 		       		-mapcs \
 		       		-O2 \
