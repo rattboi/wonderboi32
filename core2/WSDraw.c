@@ -22,10 +22,9 @@
 #define RGB555(R,G,B) ((((int)(R))<<11)|(((int)(G))<<6)|(((int)(B))<<1))
 
 int DrawMode=-1;
-int PixelDepth;
 
 byte ColTbl[0x210];
-byte Palette[16+1][16][4];
+uint16 Palette[16+1][16];
 
 uint16 screenbuffer[(224+16)*144];
 
@@ -49,9 +48,6 @@ byte SprTMap[512];						// 스후˚라이트의 타이르맛후˚
 
 byte *BGndTPal=NULL;					// 하″크크″라운트″의 타일하˚렛호˚인터
 byte *WndTPal=NULL;						// 윈트″우의 타일하˚렛호˚인터
-
-void  RefreshLine(int Line, void* lpSurface);
-void  DrawErr(char* Msg);
 
 extern unsigned short WSCBmp_horz[];
 extern unsigned short WSCBmp_vert[];
@@ -77,6 +73,8 @@ video_mode video_modes[4] =
 	vert_render_normal,		88,	7,	0
 };
 
+void  RefreshLine(int Line, void* lpSurface);
+
 //---------------------------------------------------------------------------
 int  WsDrawCreate()
 {
@@ -87,8 +85,6 @@ int  WsDrawCreate()
 	video_y = video_modes[DrawMode].video_y;
 	scroll_x = video_modes[DrawMode].scroll_x;
 		
-    PixelDepth=2;
-
     WsDrawClear();
     return 0;
 }
@@ -106,7 +102,7 @@ int  WsDrawLine(int Line)
 //---------------------------------------------------------------------------
 int  WsDrawFlip(void)
 {
-	video_update((byte*)screenbuffer+(scroll_x*2), gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2));
+	video_update((byte*)screenbuffer+(scroll_x*2)+16, gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2));
 
 	return 0;
 }
@@ -127,17 +123,15 @@ void  SetPalette(int Index, byte PalData)
 	i=Index>>5;
 	j=(Index>>1)&0x0F;
 
-	Palette[i][j][0]=(byte)(PF&0xFF);
-	PF = PF >> 8;
-	Palette[i][j][1]=(byte)(PF&0xFF);
+	Palette[i][j]=PF;
 
-    return;
+	return;
 }
 
 void  RefreshLine(int Line, void* buffer)
 {
-	byte *pSBuf;			// 서페스하″파의 (0, Y) 좌표호˚인터(8艱″실 포함하지 않고)
-	byte *pSWrBuf;			// 서페스하″파의 라이트호˚인터
+	uint16	*pSBuf;			// 서페스하″파의 (0, Y) 좌표호˚인터(8艱″실 포함하지 않고)
+	uint16	*pSWrBuf16;
 
 	int *pZ;				// ZBuf의 라이트호˚인터
 	int ZBuf[0x100];		// Z絿스크
@@ -157,55 +151,38 @@ void  RefreshLine(int Line, void* buffer)
 
     int i, j, k, index[8];
 
-	byte *pbPal;			// 하˚렛호˚인터
-	byte *pbRdPal;			// 하˚렛호˚인터
-	byte defpal[]={0,0,0,0};
+	uint16 *pbPal;			// 하˚렛호˚인터
+	uint16 defpal = 0;
 
-	pSBuf=(byte *) buffer;
-	pSWrBuf=pSBuf;
+	pSBuf=(uint16 *) buffer+8;
+	pSWrBuf16=pSBuf;
+
 	if(LCDSLP&0x01)
 	{
-		if(COLCTL&0xE0)
+		if(COLCTL&0xE0) // Any color mode
 		{
-			pbPal=&Palette[(BORDER&0xF0)>>4][BORDER&0x0F][0];
+			pbPal=&Palette[(BORDER&0xF0)>>4][BORDER&0x0F];
 		}
-		else
+		else // mono mode
 		{
-			pbPal=&Palette[16][BORDER&0x07][0];
+			pbPal=&Palette[16][BORDER&0x07];
 		}
 	}
 	else
 	{
-		pbPal=defpal;
+		pbPal=&defpal;
 	}
 	for(i=0;i<224;i++)
 	{
-//		if(PixelDepth==2)
-		{
-			*pSWrBuf++=pbPal[0];
-			*pSWrBuf++=pbPal[1];
-		}
-/*		else if(PixelDepth==3)
-		{
-			*pSWrBuf++=pbPal[0];
-			*pSWrBuf++=pbPal[1];
-			*pSWrBuf++=pbPal[2];
-		}
-		else if(PixelDepth==4)
-		{
-			*pSWrBuf++=pbPal[0];
-			*pSWrBuf++=pbPal[1];
-			*pSWrBuf++=pbPal[2];
-			*pSWrBuf++=pbPal[3];
-		}
-*/	}
+		*pSWrBuf16++=*pbPal;
+	}
 
 	if(!(LCDSLP&0x01)) return;
 
- 	if(DSPCTL&0x01)
+ 	if(DSPCTL&0x01) // BG Layer on
 	{
 		OffsetX=SCR1X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf=pSBuf-OffsetX*2; //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf16=pSBuf-OffsetX; //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR1Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -218,7 +195,7 @@ void  RefreshLine(int Line, void* buffer)
 			TMap=*(pbTMap+(TMapX++&0x3F));		// 타이르맛후˚를 읽어들인다
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;	// 타이르맛후˚를 읽어들인다
 
-			if(COLCTL&0x40)
+			if(COLCTL&0x40) // Color Mode
 			{
             	if(TMap&MAP_BANK)
             	{
@@ -238,7 +215,7 @@ void  RefreshLine(int Line, void* buffer)
 					pbTData+=OffsetY<<2;// 타이르테″타의 호˚인터를 설정
 				}
 			}
-			else
+			else	// Mono Mode
 			{
             	pbTData=IRAM+0x2000;
             	pbTData+=(TMap&MAP_TILE)<<4;
@@ -279,7 +256,7 @@ void  RefreshLine(int Line, void* buffer)
 			}
 			else
 			{
-				if(COLCTL&0x40)					// 16 Color
+				if(COLCTL&0x40)					// 16 Color (unpacked)
 				{
 					index[0] =(pbTData[0]&0x80)? 0x1:0;
 					index[0]|=(pbTData[1]&0x80)? 0x2:0;
@@ -314,7 +291,7 @@ void  RefreshLine(int Line, void* buffer)
 					index[7]|=(pbTData[2]&0x01)? 0x4:0;
 					index[7]|=(pbTData[3]&0x01)? 0x8:0;
 				}
-				else							// 4 Color
+				else							// 4 Color (unpacked)
 				{
 					index[0] =(pbTData[0]&0x80)? 0x1:0;
 					index[0]|=(pbTData[1]&0x80)? 0x2:0;
@@ -351,215 +328,62 @@ void  RefreshLine(int Line, void* buffer)
 				index[4]=j;
 			}
 
-//			if(PixelDepth==2)
+			if((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
 			{
-				if((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]];
+				*pSWrBuf16++=*pbPal++;
 			}
-/*			else if(PixelDepth==3)
+			if((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
 			{
-				if((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]];
+				*pSWrBuf16++=*pbPal++;
 			}
-			else if(PixelDepth==4)
+			if((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
 			{
-				if((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				if((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]];
+				*pSWrBuf16++=*pbPal++;
 			}
-	*/	}
+			if((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]];
+				*pSWrBuf16++=*pbPal++;
+			}
+			if((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]];
+				*pSWrBuf16++=*pbPal++;
+			}
+			if((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]];
+				*pSWrBuf16++=*pbPal++;
+			}
+			if((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]];
+				*pSWrBuf16++=*pbPal++;
+			}
+			if((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]];
+				*pSWrBuf16++=*pbPal++;
+			}
+		}
 	}
 
 	GPMEMSET(&ZBuf, 0, sizeof(ZBuf));
 
-	if(DSPCTL&0x02)
+	if(DSPCTL&0x02)			// FG Layer on
 	{
-		if((DSPCTL&0x30) ==0x20)
+		if((DSPCTL&0x30) ==0x20) // FG Layer displayed only inside window
 		{
             for(i=0, pW=WBuf+8;i<224;i++)
 			{
@@ -573,7 +397,7 @@ void  RefreshLine(int Line, void* buffer)
             	}
             }
 		}
-		else if((DSPCTL&0x30) ==0x30)
+		else if((DSPCTL&0x30) ==0x30) // FG Layer displayed only outside window
 		{
             for(i=0, pW=WBuf+8;i<224;i++)
 			{
@@ -587,7 +411,7 @@ void  RefreshLine(int Line, void* buffer)
             	}
             }
 		}
-		else
+		else  // no FG window
 		{
 			for(i=0, pW=WBuf+8;i<0x100;i++)
 			{
@@ -596,7 +420,7 @@ void  RefreshLine(int Line, void* buffer)
 		}
 
 		OffsetX=SCR2X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf=pSBuf-OffsetX*2; //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf16=pSBuf-OffsetX; //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR2Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -745,261 +569,76 @@ void  RefreshLine(int Line, void* buffer)
 				index[4]=j;
 			}
 
-//			if(PixelDepth==2)
+			if(((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
 			{
-				if(((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=2;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
 			}
-/*			else if(PixelDepth==3)
+			pW++;pZ++;
+			if(((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
 			{
-				if(((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=3;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
 			}
-			else if(PixelDepth==4)
+			pW++;pZ++;
+			if(((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
 			{
-				if(((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
-				if(((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf+=4;
-				else
-				{
-					pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]][0];
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pZ=1;
-				}
-				pW++;pZ++;
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
 			}
-	*/	}
+			pW++;pZ++;
+			if(((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
+			}
+			pW++;pZ++;
+			if(((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
+			}
+			pW++;pZ++;
+			if(((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
+			}
+			pW++;pZ++;
+			if(((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
+			}
+			pW++;pZ++;
+			if(((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			else
+			{
+				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]];
+				*pSWrBuf16++=*pbPal++;
+				*pZ=1;
+			}
+			pW++;pZ++;
+		}
 	}
 
-	if(DSPCTL&0x04)
+	if(DSPCTL&0x04) // sprites on
 	{
-		if(DSPCTL&0x08)
+		if(DSPCTL&0x08) //sprite window on
         {
             for(i=0, pW=WBuf+8;i<224;i++)
 			{
@@ -1044,9 +683,9 @@ void  RefreshLine(int Line, void* buffer)
 				continue;
 
 			i=k;
-			pSWrBuf=pSBuf+i*2; //PixelDepth;
+			pSWrBuf16=pSBuf+i;
 
-			if(COLCTL&0x40)
+			if(COLCTL&0x40)		// 16 color
 			{
             	pbTData=IRAM+0x4000;
             	pbTData+=(TMap&SPR_TILE)<<5;
@@ -1059,7 +698,7 @@ void  RefreshLine(int Line, void* buffer)
 					pbTData+=(Line-j)<<2;// 타이르테″타의 호˚인터를 설정
 				}
 			}
-			else
+			else			// 4 color
 			{
             	pbTData=IRAM+0x2000;
             	pbTData+=(TMap&SPR_TILE)<<4;
@@ -1176,13 +815,13 @@ void  RefreshLine(int Line, void* buffer)
 			pZ=ZBuf+k+8;
             for(i=0;i<8;i++, pZ++, pW++)
             {
-            	if(DSPCTL&0x08)
+            	if(DSPCTL&0x08)			// sprite window on
             	{
             		if(TMap&SPR_CLIP)
             		{
                 		if(!*pW)
                 		{
-                			pSWrBuf+=2; //PixelDepth;
+                			pSWrBuf16++;
 							continue;
                 		}
             		}
@@ -1190,7 +829,7 @@ void  RefreshLine(int Line, void* buffer)
 					{
 						if(*pW)
 						{
-							pSWrBuf+=2; //PixelDepth;
+							pSWrBuf16++;
                    			continue;
 						}
             		}
@@ -1198,42 +837,24 @@ void  RefreshLine(int Line, void* buffer)
 
 				if((!index[i])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))
                 {
-                	pSWrBuf+=2; //PixelDepth;
+                	pSWrBuf16++;
                     continue;
                 }
 
 				if((*pZ)&&(!(TMap&SPR_LAYR)))
                 {
-                	pSWrBuf+=2; //PixelDepth;
+                	pSWrBuf16++;
                     continue;
                 }
 
-                pbPal=&Palette[((TMap&SPR_PAL)>>9)+8][index[i]][0];
+                pbPal=&Palette[((TMap&SPR_PAL)>>9)+8][index[i]];
 #ifdef DRAW_DEBUG
 				if(!(COLCTL&0x80))
                 {
-					pbPal=&Palette[((TMap&SPR_PAL)>>9)+8][index[i]+12][0];
+					pbPal=&Palette[((TMap&SPR_PAL)>>9)+8][index[i]+12];
                 }
 #endif
-//				if(PixelDepth==2)
-				{
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-/*				else if(PixelDepth==3)
-				{
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-				else if(PixelDepth==4)
-				{
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-					*pSWrBuf++=*pbPal++;
-				}
-*/
+				*pSWrBuf16++=*pbPal++;
 			}
 		}
 	}
@@ -1282,13 +903,6 @@ int  GetDrawMode()
 {
 	return DrawMode;
 }
-
-//---------------------------------------------------------------------------
-void  DrawErr(char* Msg)
-{
-//	MessageBox(NULL, Msg,"WsDraw닝라", MB_ICONEXCLAMATION|MB_OK);
-}
-
 
 
 

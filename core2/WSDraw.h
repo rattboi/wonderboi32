@@ -9,8 +9,8 @@ extern byte 	*SprTTMap;
 extern byte 	*SprETMap;
 extern byte 	SprTMap[512];
 
-extern byte ColTbl[0x210];
-extern byte Palette[16+1][16][4];
+extern byte		ColTbl[0x210];
+extern uint16	Palette[16+1][16];
 
 extern byte 	*BGndTPal;
 extern byte 	*WndTPal;

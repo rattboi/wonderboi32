@@ -18,7 +18,7 @@ typedef struct WsRomHeader_tag
 	uint8	unused;
 	uint8	romSize;
 	uint8	ramSize;
-	uint8	additionnalCapabilities;
+	uint8	additionalCapabilities;
 	uint8	realtimeClock;
 	uint16	checksum;
 } WsRomHeader;

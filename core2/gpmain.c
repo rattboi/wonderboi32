@@ -56,11 +56,6 @@ void ShowCredits()
 	PrintMessage(string_version,1);
 }
 
-int rotated()
-{
-	return base_rom[romSize-4]&1;
-}
-
 int LoadRom(char *filename)
 {
 	F_HANDLE F;
@@ -340,13 +335,12 @@ void GetBaseName(char *fname, char *basename)
 void GpMain(void *arg)
 {
 	int i;
-	int first_run = 1;
-	char fname[256];
-	char debugstring[512];
 	char g_string[256];
 	int result;
-	int running = 0;							// set to 1 if a rom is loaded
 	F_HANDLE F;
+	int running = 0;				// set to 1 if a rom is loaded
+	int first_run = 1;				// used to see if Reset should save ram
+	int horz_mode = 0;
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
@@ -401,7 +395,7 @@ void GpMain(void *arg)
 		{
 		case MENU_MAIN_LOAD_ROM:
 			{
-				if (DoFileSelector(fname, base_rom) == 0)
+				if (DoFileSelector(g_string, base_rom) == 0)
 				{
 					while (GpKeyGet());  // wait for keyrelease			
 					break;
@@ -412,27 +406,33 @@ void GpMain(void *arg)
 					running = 0;
 					WsRelease();
 				}
-									
-				if (!LoadRom(fname))
+
+				setCpuSpeed(132);
+
+				if (!LoadRom(g_string))
 				{
 					PrintError("Error Loading File!", 1);
-//					GpAppExit();
 					break;
 				}
 
+				setCpuSpeed(66);
+
 				WsCreate(base_rom, romSize);
-				
-				vert = rotated();
 				
 				if (vert == 1)
 				{
+					if (videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected != 3)
+						horz_mode = videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected;
+
 					videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = 3;
-					WsInputInit(1);
 				}
 				else
-					WsInputInit(0);
+				{
+					if (videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected == 3)
+						videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = horz_mode;
+				}
 				
-				GetBaseName(fname, basename);
+				GetBaseName(g_string, basename);
 
 				GPSPRINTF(SaveName, "gp:\\GPMM\\WB32\\RAM\\%s.ram",basename); // ram save = filename.ram
 
@@ -576,8 +576,8 @@ void GpMain(void *arg)
 							vert_keys_menu.options[MENU_KEYS_LEFT].selected		= 6;
 							vert_keys_menu.options[MENU_KEYS_RIGHT].selected	= 7;
 							vert_keys_menu.options[MENU_KEYS_DOWN].selected		= 5;
-							vert_keys_menu.options[MENU_KEYS_A].selected		= 3;
-							vert_keys_menu.options[MENU_KEYS_B].selected		= 1;
+							vert_keys_menu.options[MENU_KEYS_A].selected		= 1;
+							vert_keys_menu.options[MENU_KEYS_B].selected		= 3;
 							vert_keys_menu.options[MENU_KEYS_START].selected	= 10;
 							vert_keys_menu.options[MENU_KEYS_L].selected		= 2;
 							vert_keys_menu.options[MENU_KEYS_R].selected		= 0;

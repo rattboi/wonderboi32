@@ -39,6 +39,7 @@ int TblSkip[11][10]={
 };
 
 int vert;
+uint16 RomCRC;
 
 void ErrorMsg(char *Msg)
 {
@@ -811,7 +812,6 @@ WriteMemFn WriteMemFnTable[16]= {
     WriteRom,
 };
 
-int Int_callback(int);
 void WsReset (void)
 {
 	int i, j;
@@ -905,8 +905,8 @@ void WsReset (void)
     Page[0xF]=ROMMap[0xF|j];
     WriteIO(0xC2, 0xFF);
     WriteIO(0xC3, 0xFF);
-//    SetSoundFreq(4,0);
-//    SetSoundFreq(4,1792);
+//  SetSoundFreq(4,0);
+//  SetSoundFreq(4,1792);
 	WaveMap=-1;
 //	WsSoundClear(0);
 //	WsSoundClear(1);
@@ -920,7 +920,7 @@ void WsReset (void)
 	nec_reset(NULL);
 	nec_set_reg(NEC_SP, 0x2000);
 
-//쵸코보의 신기한 지하 감옥
+// Some games require initialized RAM 
     IRAM[0x75AC]=0x41;
     IRAM[0x75AD]=0x5F;
     IRAM[0x75AE]=0x43;
@@ -1020,6 +1020,10 @@ int WsCreate(uint8 *RomBase, uint32 romSize)
 	
 	WsReset ();
 
+	vert = WsromHeader->additionalCapabilities & 1; // set if the game is vertical
+
+	RomCRC = WsromHeader->checksum;
+
 	return 0;
 }
 
@@ -1062,7 +1066,6 @@ void saveStateToMem(gameState *tempState)
 
 void loadStateFromMem(gameState *tempState)
 {
-
 	MacroLoadNecRegisterFromMem(tempState,NEC_IP);
 	MacroLoadNecRegisterFromMem(tempState,NEC_AW);
 	MacroLoadNecRegisterFromMem(tempState,NEC_BW);
@@ -1094,9 +1097,9 @@ void loadStateFromMem(gameState *tempState)
 
 int	WsSaveState(char *statepath)
 {
-	F_HANDLE F;
-	uint32 result;
-//	uint16	crc=memory_getRomCrc();
+	F_HANDLE	F;
+	uint32		result;
+	uint16		crc	=	RomCRC;
 	unsigned	value;
 	char		newPath[1024];
 	gameState	*saveState;
@@ -1112,44 +1115,23 @@ int	WsSaveState(char *statepath)
 		if (saveState != NULL)
 		{
 			saveStateToMem(saveState);
-//			GpFileWrite(F,&crc,sizeof(crc));
+			GpFileWrite(F,&crc,sizeof(crc));
 			GpFileWrite(F,saveState,sizeof(gameState));
 		}
 		GpFileClose(F);
-	}
-	else
-	{
-//		PrintError("Error Saving\nIs WB32\\SAV directory created?",0);
-//		Delay(1000);
 	}
 
 	return(1);
 }
 
-////////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////////
-//
-//
-//
-//
-//
-//
-//
-////////////////////////////////////////////////////////////////////////////////
-#define MacroLoadNecRegisterFromFile(F,R)        \
-		GpFileRead(F,&value,sizeof(value),&sizeread);		\
-	    nec_set_reg(R,value);
-
 int	WsLoadState(char *statepath)
 {
-	F_HANDLE F;
-	uint32 result;
-	ulong sizeread;
+	F_HANDLE	F;
+	uint32		result;
+	ulong		sizeread;
 
-//	uint16	crc=memory_getRomCrc();
-	uint16	newCrc;
-	unsigned	value;
+	uint16		crc		=	RomCRC;
+	uint16		newCrc;
 
 	gameState	*saveState;
 
@@ -1158,13 +1140,13 @@ int	WsLoadState(char *statepath)
 	if (result != SM_OK)
 		return(-1);
 
-//	GpFileRead(F, &newCrc, sizeof(newCrc), &sizeread);
+	GpFileRead(F, &newCrc, sizeof(newCrc), &sizeread);
 
-//	if (newCrc!=crc)
-//	{
-//		GpFileClose(F);
-//		return(-1);
-//	}
+	if (newCrc!=crc)
+	{
+		GpFileClose(F);
+		return(-1);
+	}
 
 	saveState	=	GPMALLOC(sizeof(gameState));
 
@@ -1506,7 +1488,3 @@ int WsRun(void)
 	}
 	return 1;
 }
-
-
-
-

@@ -88,7 +88,7 @@ int DoKeys(uint16 *state)
 		{
 			if (DrawMode != 0 && DrawMode != 3)
 			{
-				scroll_x = ((scroll_x < 14) ? scroll_x + 2 : 14);
+				scroll_x = ((scroll_x < 10) ? scroll_x + 2 : 10);
 			}
 			selectPressed = 1;
 		}
