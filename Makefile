@@ -71,7 +71,6 @@ CFLAGS			=	-marm \
 	       			-mstructure-size-boundary=8 \
 		       		-mno-thumb-interwork \
 		       		-Wno-multichar \
-		       		-save-temps \
 				-I$(GPSDK)/include \
 				-I. \
 				-I./zlib \

@@ -258,18 +258,34 @@ static void WriteRom(unsigned A, byte V)
 static void WriteIRam(unsigned A, byte V)
 {
 	IRAM[A&0xFFFF]=V;
+	// wsc palette
 	if((A&0xFE00)==0xFE00)
 	{
     	SetPalette(A&0x1FF, V);
 	}
+	// wsc 16 color tiles bank 0
+	if (((A&0xFFFF)>=0x4000)&&((A&0xFFFF)<0x8000))
+	{
+		if (IRAM[A&0xFFFF]!=V)
+			wsc_modified_tile[(A&0x3fff)>>5]=1;
+	}
+	else
+	// wsc 16 color tiles bank 1
+	if (((A&0xFFFF)>=0x8000)&&((A&0xFFFF)<0xC000))
+	{
+		if (IRAM[(A&0xFFFF)]!=V)
+			wsc_modified_tile[((A&0x3fff)>>5)+512]=1;
+	}
+/*
 	if(!((A-WaveMap) &0xFFC0))
 	{
 	#ifdef SOUND_DEBUG
 	GPSPRINTF(str,"%05d-\t\t\t\t\t(%02X) %02X\n", GetTickCount() &0xFFFF, A&0x003F, V);
 	LogFile(LK_SOUND, str);
 	#endif
-//		SetSoundPBuf(A&0x003F, V);
+		SetSoundPBuf(A&0x003F, V);
 	}
+*/
 }
 
 static void  WriteCRam(unsigned A, byte V)

@@ -30,6 +30,14 @@ uint16 Palette[16+1][16];
 
 uint16 screenbuffer[(224+16)*144];
 
+uint8	*ws_tile_cache;
+uint8	*wsc_tile_cache;
+
+uint8	*ws_hflipped_tile_cache;
+uint8	*wsc_hflipped_tile_cache;
+uint8	*ws_modified_tile;
+uint8	*wsc_modified_tile;
+
 #define MAP_TILE 0x01FF
 #define MAP_PAL  0x1E00
 #define MAP_BANK 0x2000
@@ -97,7 +105,26 @@ int  WsDrawCreate()
 	video_y = video_modes[DrawMode].video_y;
 	scroll_x = video_modes[DrawMode].scroll_x;
 
-//	RefreshLine = RefreshLineOld;
+	if (ws_tile_cache == NULL)
+	{
+		ws_tile_cache				= (uint8*)GPMALLOC(512*8*8);
+		wsc_tile_cache				= (uint8*)GPMALLOC(1024*8*8);
+
+		ws_hflipped_tile_cache		= (uint8*)GPMALLOC(512*8*8);
+		wsc_hflipped_tile_cache		= (uint8*)GPMALLOC(1024*8*8);
+
+		ws_modified_tile			= (uint8*)GPMALLOC(512);
+		wsc_modified_tile			= (uint8*)GPMALLOC(1024);
+	}
+
+	GPMEMSET(ws_tile_cache,0x00,512*8*8);
+	GPMEMSET(wsc_tile_cache,0x00,1024*8*8);
+
+	GPMEMSET(ws_hflipped_tile_cache,0x00,512*8*8);
+	GPMEMSET(wsc_hflipped_tile_cache,0x00,1024*8*8);
+
+	GPMEMSET(ws_modified_tile,0x01,512);
+	GPMEMSET(wsc_modified_tile,0x01,1024);
 
     WsDrawClear();
     return 0;
@@ -123,6 +150,7 @@ int  WsDrawLine(int Line)
 
 	OkfPrintSurface(debug,0);
 */
+
     return 0;
 }
 

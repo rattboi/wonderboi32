@@ -21,6 +21,8 @@ extern int 		DispHeight;
 extern int 		DispWidth;
 extern int 		PixelDepth;
 
+extern uint8	*wsc_modified_tile;
+
 extern int		WsDrawCreate();
 
 extern  void  	WsDrawRelease(void);
