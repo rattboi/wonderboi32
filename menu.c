@@ -181,21 +181,13 @@ void fill_main_menu (stMenu *menu) {
 			menu->options[MENU_MAIN_CPUSPEED].selected = 0; // Default to 132
 			
 		GPSTRCPY (menu->options[MENU_MAIN_LOAD_ROM].name,"Load Rom");
-
 		GPSTRCPY (menu->options[MENU_MAIN_PLAY].name,"Continue Playing");
-
 		GPSTRCPY (menu->options[MENU_MAIN_WS_RESET].name,"Reset Game (Saves SRAM)");
-
-		GPSTRCPY (menu->options[MENU_MAIN_CONFIG_STATES].name, "States Config");
-		
-		GPSTRCPY (menu->options[MENU_MAIN_CONFIG_VIDEO].name, "Video Config");
-		
-		GPSTRCPY (menu->options[MENU_MAIN_CONFIG_KEYS].name, "Key Config");
-		
+		GPSTRCPY (menu->options[MENU_MAIN_LOAD_STATE].name, "Load State");
+		GPSTRCPY (menu->options[MENU_MAIN_SAVE_STATE].name, "Save State");
+		GPSTRCPY (menu->options[MENU_MAIN_CONFIG].name, "Config");
 		GPSTRCPY (menu->options[MENU_MAIN_SAVE_DEF_CFG].name, "Save Default Config");
-
 		GPSTRCPY (menu->options[MENU_MAIN_SAVE_GME_CFG].name, "Save Game Config");
-
 		GPSTRCPY (menu->options[MENU_MAIN_REBOOT].name,"Reboot GP32");
 
 		menu->num = 10;
@@ -203,90 +195,41 @@ void fill_main_menu (stMenu *menu) {
 		precalc_menu(menu,2,2);
 }
 
-void fill_statesconfig_menu (stMenu *menu) {
+void fill_config_menu (stMenu *menu) {
 
 		GPMEMSET(menu,0,sizeof(stMenu));
 
-		GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].name,"States");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[0].name,"1");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[1].name,"2");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[2].name,"3");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[3].name,"4");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[4].name,"5");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[5].name,"6");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[6].name,"7");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[7].name,"8");
-			GPSTRCPY (menu->options[MENU_STATECONFIG_SAVESLOT].sub_options[8].name,"9");
+		GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].name,"Frameskip");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[0].name,"0");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[1].name,"1");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[2].name,"2");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[3].name,"3");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[4].name,"4");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[5].name,"5");
+			menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].num=6;
+			menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = 2; // Default to FS4
+
+		GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].name,"Video");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].sub_options[0].name,"S");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].sub_options[1].name,"F");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].sub_options[2].name,"W");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].sub_options[3].name,"V");
+			menu->options[MENU_CONFIG_VIDEO_STRETCH].num=4;
+			menu->options[MENU_CONFIG_VIDEO_STRETCH].selected = 2; // Default to H+V
 			
-			menu->options[MENU_STATECONFIG_SAVESLOT].num=9;
-
-		GPSTRCPY (menu->options[MENU_STATECONFIG_LOAD_STATE].name,"Load State");
-
-		GPSTRCPY (menu->options[MENU_STATECONFIG_SAVE_STATE].name,"Save State");
-
-		GPSTRCPY (menu->options[MENU_STATECONFIG_RETURN].name,"Return To Main Menu");
-		
-		menu->num = 4;
-
-		precalc_menu(menu,2,10);
-}
-
-void fill_videoconfig_menu (stMenu *menu) {
-
-		GPMEMSET(menu,0,sizeof(stMenu));
-
-		GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].name,"Frameskip");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[0].name,"0");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[1].name,"1");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[2].name,"2");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[3].name,"3");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[4].name,"4");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[5].name,"5");
-			menu->options[MENU_VIDEOCONFIG_FRAMESKIP].num=6;
-			menu->options[MENU_VIDEOCONFIG_FRAMESKIP].selected = 2; // Default to FS4
-
-		GPSTRCPY (menu->options[MENU_VIDEOCONFIG_STRETCH].name,"Video");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_STRETCH].sub_options[0].name,"Nor");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_STRETCH].sub_options[1].name,"H");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_STRETCH].sub_options[2].name,"H+V");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_STRETCH].sub_options[3].name,"Vert");
-			menu->options[MENU_VIDEOCONFIG_STRETCH].num=4;
-			menu->options[MENU_VIDEOCONFIG_STRETCH].selected = 2; // Default to H+V
+		GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_PALETTE].name,"Palette");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_PALETTE].sub_options[0].name,"Default");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_PALETTE].sub_options[1].name,"Amber");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_PALETTE].sub_options[2].name,"Green");
+			menu->options[MENU_CONFIG_VIDEO_PALETTE].num=3;
 			
-		GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FORCEMODE].name,"Force Mode");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FORCEMODE].sub_options[0].name,"Auto");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FORCEMODE].sub_options[1].name,"B/W");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FORCEMODE].sub_options[2].name,"Color");
-			menu->options[MENU_VIDEOCONFIG_FORCEMODE].num=3;
+		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_HORZ].name,"Configure Horz Keys");
+		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_VERT].name,"Configure Vert Keys");
+		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_DEF_HORZ].name,"Load Default Horz Keys");
+		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_DEF_VERT].name,"Load Default Vert Keys");
+		GPSTRCPY (menu->options[MENU_CONFIG_RETURN].name,"Return To Main Menu");
 
-		GPSTRCPY (menu->options[MENU_VIDEOCONFIG_PALETTE].name,"Palette");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_PALETTE].sub_options[0].name,"Default");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_PALETTE].sub_options[1].name,"Amber");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_PALETTE].sub_options[2].name,"Green");
-			menu->options[MENU_VIDEOCONFIG_PALETTE].num=3;
-			
-		GPSTRCPY (menu->options[MENU_VIDEOCONFIG_RETURN].name,"Return To Main Menu");
-
-		menu->num = 5;
-
-		precalc_menu(menu,2,10);
-}
-
-void fill_keyconfig_menu (stMenu *menu) {
-
-		GPMEMSET(menu,0,sizeof(stMenu));
-
-		GPSTRCPY (menu->options[MENU_KEYCONFIG_CONFIG_HORZ].name,"Configure Horz Keys");
-
-		GPSTRCPY (menu->options[MENU_KEYCONFIG_CONFIG_VERT].name,"Configure Vert Keys");
-
-		GPSTRCPY (menu->options[MENU_KEYCONFIG_DEF_HORZ].name,"Load Default Horz Keys");
-
-		GPSTRCPY (menu->options[MENU_KEYCONFIG_DEF_VERT].name,"Load Default Vert Keys");
-
-		GPSTRCPY (menu->options[MENU_KEYCONFIG_RETURN].name,"Return To Main Menu");
-
-		menu->num = 5;
+		menu->num = 8;
 
 		precalc_menu(menu,2,10);
 }

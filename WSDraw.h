@@ -17,9 +17,7 @@ extern byte 	*WndTPal;
 extern int 		MaxLine;
 extern int 		DrawLine;
 
-extern int 		DispHeight;
-extern int 		DispWidth;
-extern int 		PixelDepth;
+extern float	gammaC;
 
 extern uint8	*wsc_modified_tile;
 
@@ -33,6 +31,7 @@ extern  int  	GetDrawMode(void);
 extern  int  	WsDrawLine(int Line);
 extern  int  	WsDrawFlip(void);
 extern  void  	WsDrawClear(void);
+extern  void	WsClearGpuCache(void);
 
 extern  void  	SetPalette(int Index, byte PalData);
 

@@ -41,9 +41,7 @@ char basename[256];
 char SaveName[256];
 
 stMenu main_menu;
-stMenu statesconfig_menu;
-stMenu videoconfig_menu;
-stMenu keyconfig_menu;
+stMenu config_menu;
 stMenu horz_keys_menu;
 stMenu vert_keys_menu;
 
@@ -203,8 +201,8 @@ void Emulate()
 
 	InitGraphics(8);
 
-	SetDrawMode(videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected);
-	FrameSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected);
+	SetDrawMode(config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected);
+	FrameSkip = (config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected);
 //	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
 	WsInputInit(vert);
@@ -214,8 +212,8 @@ void Emulate()
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
 
-	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = FrameSkip;
-	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = GetDrawMode();
+	config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = FrameSkip;
+	config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = GetDrawMode();
 	setCpuSpeed(66);
 
 	InitGraphics(16);
@@ -241,11 +239,16 @@ int SaveStatesEmulate(char *savestate)
 	);
 
 	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
+
+	InitGraphics(8);
+
+/*
 	StateDrawMode = GetDrawMode();
 	if (StateDrawMode == 3)
 		SetDrawMode(5);
 	else
 		SetDrawMode(4);
+*/
 
 	StateInputInit();
 //	GpSurfaceSet(&gtSurface[0]);
@@ -294,53 +297,46 @@ int SaveStatesEmulate(char *savestate)
 			GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, selectedState + 1); // savename = filename + saveslot
 			loadOK = WsLoadState(stateName);				// load the state data
 
-			okf.x = 12;
-			okf.y = 220;
-
 			if (loadOK == -1)
 			{
 				if (GetDrawMode() == 4)
 				{
-					DrawWindow(44, 37, 228, 148, 0, COLOR_RED, COLOR_BLUE); // file selector window
-					DrawWindow(5, 219, 305, 15,  0, COLOR_RED, COLOR_BLUE); // totals window
 					okf.x = 12;
 					okf.y = 220;
 				}
 				else
 				{
-					DrawWindow(85, 0,  146, 226, 0, COLOR_RED, COLOR_BLUE); // file selector window
-					DrawWindow(5, 225, 305, 12,  0, COLOR_RED, COLOR_BLUE); // totals window
 					okf.x = 12;
 					okf.y = 225;
 				}
-
 				GPSPRINTF(printstring, "Slot %d: Empty Slot", selectedState + 1);
 			}
 			else
 			{
 				if (GetDrawMode() == 4)  // horizontal
 				{
-					DrawWindow(5, 219,  305, 15,  0, COLOR_RED, COLOR_BLUE); // totals window
 					okf.x = 12;
 					okf.y = 220;
 				}
 				else
 				{
-					DrawWindow(5, 225, 305, 12,  0, COLOR_RED, COLOR_BLUE); // totals window
 					okf.x = 12;
 					okf.y = 225;
 				}
 
 				GPSPRINTF(printstring, "Slot %d: %s.sa%d", selectedState + 1, basename, selectedState + 1);
+				WsClearGpuCache();
+				RebuildPalette();
 			}
-			OkfPrintSurface(printstring,0);
-
+//			OkfPrintSurface(printstring,giSurface);
 		}
 		LastKey = ExKey;
 	}
 
-	SetDrawMode(StateDrawMode);
+//	SetDrawMode(StateDrawMode);
 	setCpuSpeed(66);
+
+	InitGraphics(16);
 
 	return SaveStateSelected;
 }
@@ -359,17 +355,9 @@ int	SaveConfig(char *configPath)
 			GpFileWrite(F, &main_menu.options[i].selected,sizeof(int));
 		GpFileWrite(F, &main_menu.selected,sizeof(int));
 
-		for (i = 0; i < statesconfig_menu.num; i++)
-			GpFileWrite(F, &statesconfig_menu.options[i].selected,sizeof(int));
-		GpFileWrite(F, &statesconfig_menu.selected,sizeof(int));
-
-		for (i = 0; i < videoconfig_menu.num; i++)
-			GpFileWrite(F, &videoconfig_menu.options[i].selected,sizeof(int));
-		GpFileWrite(F, &videoconfig_menu.selected,sizeof(int));
-
-		for (i = 0; i < keyconfig_menu.num; i++)
-			GpFileWrite(F, &keyconfig_menu.options[i].selected,sizeof(int));
-		GpFileWrite(F, &keyconfig_menu.selected,sizeof(int));
+		for (i = 0; i < config_menu.num; i++)
+			GpFileWrite(F, &config_menu.options[i].selected,sizeof(int));
+		GpFileWrite(F, &config_menu.selected,sizeof(int));
 		
 		for (i = 0; i < horz_keys_menu.num; i++)
 			GpFileWrite(F, &horz_keys_menu.options[i].selected,sizeof(int));
@@ -405,17 +393,9 @@ int	LoadConfig(char *configPath)
 		GpFileRead(F, &main_menu.options[i].selected,sizeof(int),&sizeread);
 	GpFileRead(F, &main_menu.selected,sizeof(int),&sizeread);
 
-	for (i = 0; i < statesconfig_menu.num; i++)
-		GpFileRead(F, &statesconfig_menu.options[i].selected,sizeof(int),&sizeread);
-	GpFileRead(F, &statesconfig_menu.selected,sizeof(int),&sizeread);
-
-	for (i = 0; i < videoconfig_menu.num; i++)
-		GpFileRead(F, &videoconfig_menu.options[i].selected,sizeof(int),&sizeread);
-	GpFileRead(F, &videoconfig_menu.selected,sizeof(int),&sizeread);
-
-	for (i = 0; i < keyconfig_menu.num; i++)
-		GpFileRead(F, &keyconfig_menu.options[i].selected,sizeof(int),&sizeread);
-	GpFileRead(F, &keyconfig_menu.selected,sizeof(int),&sizeread);
+	for (i = 0; i < config_menu.num; i++)
+		GpFileRead(F, &config_menu.options[i].selected,sizeof(int),&sizeread);
+	GpFileRead(F, &config_menu.selected,sizeof(int),&sizeread);
 	
 	for (i = 0; i < horz_keys_menu.num; i++)
 		GpFileRead(F, &horz_keys_menu.options[i].selected,sizeof(int),&sizeread);
@@ -484,9 +464,7 @@ void GpMain(void *arg)
 	ShowCredits();								// show the opening dialog
 
 	fill_main_menu(&main_menu);					// Init the menus
-	fill_statesconfig_menu(&statesconfig_menu);  
-	fill_videoconfig_menu(&videoconfig_menu);
-	fill_keyconfig_menu(&keyconfig_menu);
+	fill_config_menu(&config_menu);  
 	fill_horz_keys_menu(&horz_keys_menu);
 	fill_vert_keys_menu(&vert_keys_menu);
 
@@ -532,15 +510,15 @@ void GpMain(void *arg)
 				
 				if (vert == 1)
 				{
-					if (videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected != 3)
-						horz_mode = videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected;
+					if (config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected != 3)
+						horz_mode = config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected;
 
-					videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = 3;
+					config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = 3;
 				}
 				else
 				{
-					if (videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected == 3)
-						videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = horz_mode;
+					if (config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected == 3)
+						config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = horz_mode;
 				}
 				
 				GetBaseName(g_string, basename);
@@ -603,64 +581,45 @@ void GpMain(void *arg)
 				GpAppExit();									// reboot GP32
 			}
 			break;
-		case MENU_MAIN_CONFIG_STATES:
+		case MENU_MAIN_LOAD_STATE:
 			{
-				result = run_menu(&statesconfig_menu);
-				
-				switch(result)
-				{
-				case MENU_STATECONFIG_LOAD_STATE:
-					{
-						if (running != 1)				// can't load state if no rom is loaded
-							break;
-
-						if (LoadState())
-							Emulate();						// run
-					}
+				if (running != 1)				// can't load state if no rom is loaded
 					break;
-				case MENU_STATECONFIG_SAVE_STATE:
-					{
-						if (running != 1)				// can't save state if no rom is loaded
-							break;
 
-						if (SaveState())
-							Emulate();						// run
-					}
-					break;
-				}
+				if (LoadState())
+					Emulate();						// run
 			}
 			break;
-		case MENU_MAIN_CONFIG_VIDEO:
+		case MENU_MAIN_SAVE_STATE:
+			{
+				if (running != 1)				// can't save state if no rom is loaded
+					break;
+
+				if (SaveState())
+					Emulate();						// run
+			}
+			break;
+		case MENU_MAIN_CONFIG:
 			{
 				result = 0;
 				
-				while ((result != MENU_VIDEOCONFIG_RETURN) && (result != MENU_CANCEL))
+				while ((result != MENU_CONFIG_RETURN) && (result != MENU_CANCEL))
 				{
-					result = run_menu(&videoconfig_menu);
-				}
-			}
-			break;			
-		case MENU_MAIN_CONFIG_KEYS:
-			{
-				result = 0;
-
-				while ((result != MENU_KEYCONFIG_RETURN) && (result != MENU_CANCEL))
-				{
-					result = run_menu(&keyconfig_menu);							// run the key config stuff
+					result = run_menu(&config_menu);
 
 					switch(result)
 					{
-					case MENU_KEYCONFIG_CONFIG_HORZ:
+					case MENU_CONFIG_KEYS_HORZ:
 						{
 							run_menu(&horz_keys_menu);
 						}
 						break;
-					case MENU_KEYCONFIG_CONFIG_VERT:
+					case MENU_CONFIG_KEYS_VERT:
 						{
 							run_menu(&vert_keys_menu);
 						}
 						break;
-					case MENU_KEYCONFIG_DEF_HORZ:
+					case MENU_CONFIG_KEYS_DEF_HORZ:
 						{
 							horz_keys_menu.options[MENU_KEYS_UP].selected		= 0;
 							horz_keys_menu.options[MENU_KEYS_LEFT].selected		= 2;
@@ -673,7 +632,7 @@ void GpMain(void *arg)
 							horz_keys_menu.options[MENU_KEYS_R].selected		= 7;
 						}
 						break;
-					case MENU_KEYCONFIG_DEF_VERT:
+					case MENU_CONFIG_KEYS_DEF_VERT:
 						{
 							vert_keys_menu.options[MENU_KEYS_UP].selected		= 4;
 							vert_keys_menu.options[MENU_KEYS_LEFT].selected		= 6;
@@ -691,7 +650,7 @@ void GpMain(void *arg)
 					}
 				}
 			}
-			break;
+			break;			
 		case MENU_MAIN_SAVE_DEF_CFG:
 			{
 				main_menu.selected = MENU_MAIN_CPUSPEED;
@@ -719,7 +678,6 @@ void GpMain(void *arg)
 		result = run_menu(&main_menu);			// run the main menu
 	}
 
-
 	while(1) ;
 }
 
@@ -746,7 +704,6 @@ int LoadState(void)
 			}
 			else if (selection == 1)
 			{
-//				PrintMessage(stateName,1);
 				WsLoadState(stateName);
 			}
 		}

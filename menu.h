@@ -34,8 +34,7 @@ void draw_menu (stMenu *menu,int nflip);
 int run_menu(stMenu *menu);
 void precalc_menu (stMenu *menu,int y_spacing,int x_spacing);
 void fill_main_menu (stMenu *menu);
-void fill_videoconfig_menu(stMenu *menu);
-void fill_keyconfig_menu (stMenu *menu);
+void fill_config_menu(stMenu *menu);
 void fill_horz_keys_menu (stMenu *menu);
 void fill_vert_keys_menu (stMenu *menu);
 
@@ -45,29 +44,21 @@ void fill_vert_keys_menu (stMenu *menu);
 #define MENU_MAIN_LOAD_ROM		1
 #define MENU_MAIN_PLAY			2
 #define MENU_MAIN_WS_RESET		3
-#define MENU_MAIN_CONFIG_STATES 4
-#define MENU_MAIN_CONFIG_VIDEO	5
-#define MENU_MAIN_CONFIG_KEYS	6
+#define MENU_MAIN_LOAD_STATE	4
+#define MENU_MAIN_SAVE_STATE	5
+#define MENU_MAIN_CONFIG		6
 #define MENU_MAIN_SAVE_DEF_CFG	7
 #define MENU_MAIN_SAVE_GME_CFG	8
 #define MENU_MAIN_REBOOT		9
 
-#define MENU_STATECONFIG_SAVESLOT	0
-#define MENU_STATECONFIG_LOAD_STATE	1
-#define MENU_STATECONFIG_SAVE_STATE	2
-#define MENU_STATECONFIG_RETURN		3
-
-#define MENU_VIDEOCONFIG_FRAMESKIP	0
-#define MENU_VIDEOCONFIG_STRETCH	1
-#define MENU_VIDEOCONFIG_FORCEMODE	2
-#define MENU_VIDEOCONFIG_PALETTE	3
-#define MENU_VIDEOCONFIG_RETURN		4
-
-#define MENU_KEYCONFIG_CONFIG_HORZ	0
-#define MENU_KEYCONFIG_CONFIG_VERT	1
-#define MENU_KEYCONFIG_DEF_HORZ		2
-#define MENU_KEYCONFIG_DEF_VERT		3
-#define MENU_KEYCONFIG_RETURN		4		
+#define MENU_CONFIG_VIDEO_FRAMESKIP	0
+#define MENU_CONFIG_VIDEO_STRETCH	1
+#define MENU_CONFIG_VIDEO_PALETTE	2
+#define MENU_CONFIG_KEYS_HORZ		3
+#define MENU_CONFIG_KEYS_VERT		4
+#define MENU_CONFIG_KEYS_DEF_HORZ	5
+#define MENU_CONFIG_KEYS_DEF_VERT	6
+#define MENU_CONFIG_RETURN			7
 
 #define MENU_KEYS_UP		0
 #define MENU_KEYS_LEFT		1
@@ -89,10 +80,6 @@ void fill_vert_keys_menu (stMenu *menu);
 #define KEYS_START		6
 #define KEYS_L			7
 #define KEYS_R			8
-
-#define FORCEMODE_AUTO	0
-#define FORCEMODE_BW	1
-#define FORCEMODE_COLOR 2
 
 #define STRETCH_NONE	0
 #define STRETCH_HORZ	1

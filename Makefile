@@ -62,7 +62,7 @@ OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o) $(.CXXFILES:.cpp=.o)
 CFLAGS			=	-marm \
 				-march=armv4t \
 		       		-mapcs \
-		       		-O2 \
+		       		-O3 \
 	       			-fomit-frame-pointer \
 	       			-finline-functions \
 		       		-fshort-enums \

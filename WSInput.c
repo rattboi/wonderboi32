@@ -9,6 +9,7 @@
 
 #include "WSInput.h"
 #include "WS.h"
+#include "WSDraw.h"
 #include "WSHard.h"
 
 #include "menu.h"
@@ -154,10 +155,34 @@ int WsKeys(uint16 *state)
 			selectPressed = 1;
 		}
 				
-		if ((ExKey & GPC_VK_RIGHT)  && !(LastKey & GPC_VK_RIGHT)) // select + LEFT
+		if ((ExKey & GPC_VK_RIGHT)  && !(LastKey & GPC_VK_RIGHT)) // select + RIGHT
 		{
 			FrameSkip += 1;
 			FrameSkip %= 6;
+
+			selectPressed = 1;
+		}
+
+		if (ExKey & GPC_VK_FB) // select + B
+		{
+			gammaC -= 0.03f;
+
+			if (gammaC < 1.0f)
+				gammaC = 1.0f;
+
+			RebuildPalette();
+
+			selectPressed = 1;
+		}
+				
+		if (ExKey & GPC_VK_FA)// select + A
+		{
+			gammaC += 0.03f;
+
+			if (gammaC > 3.0f)
+				gammaC = 3.0f;
+
+			RebuildPalette();
 
 			selectPressed = 1;
 		}

@@ -85,6 +85,8 @@ video_mode video_modes[6] =
 	NULL,		88,	0,	0			//for savestates
 };
 
+float gammaC = 1.0f;
+
 #define VERT_BUFFER_MODE 1
 #define HORZ_BUFFER_MODE 240
 
@@ -140,8 +142,8 @@ int  WsDrawLine(int Line)
 	char debug[100];
 
 #if BUFFER_MODE == HORZ_BUFFER_MODE
-	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(240-(Line))); // works for horz
-//	RefreshLine(Line, screenbuffer+(144-Line)); // works for horz
+//	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(240-(Line))); // works for horz
+	RefreshLine(Line, screenbuffer+(144-Line)); // works for horz
 #else
 	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(Line*240)); // works for vert
 #endif
@@ -161,8 +163,8 @@ int  WsDrawLine(int Line)
 //---------------------------------------------------------------------------
 int  WsDrawFlip(void)
 {
+/*
 #if BUFFER_MODE == HORZ_BUFFER_MODE
-
 int i,j;
 	for (i = 0; i < 8; i++)
 		for (j = 0; j < 144; j++)
@@ -172,8 +174,9 @@ int i,j;
 		}
 
 #endif
-//	if (video_update != NULL)
-//		video_update((uint8*)screenbuffer+(8*240)+(scroll_x*240), gtSurface[giSurface].ptbuffer+(240*video_x)+(video_y));
+*/
+	if (video_update != NULL)
+		video_update((uint8*)screenbuffer+(8*240)+(scroll_x*240), gtSurface[giSurface].ptbuffer+(240*video_x)+(video_y));
 	SurfaceFlip();
 	return 0;
 }
@@ -190,11 +193,10 @@ void  SetPalette(int Index, byte PalData)
     i=Index&0x3FE;
 	Pal=(ColTbl[i+1]<<8) |ColTbl[i];
 
-#define GAMMA 2.4
 
-	r = (int)(((Pal>>8)&0x0f)*GAMMA)<<1;
-	g = (int)(((Pal>>4)&0x0f)*GAMMA)<<1;
-	b = (int)((Pal&0x0f)*GAMMA)<<1;
+	r = (int)(((Pal>>8)&0x0f)*gammaC)<<1;
+	g = (int)(((Pal>>4)&0x0f)*gammaC)<<1;
+	b = (int)((Pal&0x0f)*gammaC)<<1;
 
 	if (r > 31) r = 31;
 	if (g > 31) g = 31;
@@ -217,9 +219,9 @@ void  RebuildPalette()
 		j=i&0x3FE;
 		Pal=(ColTbl[j+1]<<8) |ColTbl[j];
 
-		r = (int)(((Pal>>8)&0x0f)*GAMMA)<<1;
-		g = (int)(((Pal>>4)&0x0f)*GAMMA)<<1;
-		b = (int)((Pal&0x0f)*GAMMA)<<1;
+		r = (int)(((Pal>>8)&0x0f)*gammaC)<<1;
+		g = (int)(((Pal>>4)&0x0f)*gammaC)<<1;
+		b = (int)((Pal&0x0f)*gammaC)<<1;
 
 		if (r > 31) r = 31;
 		if (g > 31) g = 31;
@@ -309,4 +311,9 @@ int  SetDrawMode(int Mode)
 int  GetDrawMode()
 {
 	return DrawMode;
+}
+
+void WsClearGpuCache(void)
+{
+	GPMEMSET(wsc_modified_tile,0x01,1024);
 }
