@@ -27,13 +27,8 @@
 #include "OKF/graphics16.h"
 #include "OKF/okf.h"
 
-#include "OKF/fonts/verdana10.h"
 #include "OKF/fonts/verdana8b_pm.h"
-#include "OKF/fonts/comicSansMS12b_pm.h"
-
-#include "OKF/fonts/verdana10.c"
 #include "OKF/fonts/verdana8b_pm.c"
-#include "OKF/fonts/comicSansMS12b_pm.c"
 
 #include "types.h"
 
@@ -476,6 +471,9 @@ void Emulate()
 	if (forcemode == FORCEMODE_COLOR)
 			ws_gpu_forceColorSystem();
 
+	if (forcemode == FORCEMODE_AUTO)
+			ws_gpu_forceReset();
+
 	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
 	GpSurfaceSet(&gtSurface[0]);
@@ -594,9 +592,10 @@ void GpMain(void *arg)
 	giSurface = 1;
 	OkfInitialize(gtSurface, &giSurface);
 
-	OkfRegister(verdana8b_pm_okf);				// Register some fonts (internal)
-	OkfRegister(verdana10_okf);
-	OkfRegister(comicSansMS12b_pm_okf);
+//	OkfRegister(verdana8_okf);				// Register some fonts (internal)
+	OkfRegister(verdana8b_pm_okf);
+//	OkfRegister(verdana10_okf);
+//	OkfRegister(comicSansMS12b_pm_okf);
 
 	okf.font = 1;								// Use font #1
 	
