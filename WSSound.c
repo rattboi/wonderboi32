@@ -39,11 +39,15 @@ int ChCurVol[6]={-1,-1,-1,-1,-1,-1};	// 현재의 채널호″류무
 int ChCurPer[6]={-1,-1,-1,-1,-1,-1};	// 현재의 채널 주기
 long ChCurPan[6]={-1,-1,-1,-1,-1,-1};	// 현재의 채널하˚
 
-unsigned char PData[4][BUFSIZE];		// 파형하˚턴,1/8,1/4,1/2,3/4, 임의
-unsigned char PDataP[BUFSIZEP<<4];		// PCM 파형하˚턴
-unsigned char PDataN[8][BUFSIZEN];		// 파형하˚턴, 노이스″
+unsigned char PData[4][BUFSIZE];		// Standard small sample buffers
+unsigned char PDataP[BUFSIZEP*16];		// PCM Channel Buffer
+unsigned char PDataN[8][BUFSIZEN];		// Noise Channel Buffer
 
 int RandData[BUFSIZEN];					// 파형하˚턴, 노이스″
+
+unsigned char ChannelBuf[4][BUFSIZE];
+unsigned char ChannelPCMBuf[BUFSIZEP<<4];		// PCM Channel Buffer
+unsigned char ChannelNoiseBuf[BUFSIZEN];		// Noise Channel Buffer
 
 int CntSwp=0;							// 스이후˚카운터
 int PcmWrPos=0;							// PCM 파형 기입호˚인터
@@ -90,9 +94,8 @@ static const POLYNOMIAL TblMask[]=
 
 unsigned int Mrand(unsigned int Degree)
 {
-
 	static POLYNOMIAL *pTbl=TblMask;
-	static int ShiftReg=0; // pTbl->InputBit-1; // what/s this?
+	static int ShiftReg=BIT(2)-1; //TblMask[0]->InputBit-1; // what/s this?
 	int XorReg=0;
 	int Masked;
 
@@ -142,6 +145,14 @@ unsigned int Mrand(unsigned int Degree)
 struct pcm pcm;
 struct snd snd;
 
+void sound_mix();
+
+void audio_callback(void *blah, byte *stream, int len)
+{
+       sound_mix();
+       GPMEMCPY(stream, pcm.buf, len);
+}
+
 //---------------------------------------------------------------------------
 int WsSoundCreate()
 {
@@ -149,88 +160,38 @@ int WsSoundCreate()
 
 	//set up sound format
 
-/*
-    GPMEMSET(&PCMWF, 0, sizeof(PCMWAVEFORMAT));
-    PCMWF.wf.wFormatTag=WAVE_FORMAT_PCM;
-    PCMWF.wf.nChannels=1;
-    PCMWF.wf.nSamplesPerSec=BPS;
-    PCMWF.wf.nBlockAlign=1;
-    PCMWF.wf.nAvgBytesPerSec=PCMWF.wf.nSamplesPerSec*PCMWF.wf.nBlockAlign;
-    PCMWF.wBitsPerSample = 8;
-    memset(&DSBD, 0, sizeof(DSBD));
-	DSBD.dwSize=sizeof(DSBD);
-   	DSBD.dwFlags=DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME;
-    DSBD.dwBufferBytes=BUFSIZE;
-    DSBD.lpwfxFormat=(LPWAVEFORMATEX) &PCMWF;
-*/
-
 	pcm.hz = 22050;
 	pcm.stereo = 0;
-	pcm.len = 22050/60;
-	pcm.buf = gm_malloc(pcm.len);
+	pcm.len = 22050/30;
+	pcm.buf = GPMALLOC(pcm.len);
 	pcm.pos = 0;
-	GPMEMSET(pcm.buf, 0, pcm.len);
+	if (pcm.buf)
+		GPMEMSET(pcm.buf, 0, pcm.len);
 
 	sndbuf.freq=PCM_M22; 
 	sndbuf.format=PCM_8BIT; 
-	sndbuf.samples=22050/60;
+	sndbuf.samples=22050/30;
 	sndbuf.userdata=NULL;
-	sndbuf.callback=NULL;//audio_callback;
+	sndbuf.callback=audio_callback;
 	sndbuf.pollfreq=100;
 
-	snd.ch[0].on = 0;
-	snd.ch[1].on = 0;
-	snd.ch[2].on = 0;
-	snd.ch[3].on = 0;
-	snd.ch[4].on = 0;
-	snd.ch[5].on = 0;
+	snd.ch[0].on = 1;
+	snd.ch[1].on = 1;
+	snd.ch[2].on = 1;
+	snd.ch[3].on = 1;
+	snd.ch[4].on = 0; // PCM channel
+	snd.ch[5].on = 0; // noise channel
 
     int i, j;
 
     for(i=0;i<4;i++)
     {
 		// create the sound buffers for 4 channels
-
-		/*
-		result=lpDS->CreateSoundBuffer(&DSBD, &snd.ch[i], NULL);
-    	if(result!=DS_OK)
-    	{
-			// SoundErr("하″크하″파를 작성 할 수 없습니다");
-    		WsSoundRelease();
-    		return -1;
-    	}
-		*/
 		WsSoundClear(i);
     }
 
-	//create a sixth channel (for what?)
-
-/*	DSBD.dwBufferBytes=BUFSIZEN;
-	result=lpDS->CreateSoundBuffer(&DSBD, &snd.ch[5], NULL);
-	if(result!=DS_OK)
-	{
-		// SoundErr("하″크하″파를 작성 할 수 없습니다");
-		WsSoundRelease();
-		return -1;
-	}
-*/
-	WsSoundClear(5);
-
-	// create a fifth channel (for what?)
-/*
-    PCMWF.wf.nSamplesPerSec=BPS;
-    PCMWF.wf.nAvgBytesPerSec=PCMWF.wf.nSamplesPerSec*PCMWF.wf.nBlockAlign;
-   	DSBD.dwFlags=DSBCAPS_CTRLFREQUENCY | DSBCAPS_CTRLPAN | DSBCAPS_CTRLVOLUME;
-    DSBD.dwBufferBytes=(BUFSIZEP<<4) *PCMWF.wf.nBlockAlign;
-    result=lpDS->CreateSoundBuffer(&DSBD, &snd.ch[4], NULL);
-    if(result!=DS_OK)
-    {
-    	// SoundErr("하″크하″파를 작성 할 수 없습니다");
-        WsSoundRelease();
-        return -1;
-    }
-*/
-	WsSoundClear(4);
+	WsSoundClear(4); // PCM Channel
+	WsSoundClear(5); // Noise/Sweep Channel ?
 
 	int rand;
 	for(i=0;i<8;i++)
@@ -256,29 +217,43 @@ int WsSoundCreate()
     return 0;
 }
 
+void pcm_open(void)
+{
+	if (!pcm.buf)
+		pcm.buf = GPMALLOC(pcm.len);
+	GpSoundBufStart(&sndbuf);
+}
+
+void pcm_close(void)
+{
+	GpSoundBufStop();
+	if (pcm.buf)
+		GPFREE(pcm.buf);
+}
+
+int pcm_submit()
+{
+	if (!pcm.buf) return 0;
+	if (pcm.pos < pcm.len) return 1;
+
+	pcm.pos = 0;
+	return 1;
+}
+
 //---------------------------------------------------------------------------
 void WsSoundRelease(void)
 {
 	int i;
 
-//	if(lpDS!=NULL)
-    //{
-    	for(i=0;i<6;i++)
+    for(i=0;i<6;i++)
+    {
+		//close all 6 sound channels (4 standard + 2 voice?)
+
+		if(snd.ch[i].on)
         {
-			//close all 6 sound channels (4 standard + 2 voice?)
+			snd.ch[i].on = 0; // turn it off
+        }
 
-			if(snd.ch[i].on)
-        	{
-/*				snd.ch[i]->Stop();
-            	snd.ch[i]->Release();
-            	snd.ch[i]=NULL;
-*/
-				snd.ch[i].on = 0; // turn it off
-        	}
-
-//        }
-//        lpDS->Release();
-//        lpDS=NULL;
     }
 }
 
@@ -289,7 +264,7 @@ int WsSoundPlay(int Channel)
 
 	int result;
 
-    if(snd.ch[Channel].on == 0) // channel is off
+    if(snd.ch[Channel].on == 1) // channel is off
     {
     	return -1;
     }
@@ -322,7 +297,6 @@ void WsSoundClear(int Channel)
 	// Clear Sound
 
     int		result;
-    int*	ptr1, ptr2;
     uint32	len1, len2, size;
 
     if(snd.ch[Channel].on == 0)
@@ -337,19 +311,21 @@ void WsSoundClear(int Channel)
 	if(Channel==5)
 	{
 		size=BUFSIZEN;
+		GPMEMSET(ChannelNoiseBuf, PL, BUFSIZEN);
 	}
 	else if(Channel==4)
 	{
 		size=BUFSIZEP<<4;
         GPMEMSET(PDataP, PL, BUFSIZEP<<4);
+        GPMEMSET(ChannelPCMBuf, PL, BUFSIZEP<<4);
 	}
 	else
 	{
 		size=BUFSIZE;
         GPMEMSET(PData[Channel], PL, BUFSIZE);
+        GPMEMSET(ChannelBuf[Channel], PL, BUFSIZE);
 	}
-
-    GPMEMCPY(ptr1, PL, size);
+//  GPMEMSET(ptr1, PL, size);
 }
 
 //---------------------------------------------------------------------------
@@ -388,7 +364,6 @@ void SetSoundFreq(int Channel, int Period)
 	}
 
 	snd.ch[Channel].freq = Freq;
-
 }
 
 //---------------------------------------------------------------------------
@@ -469,13 +444,6 @@ void SetSoundPan(int Channel, int Left, int Right)
     ChCurPan[Channel]=pan;
 
 //    result=snd.ch[Channel]->SetPan(pan);
-/*
-	if(result!=DS_OK)
-    {
-    	// SoundErr("하″크하″파의 하˚를 설정 할 수 없습니다");
-        return;
-    }
-	*/
 }
 
 //---------------------------------------------------------------------------
@@ -487,29 +455,32 @@ void SetSoundPData(int Channel, int Index)
     int*	ptr1, ptr2;
     uint32	len1, len2, size;
 	unsigned char *pData;
+	unsigned char *chanData;
 
     if(snd.ch[Channel].on == 0)
     {
     	return;
     }
 
-	if(Channel==5)
+	if(Channel==5) //noise
 	{
 		size=BUFSIZEN;
 		pData=PDataN[Index];
+		chanData=ChannelNoiseBuf;
 	}
-	else if(Channel==4)
+	else if(Channel==4) // voice / pcm 
 	{
 		size=BUFSIZEP<<4;
 		pData=PDataP;
+		chanData=ChannelPCMBuf;
 	}
 	else
 	{
 		size=BUFSIZE;
 		pData=PData[Channel];
+		chanData=ChannelBuf[Channel];
 	}
-
-    GPMEMCPY(ptr1, pData, size);
+    GPMEMCPY(chanData, pData, size);
 }
 
 //---------------------------------------------------------------------------
@@ -588,8 +559,8 @@ DWORD TickZ=0, PcmCount;
 void SetPCM(int Data)
 {
 	DWORD tick;
-	PDataP[PCMPos++]=(unsigned char) Data;
-    tick=0; //GetTickCount();
+	PDataP[PCMPos++]=(unsigned char) Data; // PCM Channel
+    tick=GpTickCountGet();
     PcmCount++;
     if(tick>=TickZ)
     {
@@ -614,10 +585,7 @@ void FlashPCM(void)
 {
 	// Flash PCM (what is this?)
 
-    int result;
-    int* ptr1, ptr2;
-    DWORD len1, len2;
-    const DWORD WrPos[16]={
+	const DWORD WrPos[16]={
 		BUFSIZEP*0, BUFSIZEP*1, BUFSIZEP*2, BUFSIZEP*3,
 		BUFSIZEP*4, BUFSIZEP*5, BUFSIZEP*6, BUFSIZEP*7,
 		BUFSIZEP*8, BUFSIZEP*9, BUFSIZEP*10, BUFSIZEP*11,
@@ -629,16 +597,140 @@ void FlashPCM(void)
 		return;
 	}
 
- 	GPMEMCPY(ptr1, PDataP, len1);
-
-	if(ptr2!=NULL)
-	{
-		GPMEMCPY(ptr2, PDataP+len1, len2);
-	}
+	GPMEMCPY(ChannelPCMBuf+WrPos[PcmWrPos], PDataP, BUFSIZEP);
 
 	PcmWrPos++;
     PcmWrPos&=0xF;
-	GPMEMSET(PDataP, PL, sizeof(PDataP));
+	GPMEMSET(PDataP, PL, sizeof(PDataP)); // Noise Channel
 	PCMPos=0;
 
+}
+
+void sound_mix()
+{
+	int s, l, r, f, n, i;
+	int gp32sound= 22050/30;
+	while(gp32sound--)
+	{
+		l = r = 0;
+
+/*
+		if (snd.ch[0].on)
+		{
+			s = sqwave[R_NR11>>6][(S1.pos>>18)&7] & S1.envol;
+			snd.ch[0].pos += snd.ch[0].freq;
+			if ((R_NR14 & 64) && ((S1.cnt += RATE) >= S1.len))
+				S1.on = 0;
+			if (S1.enlen && (S1.encnt += RATE) >= S1.enlen)
+			{
+				S1.encnt -= S1.enlen;
+				S1.envol += S1.endir;
+				if (S1.envol < 0) S1.envol = 0;
+				if (S1.envol > 15) S1.envol = 15;
+			}
+			if (S1.swlen && (S1.swcnt += RATE) >= S1.swlen)
+			{
+				S1.swcnt -= S1.swlen;
+				f = S1.swfreq;
+				n = (R_NR10 & 7);
+				if (R_NR10 & 8) f -= (f >> n);
+				else f += (f >> n);
+				if (f > 2047)
+					S1.on = 0;
+				else
+				{
+					S1.swfreq = f;
+					R_NR13 = f;
+					R_NR14 = (R_NR14 & 0xF8) | (f>>8);
+					s1_freq_d(2048 - f);
+				}
+			}
+			s <<= 2;
+			if (R_NR51 & 1) r += s;
+			if (R_NR51 & 16) l += s;
+		}
+		
+		if (S2.on)
+		{
+			s = sqwave[R_NR21>>6][(S2.pos>>18)&7] & S2.envol;
+			S2.pos += S2.freq;
+			if ((R_NR24 & 64) && ((S2.cnt += RATE) >= S2.len))
+				S2.on = 0;
+			if (S2.enlen && (S2.encnt += RATE) >= S2.enlen)
+			{
+				S2.encnt -= S2.enlen;
+				S2.envol += S2.endir;
+				if (S2.envol < 0) S2.envol = 0;
+				if (S2.envol > 15) S2.envol = 15;
+			}
+			s <<= 2;
+			if (R_NR51 & 2) r += s;
+			if (R_NR51 & 32) l += s;
+		}
+*/
+		for(i = 0; i < 4; i++)
+		{
+			if (snd.ch[i].on)
+			{
+				s = ChannelBuf[i][(snd.ch[i].pos>>16) & 1023];
+				if (snd.ch[i].pos & (1<<15)) 
+					s &= 15;
+				else 
+					s >>= 4;
+//				s -= 8;
+
+				snd.ch[i].pos += snd.ch[i].freq;
+
+				l += s;
+				r += s;
+			}
+		}
+/*
+		if (S4.on)
+		{
+			if (R_NR43 & 8) s = 1 & (noise7[
+				(S4.pos>>20)&15] >> (7-((S4.pos>>17)&7)));
+			else s = 1 & (noise15[
+				(S4.pos>>20)&4095] >> (7-((S4.pos>>17)&7)));
+			s = (-s) & S4.envol;
+			S4.pos += S4.freq;
+			if ((R_NR44 & 64) && ((S4.cnt += RATE) >= S4.len))
+				S4.on = 0;
+			if (S4.enlen && (S4.encnt += RATE) >= S4.enlen)
+			{
+				S4.encnt -= S4.enlen;
+				S4.envol += S4.endir;
+				if (S4.envol < 0) S4.envol = 0;
+				if (S4.envol > 15) S4.envol = 15;
+			}
+			s += s << 1;
+			if (R_NR51 & 8) r += s;
+			if (R_NR51 & 128) l += s;
+		}
+*/		
+//		l *= (R_NR50 & 0x07);
+//		r *= ((R_NR50 & 0x70)>>4);
+//		l >>= 4;
+//		r >>= 4;
+		
+		if (l > 127) l = 127;
+		else if (l < -128) l = -128;
+		if (r > 127) r = 127;
+		else if (r < -128) r = -128;
+
+		if (pcm.buf)
+		{
+			if (pcm.pos >= pcm.len)
+				pcm_submit(); 
+			if (pcm.stereo)
+			{
+				pcm.buf[pcm.pos++] = l+128;
+				pcm.buf[pcm.pos++] = r+128;
+			}
+			else   
+			{
+				pcm.buf[pcm.pos++] = ((l+r)>>1)+128;
+			}
+		}
+	}
 }

@@ -18,7 +18,7 @@
 
 //---------------------------------------------------------------------------
 //int SoundOn[7]={1,1,1,1,1,1,1};
-int SoundOn[7]={0,0,0,0,0,0,0};
+int SoundOn[7]={1,1,1,1,0,0,0};
 int FrameSkip=4;
 int SkipCnt=0;
 
@@ -517,61 +517,61 @@ void  WriteIO(unsigned A, byte V)
 					WaveMap=V<<6;
 					break;
 		case 0x90:
-					if((V&0x01)&&!(SNDMOD&0x01))
+					if((V&0x01)&&!(SNDMOD&0x01))	// turn channel 0 on
 					{
 						if(SoundOn[0])
 							WsSoundPlay(0);
 					}
-					else if(!(V&0x01)&&(SNDMOD&0x01))
+					else if(!(V&0x01)&&(SNDMOD&0x01))	// turn channel 0 off
 					{
 						WsSoundStop(0);
 					}
 
-					if(((V&0x22)==0x02)&&((SNDMOD&0x22)!=0x02))
+					if(((V&0x22)==0x02)&&((SNDMOD&0x22)!=0x02)) // turn channel 1 on (normal w/o voice)
 					{
 						if(SoundOn[1])
 							WsSoundPlay(1);
 					}
-					else if(((V&0x22)!=0x02)&&((SNDMOD&0x22) ==0x02))
+					else if(((V&0x22)!=0x02)&&((SNDMOD&0x22) ==0x02)) // turn channel 1 off
 					{
 						WsSoundStop(1);
 					}
 
-					if((V&0x04)&&!(SNDMOD&0x04))
+					if((V&0x04)&&!(SNDMOD&0x04)) // turn channel 3 on
 					{
 						if(SoundOn[2])
 							WsSoundPlay(2);
 					}
-					else if(!(V&0x04)&&(SNDMOD&0x04))
+					else if(!(V&0x04)&&(SNDMOD&0x04)) // turn channel 3 off
 					{
 						WsSoundStop(2);
 					}
 
-					if(((V&0x88)==0x08)&&((SNDMOD&0x88)!=0x08))
+					if(((V&0x88)==0x08)&&((SNDMOD&0x88)!=0x08)) // turn channel 4 on (normal w/o noise)
 					{
 						if(SoundOn[3])
 							WsSoundPlay(3);
 					}
-					else if(((V&0x88)!=0x08)&&((SNDMOD&0x88)==0x08))
+					else if(((V&0x88)!=0x08)&&((SNDMOD&0x88)==0x08)) // turn channel 4 off
 					{
 						WsSoundStop(3);
 					}
 
-					if(((V&0x22)==0x22)&&((SNDMOD&0x22)!=0x22))
+					if(((V&0x22)==0x22)&&((SNDMOD&0x22)!=0x22)) // channel 6 stuff (voice)
 					{
 						;
 					}
-					else if(((V&0x22)!=0x22)&&((SNDMOD&0x22)==0x22))
+					else if(((V&0x22)!=0x22)&&((SNDMOD&0x22)==0x22)) // channel 6 stuff (voice)
 					{
 						;
 					}
 
-					if(((V&0x88)==0x88)&&((SNDMOD&0x88)!=0x88))
+					if(((V&0x88)==0x88)&&((SNDMOD&0x88)!=0x88)) // channel 5 stuff (noise)
 					{
 						if(SoundOn[4])
-							WsSoundPlay(5);
+							WsSoundPlay(5); // Noise Channel
 					}
-					else if(((V&0x88)!=0x88)&&((SNDMOD&0x88)==0x88))
+					else if(((V&0x88)!=0x88)&&((SNDMOD&0x88)==0x88)) // channel 5 stuff (noise)
 					{
 						WsSoundStop(5);
 					}
@@ -1281,7 +1281,7 @@ int Interrupt(void)
                 i=(SDMACH<<8) |SDMACL;
                 j=(SDMASB<<16)|(SDMASH<<8) |SDMASL;
                 b=cpu_readmem20(j);
-                if(!SoundOn[6])
+                if(!SoundOn[6]) // DMA Sound
                     b=0x80;
                 IO[0x89]=b;
                 i--;
@@ -1297,10 +1297,10 @@ int Interrupt(void)
                 SDMACH=(byte)((i>>8) &0xFF);
                 SDMACL=(byte)(i&0xFF);
             }
-            else if((SNDMOD&0x22)==0x22)
+            else if((SNDMOD&0x22)==0x22) // voice on ?
             {
                 b=IO[0x89];
-                if(!SoundOn[5])
+                if(!SoundOn[5]) // PCM Channel
                     b=0x80;
             }
             else

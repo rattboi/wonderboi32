@@ -18,7 +18,6 @@
 #include "setcpuspeed.h"
 #include "file_dialog.h"
 
-
 #include "unzip.h"
 
 #include "WSDraw.h"
@@ -197,6 +196,7 @@ void CPU_alignment_and_cache() {
 	");
 }
 
+
 void Emulate()
 {
 	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
@@ -210,11 +210,14 @@ void Emulate()
 
 	WsInputInit(vert && (GetDrawMode() == 3));
 
+	pcm_open();
+
 //	PROFILER_START();
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
-
+	pcm_close();
+	
 	config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = FrameSkip;
 	config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = GetDrawMode();
 
