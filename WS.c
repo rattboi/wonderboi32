@@ -448,13 +448,16 @@ LogFile(LK_SPRITE, str);
 				switch((V&0xE0))
 				{
 				case 0xE0:
-					RefreshLine = RefreshLine16Packed;
+					RefreshLine = renderLine[0];
 					break;
 				case 0xC0:
-					RefreshLine = RefreshLine16Layered;
+					RefreshLine = renderLine[1];
+					break;
+				case 0x40:
+					RefreshLine = renderLine[2];
 					break;
 				default:
-					RefreshLine = RefreshLineOld;
+					RefreshLine = renderLine[3];
 				}
 			}
 			break;

@@ -80,7 +80,8 @@ video_mode video_modes[6] =
 #define VERT_BUFFER_MODE 1
 #define HORZ_BUFFER_MODE 240
 
-#define BUFFER_MODE HORZ_BUFFER_MODE
+//#define BUFFER_MODE HORZ_BUFFER_MODE
+#define BUFFER_MODE VERT_BUFFER_MODE
 
 #include "newgfxcore.h"
 
@@ -109,8 +110,13 @@ int  WsDrawLine(int Line)
 	char debug[100];
 
 //	RefreshLine(Line, &screenbuffer[(224+16)*Line]);
+
+#if BUFFER_MODE == HORZ_BUFFER_MODE
 	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*2*video_x)-(video_y*2)-(8*2)+(480-(Line*2))); // works for horz
-//	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*2*video_x)-(video_y*2)-(8*2)+(Line*2*240)); // works for vert
+#else
+	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*2*video_x)-(video_y*2)-(8*2)+(Line*2*240)); // works for vert
+#endif
+
 /*
 	GPSPRINTF(debug, "videomode = %x", IO[0x60]);
 
