@@ -46,6 +46,8 @@ void GpMain(void *arg)
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
+	setCpuSpeed(132);
+
 	InitGraphics(16);							// Init Graphics and Fonts
 
 	giSurface = 1;
@@ -61,17 +63,21 @@ void GpMain(void *arg)
 
 	ShowCredits();								// show the opening dialog
 
-	WsCreate("gp:\\gpmm\\wb32\\rom\\puzbob.ws");
+	WsCreate("gp:\\gpmm\\wb32\\rom\\mrdrill.ws");
+
+	WsDrawCreate();
+
+	GpSurfaceSet(&gtSurface[0]);
 
 	while(1)
 	{
-		GPSPRINTF(debugstring,"before WsRun");
-		PrintMessage(debugstring,0);
+//		GPSPRINTF(debugstring,"before WsRun");
+//		PrintMessage(debugstring,0);
 
 		WsRun();
 
-		GPSPRINTF(debugstring,"after WsRun");
-		PrintMessage(debugstring,0);
+//		GPSPRINTF(debugstring,"after WsRun");
+//		PrintMessage(debugstring,0);
 	}
 
 	return;

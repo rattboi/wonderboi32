@@ -22,7 +22,7 @@
 
 //---------------------------------------------------------------------------
 int SoundOn[7]={1,1,1,1,1,1,1};
-int FrameSkip=1;
+int FrameSkip=5;
 int SkipCnt=0;
 int TblSkip[5][5]={
     {1,1,1,1,1},
@@ -828,7 +828,7 @@ void WsReset (void)
 	i=(SPRTAB&0x1F)<<9;
     i+=SPRBGN<<2;
     j=SPRCNT<<2;
-    memcpy(SprTMap, IRAM+i, j);
+    GPMEMCPY(SprTMap, IRAM+i, j);
     SprTTMap=SprTMap;
     SprETMap=SprTMap+j-4;
     WriteIO(0x07, 0x00);
@@ -943,7 +943,7 @@ int WsCreate(char *CartName)
 	GPMEMSET(IO, 0, sizeof(IO));
 
 	GPSTRCPY(debugstring,CartName);
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
 	if(GpFileOpen(CartName, OPEN_R, &file)!=SM_OK)
 	{
@@ -956,7 +956,7 @@ int WsCreate(char *CartName)
 	GpFileRead(file, (void *)buf, 10, &sizeread);
 
 	GPSPRINTF(debugstring,"buffer read = %d", sizeread);
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
 	if(sizeread!=10)
 	{
@@ -982,7 +982,7 @@ int WsCreate(char *CartName)
 	}
 
 	GPSPRINTF(debugstring,"ROMBanks = %d", ROMBanks);
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
 	b=buf[5];
 	RAMBanks=0;
@@ -1004,7 +1004,7 @@ int WsCreate(char *CartName)
 	}
 
 	GPSPRINTF(debugstring,"RAMBanks =  %d", RAMBanks);
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
 	for(i=0;!(CartKind&CK_EEP) && RAMKindTable[i]. Value;i++)
 	{
@@ -1015,7 +1015,7 @@ int WsCreate(char *CartName)
 	}
 
 	GPSPRINTF(debugstring,"CartKind = %d", CartKind);
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
     if((buf[0]==0x01)&&(buf[2]==0x16)) //STAR HEARTS ∼별과 다이치의 사자∼
     {
@@ -1126,12 +1126,12 @@ int WsCreate(char *CartName)
 	}
 
 	GPSPRINTF(debugstring,"before WsReset()");
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
 	WsReset ();
 
 	GPSPRINTF(debugstring,"after WsReset()");
-	PrintMessage(debugstring,1);
+	PrintMessage(debugstring,0);
 
 	return 0;
 }
@@ -1185,6 +1185,8 @@ int Interrupt(void)
 	static int LCount=0, Joyz=0x0000;
 	int i, j;
     byte b;
+
+	char debugstring[512];
 
 	if(++LCount>=8)
 	{
@@ -1272,7 +1274,7 @@ LogFile(LK_SOUND, str);
 				i=(SPRTAB&0x1F)<<9;
                 i+=SPRBGN<<2;
                 j=SPRCNT<<2;
-                memcpy(SprTMap, IRAM+i, j);
+                GPMEMCPY(SprTMap, IRAM+i, j);
                 SprTTMap=SprTMap;
                 SprETMap=SprTMap+j-4;
             }
@@ -1295,6 +1297,8 @@ LogFile(LK_SOUND, str);
                     }
                     if(RSTRL==144)
                     {
+//						GPSPRINTF(debugstring,"WsDrawFlip");
+//						PrintMessage(debugstring,1);
                 	    WsDrawFlip();
                     }
                 }
