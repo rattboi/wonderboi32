@@ -89,7 +89,7 @@ typedef struct tagFILESELECTOR {
 
 
 // Prototypes
-int  FileSelector(FILESELECTOR *pSelector);
+int  FileSelector(FILESELECTOR *pSelector, char *dir, char *name, unsigned char *dest);
 void FileSelectorInit(FILESELECTOR *pSelector);
 
 

@@ -25,6 +25,7 @@
 #include <gpmem.h>
 #include <gpgraphic.h>
 #include <gpgraphic16.h>
+#include <gpmain.h>
 
 #include "global.h"
 #include "graphics16.h"
@@ -32,400 +33,298 @@
 
 #include "fileSelector.h"
 
+#include "filecache.h"
+
+extern struct { int crc; int size; char *name; } MyDat[];
+
 
 //*** Private macro definitions
 
 
 //*** Private prototypes
-static void RefreshScreen(FILESELECTOR *pSelector, FOLDER *pFolder);
+static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEntry);
 
 
 //*** Public implementations
-int FileSelector(FILESELECTOR *pSelector)
+int FileSelector(FILESELECTOR *pSelector, char *dir, char *name, unsigned char *dest)
 {
-  FOLDER folder;
-  FOLDERENTRY *pEntry;
-  FLDERROR error;
-  char currentPath[FLD_MAXPATH + 1];
-  char *pCurrPath;
-  int tick, keyTick=0;
-  int pressedKeys, newKeys, oldKeys;
-  int result;
+	int topEntry, selectedEntry;
+	char currentPath[FLD_MAXPATH + 1];
+	int tick, keyTick=0;
+	int pressedKeys, newKeys, oldKeys;
+	int result;
 
-  // Init structure private members
-  pSelector->pathSepLineTop = pSelector->listTop - (pSelector->listTop - (pSelector->pathTop + OkfGetFont(pSelector->pathFont)->pOkf->maxHeight)) / 2 - 1;
-  pSelector->totalsSepLineTop = pSelector->totalsTop - (pSelector->totalsTop - (pSelector->listTop + pSelector->listSize * pSelector->selectionHeight)) / 2 - 1;
-  pSelector->selectionLeft = pSelector->fileLeft - pSelector->selectionMargin;
-  pSelector->selectionWidh = (pSelector->sizeRight - pSelector->fileLeft + 1) + pSelector->selectionMargin * 2;
-  pSelector->scrollBarHeight = pSelector->listSize * pSelector->selectionHeight;
+	// Init structure private members
+	pSelector->pathSepLineTop = pSelector->listTop - (pSelector->listTop - (pSelector->pathTop + OkfGetFont(pSelector->pathFont)->pOkf->maxHeight)) / 2 - 1;
+	pSelector->totalsSepLineTop = pSelector->totalsTop - (pSelector->totalsTop - (pSelector->listTop + pSelector->listSize * pSelector->selectionHeight)) / 2 - 1;
+	pSelector->selectionLeft = pSelector->fileLeft - pSelector->selectionMargin;
+	pSelector->selectionWidh = (pSelector->sizeRight - pSelector->fileLeft + 1) + pSelector->selectionMargin * 2;
+	pSelector->scrollBarHeight = pSelector->listSize * pSelector->selectionHeight;
 
-  // Init current path
-  if (pSelector->trackPath)
-  {
-    pCurrPath = pSelector->currentPath;
-  }
-  else
-  {
-    gm_strcpy(currentPath, pSelector->currentPath);
-    pCurrPath = currentPath;
-  }
-
-  // Prepare screen
-  folder.pEntries = NULL;
-  RefreshScreen(pSelector, &folder);
-
-  // Get folder files & folders
-  error = FolderGet(pCurrPath, pSelector->pFilters, pSelector->options, &folder);
-  if (error != fldOk)
-  {
-    FolderDrop(&folder);
-    return -1;
-  }
-  folder.pTop = folder.pCurrent = folder.pEntries->pFirst;
-
-  // Main loop
-  while (GpKeyGet());
-  while(TRUE)
-  {
-    tick = GpTickCountGet();
+	gm_strcpy(currentPath, pSelector->currentPath);
     
-    // Prepare screen
-    RefreshScreen(pSelector, &folder);
+	// Prepare screen
+	topEntry = selectedEntry = 0;
+	RefreshScreen(pSelector, topEntry, selectedEntry);
 
-    // Get buttons state
-    oldKeys = pressedKeys;
-    newKeys = pressedKeys = GpKeyGet();
+	fs(dir, name, dest);
 
-    // Filter buttons
-    if (!folder.pCurrent)
-      newKeys = newKeys & GPC_VK_FB;
-    else
-    {
-      // In some cases A same as SELECT
-      if (newKeys & GPC_VK_FA)
-        if (!(pSelector->options & FLD_EXPLORE))   // If not explore, A same as SELECT
-          newKeys = (newKeys & ~GPC_VK_FA) | GPC_VK_SELECT;
-        else                                      // If explore, A same as SELECT for files only
-          if (!(((FOLDERENTRY *) folder.pCurrent->pObject)->attr.attr & 0x10))
-            newKeys = (newKeys & ~GPC_VK_FA) | GPC_VK_SELECT;
+	  // Main loop
+	while (GpKeyGet());
+	while(TRUE)
+	{
+	    tick = GpTickCountGet();
+    
+		// Prepare screen
+		RefreshScreen(pSelector, topEntry, selectedEntry);
 
-      // Control first an last item of the list
-      if (!folder.pCurrent->pPrevious && (oldKeys & GPC_VK_UP))
-        newKeys = newKeys & ~GPC_VK_UP;
-      if (!folder.pCurrent->pNext && (oldKeys & GPC_VK_DOWN))
-        newKeys = newKeys & ~GPC_VK_DOWN;
+		// Get buttons state
+		oldKeys = pressedKeys;
+		newKeys = pressedKeys = GpKeyGet();
 
-      // Special key delay for first displacements
-      if (!(newKeys & (GPC_VK_UP | GPC_VK_DOWN | GPC_VK_LEFT | GPC_VK_RIGHT)))
-        keyTick = 0;
-      else
-        if (keyTick == 0)
-          keyTick = GpTickCountGet();
-        else
-          if (keyTick != -1)
-            if (GpTickCountGet() - keyTick < pSelector->repetitionDelay)
-              newKeys = newKeys & ~(GPC_VK_UP | GPC_VK_DOWN | GPC_VK_LEFT | GPC_VK_RIGHT);
-            else
-              keyTick = -1;
-    }
+		// Control first and last item of the list
+		if ((selectedEntry == 0) && (oldKeys & GPC_VK_UP))
+			newKeys = newKeys & ~GPC_VK_UP;
+		if ((selectedEntry == (ini.num_games_in_ini - 1)) && (oldKeys & GPC_VK_DOWN))
+			newKeys = newKeys & ~GPC_VK_DOWN;
 
-    // Manage buttons
-    //- Cancel file/folder selection
-    if (newKeys & GPC_VK_FB)
-    {
-      result = 0;
-      break;
-    }
-    //- Move to previous file/folder
-    else if (newKeys & GPC_VK_UP)
-    {
-      if (folder.pCurrent->pPrevious)
-      {
-        if (folder.pTop == folder.pCurrent)
-          folder.pTop = folder.pTop->pPrevious;
-        folder.pCurrent = folder.pCurrent->pPrevious;
-      }
-      else
-      {
-        folder.pCurrent = folder.pEntries->pLast;
-        if (folder.pEntries->count > pSelector->listSize)
-          folder.pTop = ListGetItemByIndex(folder.pEntries,
-                                           folder.pEntries->count - pSelector->listSize);
-      }
-    }
-    //- Move to next file/folder
-    else if (newKeys & GPC_VK_DOWN)
-    {
-      if (folder.pCurrent->pNext)
-      {
-        folder.pCurrent = folder.pCurrent->pNext;
-        if (ListGetRelativePosition(folder.pCurrent, folder.pTop) >= pSelector->listSize)
-          folder.pTop = ListGetItemByIndex(folder.pEntries,
-                                           ListGetIndex(folder.pCurrent) - pSelector->listSize + 1);
-      }
-      else
-      {
-        folder.pCurrent = folder.pEntries->pFirst;
-        folder.pTop = folder.pCurrent;
-      }
-    }
-    //- Move to previous N file/folder
-    else if (newKeys & GPC_VK_LEFT)
-    {
-      if (folder.pEntries->count > pSelector->listSize)
-        if (ListGetIndex(folder.pTop) > pSelector->listSize)
-          folder.pTop = ListGetRelativeItem(folder.pTop, -pSelector->listSize);
-        else
-          folder.pTop = folder.pEntries->pFirst;
+		// Special key delay for first displacements
+		if (!(newKeys & (GPC_VK_UP | GPC_VK_DOWN | GPC_VK_LEFT | GPC_VK_RIGHT)))
+			keyTick = 0;
+		else
+		if (keyTick == 0)
+			keyTick = GpTickCountGet();
+		else
+		if (keyTick != -1)
+			if (GpTickCountGet() - keyTick < pSelector->repetitionDelay)
+				newKeys = newKeys & ~(GPC_VK_UP | GPC_VK_DOWN | GPC_VK_LEFT | GPC_VK_RIGHT);
+			else
+				keyTick = -1;
 
-      if (ListGetIndex(folder.pCurrent) > pSelector->listSize)
-        folder.pCurrent = ListGetRelativeItem(folder.pCurrent, -pSelector->listSize);
-      else
-        folder.pCurrent = folder.pTop;
-    }
-    //- Move to next N file/folder
-    else if (newKeys & GPC_VK_RIGHT)
-    {
-      if (folder.pEntries->count > pSelector->listSize)
-        if (ListGetIndex(folder.pTop) < folder.pEntries->count - pSelector->listSize * 2 - 1)
-          folder.pTop = ListGetRelativeItem(folder.pTop, pSelector->listSize);
-        else
-          folder.pTop = ListGetRelativeItem(folder.pEntries->pLast, -pSelector->listSize + 1);
+		// Manage buttons
+		//- Cancel file/folder selection
+		if (newKeys & GPC_VK_FB)
+		{
+			result = 0;
+			break;
+		}
 
-      if (ListGetIndex(folder.pCurrent) < folder.pEntries->count - pSelector->listSize)
-        folder.pCurrent = ListGetRelativeItem(folder.pCurrent, pSelector->listSize);
-      else
-        folder.pCurrent = folder.pEntries->pLast;
-    }
-    //- Get selected file/folder
-    else if (newKeys & GPC_VK_SELECT)
-    {
-      pEntry = (FOLDERENTRY *) folder.pCurrent->pObject;
+		//- Move to previous file/folder
+		else if (newKeys & GPC_VK_UP)
+		{
+			if (selectedEntry > 0)
+			{
+				if (topEntry == selectedEntry)
+					topEntry--;
+				selectedEntry--;
+			}
+			else
+			{
+		        selectedEntry = ini.num_games_in_ini - 1;
+				if (ini.num_games_in_ini > pSelector->listSize)
+					topEntry = ini.num_games_in_ini - pSelector->listSize;
+			}
+		}
 
-      // folder .. can't be selected
-      if (!((pEntry->filename[0] == '.') && 
-            (pEntry->filename[1] == '.') && 
-            (pEntry->filename[2] == '\0')))
-        if ((pSelector->options & FLD_FOLDERS) &&  (pEntry->attr.attr & 0x10) || 
-            (pSelector->options & FLD_FILES)   && !(pEntry->attr.attr & 0x10))
-          {
-            gm_strcat(gm_strcpy(pSelector->filename, folder.path), pEntry->filename);
-            result = 1;
-            break;
-          }
-    }
-    //- Explore new folder
-    else if (newKeys & GPC_VK_FA)
-    {
-      pEntry = (FOLDERENTRY *) folder.pCurrent->pObject;
+		//- Move to next file/folder
+		else if (newKeys & GPC_VK_DOWN)
+		{
+			if (selectedEntry < ini.num_games_in_ini - 1)
+			{
+				selectedEntry++;
+				if ((selectedEntry - topEntry) >= pSelector->listSize)
+					topEntry = (selectedEntry - pSelector->listSize) + 1;
+			}
+			else
+			{
+				selectedEntry = 0;
+				topEntry = selectedEntry;
+			}
+		}
 
-      if (pEntry->attr.attr & 0x10)
-      {
-        // Folder up
-        if ((pEntry->filename[0] == '.') && 
-            (pEntry->filename[1] == '.') && 
-            (pEntry->filename[2] == '\0'))
-        {
-          gm_strcpy(pCurrPath, folder.path);
-          pCurrPath[gm_lstrlen(pCurrPath) - 1] = '\0';
-          *strrchr(pCurrPath, '\\') = '\0';
-        }
-        // Folder down
-        else
-          gm_strcat(gm_strcpy(pCurrPath, folder.path), pEntry->filename); 
+		//- Move to previous N file/folder
+		else if (newKeys & GPC_VK_LEFT)
+		{
+			if (ini.num_games_in_ini > pSelector->listSize)
+				if (topEntry > pSelector->listSize)
+					topEntry = topEntry  - pSelector->listSize;
+				else
+					topEntry = 0;
 
-        // Move to folder
-        FolderDrop(&folder);
-        error = FolderGet(pCurrPath, pSelector->pFilters, pSelector->options, &folder);
-        if (error != fldOk)
-        {
-          // show message
-          result = -1;
-          break;
-        }
-        folder.pTop = folder.pCurrent = folder.pEntries->pFirst;
-        while (GpKeyGet());
-      }
-    }
+			if (selectedEntry > pSelector->listSize)
+				selectedEntry = selectedEntry - pSelector->listSize;
+			else
+				selectedEntry = topEntry;
+		}
 
-    while ((GpTickCountGet() - tick) < pSelector->repetitionSpeed);
-  }
+		//- Move to next N file/folder
+		else if (newKeys & GPC_VK_RIGHT)
+		{
+			if (ini.num_games_in_ini > pSelector->listSize)
+				if (topEntry < ini.num_games_in_ini - pSelector->listSize * 2 - 1)
+					topEntry = topEntry + pSelector->listSize;
+			else
+				topEntry = ini.num_games_in_ini - pSelector->listSize + 1;
 
-  // Release memory
-  FolderDrop(&folder);
+			if (topEntry < 0)
+				topEntry = 0;
 
-  return result;
+			if (selectedEntry < ini.num_games_in_ini - pSelector->listSize)
+				selectedEntry = selectedEntry + pSelector->listSize;
+			else
+		        selectedEntry = ini.num_games_in_ini;
+	    }
+
+		//- Get selected file/folder
+		else if (newKeys & GPC_VK_FA)
+		{
+			// return the file or load or something :P
+		}
+		else if (newKeys & GPC_VK_SELECT)
+		{
+			char temp[255];
+			gm_sprintf(temp,"%s\\%s",dir,name);
+			GpFileRemove(temp);
+       
+			PrintMessage("Rescanning Directory",1);
+
+			fs_scandir(dir,name);
+		}
+
+	    while ((GpTickCountGet() - tick) < pSelector->repetitionSpeed);
+	}
+	return result;
 }
 
 void FileSelectorInit(FILESELECTOR *pSelector)
 {
-  gm_strcpy(pSelector->currentPath, "gp:\\");
-  pSelector->filename[0] =     '\0';
-  pSelector->trackPath =       TRUE;
-  pSelector->pFilters =        "*.*";
-  pSelector->options =         FLD_ALL;
+	gm_strcpy(pSelector->currentPath, "gp:\\");
+	pSelector->filename[0] =     '\0';
+	pSelector->trackPath =       TRUE;
+	pSelector->pFilters =        "*.*";
+	pSelector->options =         FLD_ALL;
 
-  pSelector->pFileSizeFormat = "%s byte(s)";
-  pSelector->pTotalsFormat =   "%s byte(s) in %s files(s)";
+	pSelector->pFileSizeFormat = "%s byte(s)";
+	pSelector->pTotalsFormat =   "%s byte(s) in %s files(s)";
 
-  pSelector->pathLeft =        9;
-  pSelector->pathTop =         7;
-  pSelector->listTop =         35;
-  pSelector->listSize =        10;
-  pSelector->fileLeft =        30;
-  pSelector->fileYDisplacement = 1;
-  pSelector->sizeRight =       282;
-  pSelector->sizeYDisplacement = 1;
-  pSelector->totalsLeft =      9;
-  pSelector->totalsTop =       220;
-  pSelector->scrollBarLeft =   311;
-  pSelector->selectionHeight = 17;
-  pSelector->selectionMargin = 20;
+	pSelector->pathLeft =        9;
+	pSelector->pathTop =         7;
+	pSelector->listTop =         35;
+	pSelector->listSize =        10;
+	pSelector->fileLeft =        30;
+	pSelector->fileYDisplacement = 1;
+	pSelector->sizeRight =       282;
+	pSelector->sizeYDisplacement = 1;
+	pSelector->totalsLeft =      9;
+	pSelector->totalsTop =       220;
+	pSelector->scrollBarLeft =   311;
+	pSelector->selectionHeight = 17;
+	pSelector->selectionMargin = 20;
 
-  pSelector->showPath =        TRUE;
-  pSelector->showExtensions =  TRUE;
-  pSelector->showSizes =       TRUE;
-  pSelector->showTotals =      TRUE;
-  pSelector->showScrollBar =   TRUE;
-  pSelector->showSeparationLines = TRUE;
+	pSelector->showPath =        TRUE;
+	pSelector->showExtensions =  TRUE;
+	pSelector->showSizes =       TRUE;
+	pSelector->showTotals =      TRUE;
+	pSelector->showScrollBar =   TRUE;
+	pSelector->showSeparationLines = TRUE;
 
-  pSelector->pathFont =        1;
-  pSelector->folderFont =      1;
-  pSelector->fileFont =        1;
-  pSelector->sizesFont =       1;
-  pSelector->totalsFont =      1;
+	pSelector->pathFont =        1;
+	pSelector->folderFont =      1;
+	pSelector->fileFont =        1;
+	pSelector->sizesFont =       1;
+	pSelector->totalsFont =      1;
 
-  pSelector->pBackground =     NULL;
-  pSelector->backColor =       RGB(7, 22, 22);
-  pSelector->separationLinesColor = RGB(0, 10, 10);
-  pSelector->selectionColor =  RGB(31, 31, 31);
-  pSelector->selectionIntensity = 32;
-  pSelector->scrollBarColor =  RGB(31, 31, 31);
+	pSelector->pBackground =     NULL;
+	pSelector->backColor =       RGB(7, 22, 22);
+	pSelector->separationLinesColor = RGB(0, 10, 10);
+	pSelector->selectionColor =  RGB(31, 31, 31);
+	pSelector->selectionIntensity = 32;
+	pSelector->scrollBarColor =  RGB(31, 31, 31);
 
-  pSelector->repetitionDelay = 300;
-  pSelector->repetitionSpeed = 30;
+	pSelector->repetitionDelay = 300;
+	pSelector->repetitionSpeed = 30;
 }
 
 
 //*** Private implementations
-static void RefreshScreen(FILESELECTOR *pSelector, FOLDER *pFolder)
+static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEntry)
 {
-  LISTITEM *pItem;
-  FOLDERENTRY *pEntry;
-  int pos;
-  char str[40], str1[10], str2[10], *pPos;
+	int pos, i, h, last_c, last_o;
 
-  OkfSetToDefaults();
+	char str[40], str1[10], str2[10], *pPos;
 
-  // Background
-  if (pSelector->pBackground)
-    GpBitBlt16(NULL, &okf.pSurfaces[*okf.pCurSurface], 0, 0, GPC_LCD_WIDTH, GPC_LCD_HEIGHT,
-               (unsigned char *) pSelector->pBackground, 0, 0, GPC_LCD_WIDTH, GPC_LCD_HEIGHT);
-  else
-    GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], 0, 0, GPC_LCD_WIDTH, GPC_LCD_HEIGHT, pSelector->backColor);
+	OkfSetToDefaults();
 
-  // Current path
-  if (pSelector->showPath)
-  {
-    if (pFolder->pEntries)
-    {
-      okf.font = pSelector->pathFont;
-      OkfPrintAt(pSelector->pathLeft, pSelector->pathTop, pFolder->path);
-    }
+	// Background
+	if (pSelector->pBackground)
+		GpBitBlt16(NULL, &okf.pSurfaces[*okf.pCurSurface], 0, 0, GPC_LCD_WIDTH, GPC_LCD_HEIGHT,
+					(unsigned char *) pSelector->pBackground, 0, 0, GPC_LCD_WIDTH, GPC_LCD_HEIGHT);
+	else
+		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], 0, 0, GPC_LCD_WIDTH, GPC_LCD_HEIGHT, pSelector->backColor);
 
-    if (pSelector->showSeparationLines)
-      GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], 0, pSelector->pathSepLineTop,
-                   GPC_LCD_WIDTH, 2, pSelector->separationLinesColor);
-  }
+	for(pos = topEntry,i = 0;(i < pSelector->listSize) && (pos < ini.num_games_in_ini);pos++,i++)
+	{
+		if (pos == selectedEntry)
+		{
+			if (pSelector->selectionIntensity >= 32)
+				GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface],
+							pSelector->selectionLeft, pSelector->listTop + i * pSelector->selectionHeight,
+							pSelector->selectionWidh, pSelector->selectionHeight,
+							pSelector->selectionColor);
+			else
+				OverlayColor16(&okf.pSurfaces[*okf.pCurSurface],
+							pSelector->selectionLeft, pSelector->listTop + i * pSelector->selectionHeight,
+							pSelector->selectionWidh, pSelector->selectionHeight,
+							pSelector->selectionColor, pSelector->selectionIntensity);
+		}
 
-  // Folders and files
-  if (pFolder->pEntries)
-  {
-    pos = 0;
-    pItem = pFolder->pTop;
-    while (pItem && (pos < pSelector->listSize))
-    {
-      pEntry = (FOLDERENTRY *) pItem->pObject;
+		if(ini.game[pos].entry==65535)
+			gm_sprintf(str,"%s (CRC unknown)",ini.game[pos].file);
+		else
+			gm_sprintf(str,"%s",MyDat[ini.game[pos].entry].name); 
 
-      // if file/folder is selected
-      if (pItem == pFolder->pCurrent)
-        if (pSelector->selectionIntensity >= 32)
-          GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface],
-                       pSelector->selectionLeft, pSelector->listTop + pos * pSelector->selectionHeight,
-                       pSelector->selectionWidh, pSelector->selectionHeight,
-                       pSelector->selectionColor);
-        else
-          OverlayColor16(&okf.pSurfaces[*okf.pCurSurface],
-                         pSelector->selectionLeft, pSelector->listTop + pos * pSelector->selectionHeight,
-                         pSelector->selectionWidh, pSelector->selectionHeight,
-                         pSelector->selectionColor, pSelector->selectionIntensity);
+		h=gm_lstrlen(str);
 
-      // remove file extension, if required
-      gm_strcpy(str, pEntry->filename);
-      if (!pSelector->showExtensions && !(pEntry->attr.attr & 0x10))
-        if (pPos = strchr(str, '.'))
-          *pPos = '\0';
+		do
+		{ 
+			if(str[h]==')') 
+				last_c=h; 
+			if(str[h]=='(') 
+				last_o=h; 
 
-      // file/folder name
-      okf.font = (pEntry->attr.attr & 0x10) ? pSelector->folderFont : pSelector->fileFont;
-      OkfPrintAt(pSelector->fileLeft,
-                 pSelector->listTop + pos * pSelector->selectionHeight + pSelector->fileYDisplacement,
-                 str);
+			if(str[h]==']') 
+				last_c=h; 
+			if(str[h]=='[') 
+				last_o=h; 
+		} while((--h)>4);
 
-      // file size, if needed
-      if (pSelector->showSizes && !(pEntry->attr.attr & 0x10))
-      {
-        gm_sprintf(str1, "%ld", pEntry->attr.size);
-        gm_sprintf(str, pSelector->pFileSizeFormat, Thousands(str1));
-        okf.justify = okfJustifyRight;
-        okf.font = pSelector->sizesFont;
-        OkfPrintAt(pSelector->sizeRight,
-                   pSelector->listTop + pos * pSelector->selectionHeight + pSelector->sizeYDisplacement,
-                   str);
-        okf.justify = okfJustifyLeft;
-      }
+		// ok: this remove () but region and version
+		str[last_o-1]='\0';
 
-      pItem = pItem->pNext;
-      pos++;
-    }
-  }
+		str[39]='\0'; //cut name
 
-  // Scroll bar
-  if (pSelector->showScrollBar && pFolder->pEntries)
-  {
-    GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft, pSelector->listTop,
-                 2, pSelector->scrollBarHeight, pSelector->scrollBarColor);
-    if (pFolder->pCurrent)
-    {
-      pos = 0;
-      if (pFolder->pEntries->count > 1)
-        pos = pSelector->scrollBarHeight * 1000 / (pFolder->pEntries->count - 1);
-      pos = pSelector->listTop + ListGetIndex(pFolder->pCurrent) * pos / 1000 - 2;
-      GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft    , pos - 2, 2, 10, pSelector->backColor);
-      GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft - 2, pos    , 6,  6, pSelector->scrollBarColor);
-      GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft - 1, pos - 1, 4,  8, pSelector->scrollBarColor);
-    }
-  }
+		okf.font = pSelector->fileFont;
+		OkfPrintAt(pSelector->fileLeft,
+					pSelector->listTop + i * pSelector->selectionHeight + pSelector->fileYDisplacement,
+					str);
 
-  // Totals
-  if (pSelector->showTotals)
-  {
-    if (pSelector->showSeparationLines)
-      GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], 0, pSelector->totalsSepLineTop,
-                   GPC_LCD_WIDTH, 2, pSelector->separationLinesColor);
+	}
 
-    if (pFolder->pEntries)
-    {
-      gm_sprintf(str1, "%ld", pFolder->totalSize);
-      gm_sprintf(str2, "%ld", pFolder->totalFiles);
-      gm_sprintf(str, pSelector->pTotalsFormat, Thousands(str1), Thousands(str2));
-      okf.font = pSelector->totalsFont;
-      OkfPrintAt(pSelector->totalsLeft, pSelector->totalsTop, str);
-    }
-  }
+	// New Scroll bar
+	if (pSelector->showScrollBar)
+	{
+		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft, pSelector->listTop,
+					2, pSelector->scrollBarHeight, pSelector->scrollBarColor);
+		pos = 0;
+		if (ini.num_games_in_ini > 1)
+			pos = pSelector->scrollBarHeight * 1000 / (ini.num_games_in_ini - 1);
+		pos = pSelector->listTop + selectedEntry * pos / 1000 - 2;
+		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft    , pos - 2, 2, 10, pSelector->backColor);
+		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft - 2, pos    , 6,  6, pSelector->scrollBarColor);
+		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft - 1, pos - 1, 4,  8, pSelector->scrollBarColor);
+	}
 
-  // Shows the result
-  GpSurfaceFlip(&okf.pSurfaces[*okf.pCurSurface]);
-  *okf.pCurSurface ^= 0x01;
+	// Shows the result
+	GpSurfaceFlip(&okf.pSurfaces[*okf.pCurSurface]);
+	*okf.pCurSurface ^= 0x01;
 }
-
