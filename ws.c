@@ -27,6 +27,7 @@
 //#include "file_dialog.h"
 //extern int nFlip;
 
+
 ////////////////////////////////////////////////////////////////////////////////
 //
 ////////////////////////////////////////////////////////////////////////////////
@@ -196,10 +197,6 @@ int ws_executeLine(int16 *framebuffer, int renderLine)
 				}
 			}
 		}
-//		ws_gpu_spritebuffer_start 	= ws_ioRam[0x06];
-//		ws_gpu_spritebuffer_end		= ws_ioRam[0x05];
-		// update buffered sprite table
-//		GPMEMCPY((uint32*)ws_gpu_spritetable_buffer,(uint32*)(internalRam+(((uint32)ws_ioRam[0x04])<<9)),256*sizeof(uint32));
 	}
 	ws_ioRam[2]=ws_gpu_scanline;
 	if(drawWholeScreen)
@@ -280,66 +277,22 @@ int	ws_saveState(char *statepath)
 	uint16	crc=memory_getRomCrc();
 	unsigned	value;
 	char		newPath[1024];
-
-/*
-	if (GPSTRLEN(statepath)<4)
-		GPSPRINTF(newPath,"%s.wss",statepath);
-	else
-	{
-		int len=GPSTRLEN(statepath);
-		if ((statepath[len-1]!='s')&&(statepath[len-1]!='S'))
-			GPSPRINTF(newPath,"%s.wss",statepath);
-		else
-		if ((statepath[len-2]!='s')&&(statepath[len-2]!='S'))
-			GPSPRINTF(newPath,"%s.wss",statepath);
-		else
-		if ((statepath[len-3]!='w')&&(statepath[len-3]!='W'))
-			GPSPRINTF(newPath,"%s.wss",statepath);
-		else
-		if (statepath[len-4]!='.')
-			GPSPRINTF(newPath,"%s.wss",statepath);
-		else
-			GPSPRINTF(newPath,"%s",statepath);
-	}
-*/
-
+	gameState	*saveState;
+	
 	GPSPRINTF(newPath,"%s",statepath);
 
 	result=GpFileCreate(newPath,ALWAYS_CREATE,&F);
 
 	if (result==SM_OK)
 	{
-		GpFileWrite(F,&crc,sizeof(crc));
-		MacroStoreNecRegisterToFile(F,NEC_IP);
-		MacroStoreNecRegisterToFile(F,NEC_AW);
-		MacroStoreNecRegisterToFile(F,NEC_BW);
-		MacroStoreNecRegisterToFile(F,NEC_CW);
-		MacroStoreNecRegisterToFile(F,NEC_DW);
-		MacroStoreNecRegisterToFile(F,NEC_CS);
-		MacroStoreNecRegisterToFile(F,NEC_DS);
-		MacroStoreNecRegisterToFile(F,NEC_ES);
-		MacroStoreNecRegisterToFile(F,NEC_SS);
-		MacroStoreNecRegisterToFile(F,NEC_IX);
-		MacroStoreNecRegisterToFile(F,NEC_IY);
-		MacroStoreNecRegisterToFile(F,NEC_BP);
-		MacroStoreNecRegisterToFile(F,NEC_SP);
-		MacroStoreNecRegisterToFile(F,NEC_FLAGS);
-		MacroStoreNecRegisterToFile(F,NEC_VECTOR);
-		MacroStoreNecRegisterToFile(F,NEC_PENDING);
-		MacroStoreNecRegisterToFile(F,NEC_NMI_STATE);
-		MacroStoreNecRegisterToFile(F,NEC_IRQ_STATE);
+		saveState = GPMALLOC(sizeof(gameState));
 
-		GpFileWrite(F,internalRam,65536);
-		GpFileWrite(F,ws_staticRam,65536);
-		GpFileWrite(F,ws_ioRam,256);
-		GpFileWrite(F,ws_paletteColors,8);
-		GpFileWrite(F,ws_palette,16*4*2);
-		GpFileWrite(F,wsc_palette,16*16*2);
-		GpFileWrite(F,&ws_videoMode,1);
-		GpFileWrite(F,&ws_gpu_scanline,1);
-		GpFileWrite(F,externalEeprom,131072);
-
-
+		if (saveState != NULL)
+		{
+			saveStateToMem(saveState);
+			GpFileWrite(F,&crc,sizeof(crc));
+			GpFileWrite(F,saveState,sizeof(gameState));
+		}
 		GpFileClose(F);
 	}
 	else
@@ -375,7 +328,8 @@ int	ws_loadState(char *statepath)
 	uint16	crc=memory_getRomCrc();
 	uint16	newCrc;
 	unsigned	value;
-	uint8	ws_newVideoMode;
+
+	gameState	*saveState;
 
 	result = GpFileOpen(statepath,OPEN_R, &F);
 	
@@ -390,39 +344,94 @@ int	ws_loadState(char *statepath)
 		return(-1);
 	}
 
-	MacroLoadNecRegisterFromFile(F,NEC_IP);
-	MacroLoadNecRegisterFromFile(F,NEC_AW);
-	MacroLoadNecRegisterFromFile(F,NEC_BW);
-	MacroLoadNecRegisterFromFile(F,NEC_CW);
-	MacroLoadNecRegisterFromFile(F,NEC_DW);
-	MacroLoadNecRegisterFromFile(F,NEC_CS);
-	MacroLoadNecRegisterFromFile(F,NEC_DS);
-	MacroLoadNecRegisterFromFile(F,NEC_ES);
-	MacroLoadNecRegisterFromFile(F,NEC_SS);
-	MacroLoadNecRegisterFromFile(F,NEC_IX);
-	MacroLoadNecRegisterFromFile(F,NEC_IY);
-	MacroLoadNecRegisterFromFile(F,NEC_BP);
-	MacroLoadNecRegisterFromFile(F,NEC_SP);
-	MacroLoadNecRegisterFromFile(F,NEC_FLAGS);
-	MacroLoadNecRegisterFromFile(F,NEC_VECTOR);
-	MacroLoadNecRegisterFromFile(F,NEC_PENDING);
-	MacroLoadNecRegisterFromFile(F,NEC_NMI_STATE);
-	MacroLoadNecRegisterFromFile(F,NEC_IRQ_STATE);
+	saveState	=	GPMALLOC(sizeof(gameState));
 
-	GpFileRead(F, internalRam,		65536,	&sizeread);
-	GpFileRead(F, ws_staticRam,		65536,	&sizeread);
-	GpFileRead(F, ws_ioRam,			256,	&sizeread);
-	GpFileRead(F, ws_paletteColors,	8,		&sizeread);
-	GpFileRead(F, ws_palette,		16*4*2,	&sizeread);
-	GpFileRead(F, wsc_palette,		16*16*2,&sizeread);
-	GpFileRead(F, &ws_newVideoMode,	1,		&sizeread);
-	GpFileRead(F, &ws_gpu_scanline,	1,		&sizeread);
-	GpFileRead(F, externalEeprom,	131072,	&sizeread);
+	if (saveState == NULL)
+	{
+		GpFileClose(F);
+		return(-1);
+	}
 
-//	ws_audio_readState(fp);
+	GpFileRead(F, saveState, sizeof(gameState), &sizeread);
 	GpFileClose(F);
+
+	loadStateFromMem(saveState);
 
 	// force a video mode change to make all tiles dirty
 	ws_gpu_clearCache();
 	return(1);
+}
+
+#define MacroStoreNecRegisterToMem(M,R)        \
+		M->R = nec_get_reg(R);
+
+void saveStateToMem(gameState *tempState)
+{
+	MacroStoreNecRegisterToMem(tempState,NEC_IP);
+	MacroStoreNecRegisterToMem(tempState,NEC_AW);
+	MacroStoreNecRegisterToMem(tempState,NEC_BW);
+	MacroStoreNecRegisterToMem(tempState,NEC_CW);
+	MacroStoreNecRegisterToMem(tempState,NEC_DW);
+	MacroStoreNecRegisterToMem(tempState,NEC_CS);
+	MacroStoreNecRegisterToMem(tempState,NEC_DS);
+	MacroStoreNecRegisterToMem(tempState,NEC_ES);
+	MacroStoreNecRegisterToMem(tempState,NEC_SS);
+	MacroStoreNecRegisterToMem(tempState,NEC_IX);
+	MacroStoreNecRegisterToMem(tempState,NEC_IY);
+	MacroStoreNecRegisterToMem(tempState,NEC_BP);
+	MacroStoreNecRegisterToMem(tempState,NEC_SP);
+	MacroStoreNecRegisterToMem(tempState,NEC_FLAGS);
+	MacroStoreNecRegisterToMem(tempState,NEC_VECTOR);
+	MacroStoreNecRegisterToMem(tempState,NEC_PENDING);
+	MacroStoreNecRegisterToMem(tempState,NEC_NMI_STATE);
+	MacroStoreNecRegisterToMem(tempState,NEC_IRQ_STATE);
+
+	GPMEMCPY(tempState->internalRam,		internalRam,		65536);
+	GPMEMCPY(tempState->ws_staticRam,		ws_staticRam,		65536);
+	GPMEMCPY(tempState->ws_ioRam,			ws_ioRam,			256);
+	GPMEMCPY(tempState->ws_paletteColors,	ws_paletteColors,	8);
+	GPMEMCPY(tempState->ws_palette,			ws_palette,			16*4*2);
+	GPMEMCPY(tempState->wsc_palette,		wsc_palette,		16*16*2);
+	GPMEMCPY(tempState->externalEeprom,		externalEeprom,		131072);
+
+	tempState->ws_videoMode		= ws_videoMode;
+	tempState->ws_gpu_scanline	= ws_gpu_scanline;
+}
+
+#define MacroLoadNecRegisterFromMem(M,R)        \
+	    nec_set_reg(R,M->R);
+
+void loadStateFromMem(gameState *tempState)
+{
+	uint8	ws_newVideoMode;
+
+	MacroLoadNecRegisterFromMem(tempState,NEC_IP);
+	MacroLoadNecRegisterFromMem(tempState,NEC_AW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_BW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_CW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_DW);
+	MacroLoadNecRegisterFromMem(tempState,NEC_CS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_DS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_ES);
+	MacroLoadNecRegisterFromMem(tempState,NEC_SS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_IX);
+	MacroLoadNecRegisterFromMem(tempState,NEC_IY);
+	MacroLoadNecRegisterFromMem(tempState,NEC_BP);
+	MacroLoadNecRegisterFromMem(tempState,NEC_SP);
+	MacroLoadNecRegisterFromMem(tempState,NEC_FLAGS);
+	MacroLoadNecRegisterFromMem(tempState,NEC_VECTOR);
+	MacroLoadNecRegisterFromMem(tempState,NEC_PENDING);
+	MacroLoadNecRegisterFromMem(tempState,NEC_NMI_STATE);
+	MacroLoadNecRegisterFromMem(tempState,NEC_IRQ_STATE);
+
+	GPMEMCPY(internalRam,		tempState->internalRam,		65536);
+	GPMEMCPY(ws_staticRam,		tempState->ws_staticRam,	65536);
+	GPMEMCPY(ws_ioRam,			tempState->ws_ioRam,		256);
+	GPMEMCPY(ws_paletteColors,	tempState->ws_paletteColors,8);
+	GPMEMCPY(ws_palette,		tempState->ws_palette,		16*4*2);
+	GPMEMCPY(wsc_palette,		tempState->wsc_palette,		16*16*2);
+	GPMEMCPY(externalEeprom,	tempState->externalEeprom,	131072);
+
+	ws_newVideoMode = tempState->ws_videoMode;
+	ws_gpu_scanline = tempState->ws_gpu_scanline;
 }
