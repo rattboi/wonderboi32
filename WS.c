@@ -257,7 +257,6 @@ static void WriteRom(unsigned A, byte V)
 
 static void WriteIRam(unsigned A, byte V)
 {
-	IRAM[A&0xFFFF]=V;
 	// wsc palette
 	if((A&0xFE00)==0xFE00)
 	{
@@ -276,6 +275,7 @@ static void WriteIRam(unsigned A, byte V)
 		if (IRAM[(A&0xFFFF)]!=V)
 			wsc_modified_tile[((A&0x3fff)>>5)+512]=1;
 	}
+	IRAM[A&0xFFFF]=V;
 /*
 	if(!((A-WaveMap) &0xFFC0))
 	{
@@ -429,8 +429,8 @@ LogFile(LK_SPRITE, str);
 						j=(DMADH<<8) |DMADL;
 						for(k=0;k<n;k++)
 						{
-							b=cpu_readmem20(i);
-							cpu_writemem20(j,b);
+							b=ReadMem(i);
+							WriteMem(j,b);
 							i++;
 							j++;
 						}
@@ -1438,21 +1438,21 @@ LogFile(LK_SOUND, str);
                 if(RSTRL==0)
                 {
                     SkipCnt--;
-                    if(SkipCnt<0)
-                    {
-                        SkipCnt=9;
-                    }
+
+					if (SkipCnt < 0)
+	                    SkipCnt=FrameSkip;
                 }
-                if(TblSkip[FrameSkip][SkipCnt])
+
+				if(SkipCnt == 0)
                 {
-            	    if(RSTRL<144)
-                    {
-                	    WsDrawLine((int) RSTRL);
-                    }
-                    if(RSTRL==144)
-                    {
-                	    WsDrawFlip();
-                    }
+					if(RSTRL<144)
+					{
+	                	WsDrawLine((int) RSTRL);
+					}
+					if(RSTRL==144)
+					{
+	                	WsDrawFlip();
+					}
                 }
 			}
             break;

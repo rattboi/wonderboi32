@@ -26,22 +26,40 @@ void (*renderLine[]) (int Line, void *buffer) = {
 	RefreshLineOld
 };
 
-uint8 *ws_tileCache_getTileRow(uint32 tileIndex, 
+uint8 *ws_tileCache_getTileRow(uint32 TMap, 
 							   uint32 line, 
-							   uint32 vFlip, 
-							   uint32 hFlip, 
-							   uint32 bank)
+							   uint32 sprite)
 {
 	int forline;
+	int vFlip;
+	int hFlip;
+	int bank;
+	int tileIndex;
+	
+	if (sprite == 0)
+	{
+		tileIndex	= TMap&MAP_TILE;
+		vFlip		= TMap&MAP_VREV;
+		hFlip		= TMap&MAP_HREV;
+		bank		= TMap&MAP_BANK;
+	}
+	else
+	{
+		tileIndex	= TMap&SPR_TILE;
+		vFlip		= TMap&SPR_VREV;
+		hFlip		= TMap&SPR_HREV;
+		bank		= 0;
+	}
 
-	switch(COLCTL)
+	if (bank)
+		tileIndex+=512;
+
+	switch(COLCTL & 0xE0)
 	{
 	case 0xE0:		// 16 bit packed (so easy!)
 		{
-			if (wsc_modified_tile[tileIndex])
+			if ((wsc_modified_tile[tileIndex] == 1))//|| sprite == 1 )
 			{
-				if (bank)
-					tileIndex+=512;
 
 				uint8	*tileInCachePtr = &wsc_tile_cache[tileIndex<<6];
 				uint8	*hflippedTileInCachePtr = &wsc_hflipped_tile_cache[tileIndex<<6];
@@ -85,7 +103,7 @@ uint8 *ws_tileCache_getTileRow(uint32 tileIndex,
 		break;
 	case 0xC0:		// 16 bit layered (not so easy!)
 		{
-			if (wsc_modified_tile[tileIndex])
+			if ((wsc_modified_tile[tileIndex] == 1))// || sprite == 1 )
 			{
 				uint8	*tileInCachePtr			= &wsc_tile_cache[tileIndex<<6];
 				uint8	*hflippedTileInCachePtr = &wsc_hflipped_tile_cache[tileIndex<<6];
@@ -97,14 +115,14 @@ uint8 *ws_tileCache_getTileRow(uint32 tileIndex,
 				{
 					tileLine=*tileInRamPtr++;
 					
-					tileInCachePtr[0] = (j=((((j=tileLine&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F));
-					tileInCachePtr[1] = (j=((((j=tileLine&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F));
-					tileInCachePtr[2] = (j=((((j=tileLine&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F));
-					tileInCachePtr[3] = (j=((((j=tileLine&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F));
-					tileInCachePtr[4] = (j=((((j=tileLine&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F));
-					tileInCachePtr[5] = (j=((((j=tileLine&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F));
-					tileInCachePtr[6] = (j=((((j=tileLine&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F));
-					tileInCachePtr[7] = (j=((((j=tileLine&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F));
+					tileInCachePtr[0] = ((((j=tileLine&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F);
+					tileInCachePtr[1] = ((((j=tileLine&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F);
+					tileInCachePtr[2] = ((((j=tileLine&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F);
+					tileInCachePtr[3] = ((((j=tileLine&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F);
+					tileInCachePtr[4] = ((((j=tileLine&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F);
+					tileInCachePtr[5] = ((((j=tileLine&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F);
+					tileInCachePtr[6] = ((((j=tileLine&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F);
+					tileInCachePtr[7] = ((((j=tileLine&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F);
 
 					hflippedTileInCachePtr[7]=tileInCachePtr[0];
 					hflippedTileInCachePtr[6]=tileInCachePtr[1];
@@ -154,9 +172,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 	int TMapX;
 	int TMapXEnd;
 
-	register byte *pbTData;
-
-	uint8	*ws_tileRow;
+	register uint8	*ws_tileRow;
 
     unsigned int i, j, k, index[8];
 
@@ -165,7 +181,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 	uint8 bkCol;
 
 	defpal[0] = 0;
-	pSBuf=(uint8 *) buffer+8;
+	pSBuf=(uint8 *) buffer+(8*BUFFER_MODE);
 	pSWrBuf=pSBuf;
 
 
@@ -176,7 +192,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 
 	if(!(LCDSLP&0x01)) return;
 
-#define ColorTILEInfo (((TMap>>9)&0x0F)<<4)
+#define ColorTILEInfo (((TMap&MAP_PAL)>>9)<<4)
  	if(DSPCTL&0x01) // BG Layer on
 	{
 		OffsetX=SCR1X&0x07;
@@ -193,16 +209,16 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap&MAP_TILE, OffsetY, TMap&MAP_VREV, TMap&MAP_HREV, TMap&MAP_BANK);
+			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
 
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
-			*pSWrBuf = (j=*ws_tileRow++		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
 		}
 	}
 
@@ -249,7 +265,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap&MAP_TILE, OffsetY, TMap&MAP_VREV, TMap&MAP_HREV, TMap&MAP_BANK);
+			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
 
 			if (!pW[0]&&(j=(*ws_tileRow++)))	  { pZ[0]=1; pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
 			if (!pW[1]&&(j=(*ws_tileRow++)))	  { pZ[1]=1; pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
@@ -267,7 +283,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 	}
 
 #undef	ColorTILEInfo
-#define ColorTILEInfo ((((TMap>>9)&0x0E)+8)<<4)
+#define ColorTILEInfo ((((TMap&SPR_PAL)>>9)+8)<<4)
 
 	if(DSPCTL&0x04) // sprites on
 	{
@@ -293,7 +309,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 				i=k;
 				pSWrBuf=pSBuf+(i*BUFFER_MODE);
 
-				ws_tileRow	=	ws_tileCache_getTileRow(TMap&SPR_TILE, (Line-j)&0x07, TMap&SPR_VREV, TMap&SPR_HREV, 0);
+				ws_tileRow	=	ws_tileCache_getTileRow(TMap, (Line-j)&0x07, 1);
 
 				index[0]=*ws_tileRow++;
 				index[1]=*ws_tileRow++;
@@ -337,7 +353,7 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 				i=k;
 				pSWrBuf=pSBuf+(i*BUFFER_MODE);
 
-				ws_tileRow	=	ws_tileCache_getTileRow(TMap&SPR_TILE, (Line-j)&0x07, TMap&SPR_VREV, TMap&SPR_HREV, 0);
+				ws_tileRow	=	ws_tileCache_getTileRow(TMap, (Line-j)&0x07, 1);
 
 //				pW=WBuf+8+k;
 				pZ=ZBuf+k+8;
@@ -355,17 +371,14 @@ void  REFRESHLINE16PACKED(int Line, void* buffer)
 				}
 				else 
 				{
-					if(TMap&SPR_HREV) 
-					{
-						if (!pZ[0]&&(j=(*ws_tileRow++)))	  { pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[1]&&(j=(*ws_tileRow++)))	  { pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[2]&&(j=(*ws_tileRow++)))	  { pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[3]&&(j=(*ws_tileRow++)))	  { pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[4]&&(j=(*ws_tileRow++)))	  { pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[5]&&(j=(*ws_tileRow++)))	  { pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[6]&&(j=(*ws_tileRow++)))	  { pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo; }
-						if (!pZ[7]&&(j=(*ws_tileRow++)))	  { pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo; }
-					} 
+					if (!pZ[0]&&(j=(*ws_tileRow++)))	  { pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[1]&&(j=(*ws_tileRow++)))	  { pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[2]&&(j=(*ws_tileRow++)))	  { pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[3]&&(j=(*ws_tileRow++)))	  { pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[4]&&(j=(*ws_tileRow++)))	  { pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[5]&&(j=(*ws_tileRow++)))	  { pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[6]&&(j=(*ws_tileRow++)))	  { pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo; }
+					if (!pZ[7]&&(j=(*ws_tileRow++)))	  { pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo; }
 				}
 			}
 		}  // DSPCTL&0x08 Off
@@ -391,20 +404,19 @@ void REFRESHLINE16LAYERED(int Line, void *buffer)
 	int TMapX;
 	int TMapXEnd;
 
-	register byte *pbTData;
+	register uint8	*ws_tileRow;
 
     uint32 i, j, k, index[8];
 
 	uint8 *pbPal;
 	uint8 defpal = 0;
 
-	pSBuf=(uint8 *) buffer+8;
+	pSBuf=(uint8 *) buffer+(8*BUFFER_MODE);
 	pSWrBuf=pSBuf;
 
 	uint8 bkCol;
 
 	if(LCDSLP&0x01)	
-//		pbPal=&Palette[(BORDER&0xF0)>>4][BORDER&0x0F];
 		bkCol = BORDER;
 	else	
 		bkCol = 0;
@@ -413,7 +425,7 @@ void REFRESHLINE16LAYERED(int Line, void *buffer)
 	if(! (LCDSLP&0x01)) return;
 
 #undef	ColorTILEInfo
-#define ColorTILEInfo (((TMap>>9)&0x0f)<<4)
+#define ColorTILEInfo (((TMap&MAP_PAL)>>9)<<4)
 
  	if(DSPCTL&0x01)
 	{
@@ -431,31 +443,16 @@ void REFRESHLINE16LAYERED(int Line, void *buffer)
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			pbTData = (TMap&MAP_BANK) ? (IRAM+0x08000) : (IRAM+0x4000);
-			pbTData+= (TMap&MAP_TILE)<<5;
-			pbTData+= (TMap&MAP_VREV) ? ((7-OffsetY)<<2) : (OffsetY<<2);
-//			uint16 * palt = Palette[(TMap&MAP_PAL)>>9];
+			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
 
-			uint32 *pp = (uint32*) &pbTData[0];
-			if(TMap&MAP_HREV) {
-				*pSWrBuf = (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-			} else 	{
-				*pSWrBuf = (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-				*pSWrBuf = (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		? j+ColorTILEInfo : bkCol; pSWrBuf+=BUFFER_MODE;
-			}
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
+			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
 		}
 	}
 
@@ -502,40 +499,25 @@ void REFRESHLINE16LAYERED(int Line, void *buffer)
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			pbTData = (TMap&MAP_BANK) ? (IRAM+0x08000) : (IRAM+0x4000);
-			pbTData+= (TMap&MAP_TILE)<<5;
-			pbTData+= (TMap&MAP_VREV) ? ((7-OffsetY)<<2) : (OffsetY<<2);
-//			uint16 * palt = Palette[(TMap&MAP_PAL)>>9];
+			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
 
-			uint32 *pp = (uint32*) &pbTData[0];
-			if (TMap&MAP_HREV) {
-				if (!pW[0]&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		{ pZ[0]=1; pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[1]&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	{ pZ[1]=1; pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[2]&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	{ pZ[2]=1; pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[3]&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))) { pZ[3]=1; pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[4]&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	{ pZ[4]=1; pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[5]&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))) { pZ[5]=1; pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[6]&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	{ pZ[6]=1; pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[7]&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))) { pZ[7]=1; pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo; }
-			} else {
-				if (!pW[0]&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))) { pZ[0]=1; pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[1]&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	{ pZ[1]=1; pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[2]&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))) { pZ[2]=1; pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[3]&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	{ pZ[3]=1; pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[4]&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))) { pZ[4]=1; pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[5]&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	{ pZ[5]=1; pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[6]&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	{ pZ[6]=1; pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo; }
-				if (!pW[7]&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		{ pZ[7]=1; pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo; }
-			}
+			if (!pW[0]&&(j=(*ws_tileRow++)))	  { pZ[0]=1; pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[1]&&(j=(*ws_tileRow++)))	  { pZ[1]=1; pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[2]&&(j=(*ws_tileRow++)))	  { pZ[2]=1; pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[3]&&(j=(*ws_tileRow++)))	  { pZ[3]=1; pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[4]&&(j=(*ws_tileRow++)))	  { pZ[4]=1; pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[5]&&(j=(*ws_tileRow++)))	  { pZ[5]=1; pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[6]&&(j=(*ws_tileRow++)))	  { pZ[6]=1; pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo; }
+			if (!pW[7]&&(j=(*ws_tileRow++)))	  { pZ[7]=1; pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo; }
 
 			pW += 8;
 			pZ += 8;
-			pSWrBuf += (8 * BUFFER_MODE);
+			pSWrBuf += (8*BUFFER_MODE);
 		}
 	}
 
 #undef	ColorTILEInfo
-#define ColorTILEInfo ((((TMap>>9)&0x0e)+8)<<4)
+#define ColorTILEInfo ((((TMap&SPR_PAL)>>9)+8)<<4)
 
 	if(DSPCTL&0x04) // sprites on
 	{
@@ -558,100 +540,55 @@ void REFRESHLINE16LAYERED(int Line, void *buffer)
 				if(Line<j) continue;
 				if(Line>=j+8) continue;
 				if(224<=k) continue;
-				i=k; pSWrBuf=pSBuf+(i*BUFFER_MODE);
-				pbTData=IRAM+0x4000;
-				pbTData+=(TMap&SPR_TILE)<<5;
-				if(TMap&SPR_VREV) pbTData+=(7-Line+j)<<2; else pbTData+=(Line-j)<<2;
+				i=k; 
+				pSWrBuf=pSBuf+(i*BUFFER_MODE);
 
 				pW=WBuf+8+k;
 				pZ=ZBuf+k+8;
-//				uint16 *palt = Palette[((TMap&SPR_PAL)>>9)+8];
-				uint32 *pp = (uint32*) &pbTData[0];
+
+				ws_tileRow	=	ws_tileCache_getTileRow(TMap, (Line-j)&0x07, 1);
+
 				if(TMap&SPR_CLIP) {
 					if (TMap&SPR_LAYR){
-						if (TMap&SPR_HREV) {
-							if ((*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;				
-						} else 	{
-							if ((*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
-						}
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
 						pZ+=8;
 					} else {
-						if (TMap&SPR_HREV) {
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;				
-						} else 	{
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
-						}
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
 					}
 				} else {
 					if (TMap&SPR_LAYR){
-						if (TMap&SPR_HREV) {
-							if ((!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;				
-						} else 	{
-							if ((!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
-						}
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
 						pZ+=8;
 					} else {
-						if (TMap&SPR_HREV) {
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;				
-						} else 	{
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
-						}
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
+						if ((!*pZ++)&&(!*pW++)&&(j=(*ws_tileRow++)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
 					}
 				}
 			}
@@ -666,56 +603,33 @@ void REFRESHLINE16LAYERED(int Line, void *buffer)
 				if(Line<j) continue;
 				if(Line>=j+8) continue;
 				if(224<=k) continue;
-				i=k; pSWrBuf=pSBuf+(i*BUFFER_MODE);
-				pbTData=IRAM+0x4000;
-				pbTData+=(TMap&SPR_TILE)<<5;
-				if(TMap&SPR_VREV) pbTData+=(7-Line+j)<<2; else pbTData+=(Line-j)<<2;
+				i=k; 
+				pSWrBuf=pSBuf+(i*BUFFER_MODE);
 
 				pW=WBuf+8+k;
 				pZ=ZBuf+k+8;
-//				uint16 *palt = Palette[((TMap&SPR_PAL)>>9)+8];
-				uint32 *pp = (uint32*) &pbTData[0];
+
+				ws_tileRow	=	ws_tileCache_getTileRow(TMap, (Line-j)&0x07, 1);
+
 				if (TMap&SPR_LAYR) {
-					if (TMap&SPR_HREV) {
-						if (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;				
-					} else 	{
-						if (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-						if (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
-					}
+					if (j=(*ws_tileRow++))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
+					if (j=(*ws_tileRow++))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
 					pZ+=8;
 				} else {
-					if (TMap&SPR_HREV) {
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;				
-					} else 	{
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
-					}
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[2*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[3*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[4*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[5*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[6*BUFFER_MODE]=j+ColorTILEInfo;
+					if ((!*pZ++)&&(j=(*ws_tileRow++)))		pSWrBuf[7*BUFFER_MODE]=j+ColorTILEInfo;
 				}
 			}
 		}//(DSPCTL&0x08)

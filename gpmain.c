@@ -200,29 +200,25 @@ void Emulate()
 	int forcemode;
 	
 	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
-	SetDrawMode(videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected);
-	FrameSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected << 1);
-//	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
-//	GpGraphicModeSet(8,NULL);
 	InitGraphics(8);
 
+	SetDrawMode(videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected);
+	FrameSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected);
+//	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
+
 	WsInputInit(vert);
-//	GpSurfaceSet(&gtSurface[0]);
 	
 //	PROFILER_START();
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
 
-//	GpGraphicModeSet(16,NULL);
-	InitGraphics(16);
-
-//	GpSurfaceSet(&gtSurface[giSurface]);
-	
-	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = FrameSkip >> 1;
+	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = FrameSkip;
 	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = GetDrawMode();
 	setCpuSpeed(66);
+
+	InitGraphics(16);
 }
 
 

@@ -28,7 +28,7 @@ int DrawMode=-1;
 byte ColTbl[0x210];
 uint16 Palette[16+1][16];
 
-uint16 screenbuffer[(224+16)*144];
+uint8 screenbuffer[240*240];
 
 uint8	*ws_tile_cache;
 uint8	*wsc_tile_cache;
@@ -77,12 +77,12 @@ int scroll_x = 0;
 
 video_mode video_modes[6] =
 {
-	horz_render_normal,		48,	41,	0,
-	horz_render_hstretch,	0,	41,	6,
-	horz_render_hvstretch,	0,	12,	6,
-	vert_render_normal,		88,	7,	0,
-	horz_render_normal,		48,	41,	0,			//for savestates
-	vert_render_normal,		88,	0,	0			//for savestates
+	horz_render_square,		48,	12,	0,
+	horz_render_widescreen,		0,	48,	0,
+	horz_render_fullscreen,		0,	12,	0,
+	NULL,		0,	0,	0,
+	NULL,		48,	41,	0,			//for savestates
+	NULL,		88,	0,	0			//for savestates
 };
 
 #define VERT_BUFFER_MODE 1
@@ -94,6 +94,8 @@ video_mode video_modes[6] =
 #include "newgfxcore.h"
 
 void  (*RefreshLine)(int Line, void* lpSurface);
+
+void  RebuildPalette();
 
 //---------------------------------------------------------------------------
 int  WsDrawCreate()
@@ -127,6 +129,7 @@ int  WsDrawCreate()
 	GPMEMSET(wsc_modified_tile,0x01,1024);
 
     WsDrawClear();
+	RebuildPalette();
     return 0;
 }
 
@@ -137,9 +140,10 @@ int  WsDrawLine(int Line)
 	char debug[100];
 
 #if BUFFER_MODE == HORZ_BUFFER_MODE
-	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)-(8)+(240-(Line))); // works for horz
+	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(240-(Line))); // works for horz
+//	RefreshLine(Line, screenbuffer+(144-Line)); // works for horz
 #else
-	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)-(8)+(Line*240)); // works for vert
+	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(Line*240)); // works for vert
 #endif
 
 /*
@@ -157,7 +161,19 @@ int  WsDrawLine(int Line)
 //---------------------------------------------------------------------------
 int  WsDrawFlip(void)
 {
-//	video_update((byte*)screenbuffer+(scroll_x*2)+16, gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2));
+#if BUFFER_MODE == HORZ_BUFFER_MODE
+
+int i,j;
+	for (i = 0; i < 8; i++)
+		for (j = 0; j < 144; j++)
+		{
+			*(gtSurface[giSurface].ptbuffer+(240*video_x)+(video_y)+(i*240)+j+15) = BORDER;
+			*(gtSurface[giSurface].ptbuffer+(240*video_x)+(240*(224+8))+(video_y)+(i*240)+j+15) = BORDER;
+		}
+
+#endif
+//	if (video_update != NULL)
+//		video_update((uint8*)screenbuffer+(8*240)+(scroll_x*240), gtSurface[giSurface].ptbuffer+(240*video_x)+(video_y));
 	SurfaceFlip();
 	return 0;
 }
@@ -167,26 +183,52 @@ void  SetPalette(int Index, byte PalData)
 {
 	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
 	uint16 Pal;
-    uint16 PF;
-	int i,j;
+	int i;
+	int r,g,b;
 
-	int col;
-	
 	ColTbl[Index]=PalData;
     i=Index&0x3FE;
 	Pal=(ColTbl[i+1]<<8) |ColTbl[i];
 
-	i=Index>>5;
-	j=(Index>>1)&0x0F;
-	
-	col = Index >> 1;
+#define GAMMA 2.4
 
-//    if(col<253)
-		HWPALETTE[col] = RGB555(((Pal>>8)&0x0f)<<1,((Pal>>4)&0x0f)<<1,(Pal&0x0f)<<1);
+	r = (int)(((Pal>>8)&0x0f)*GAMMA)<<1;
+	g = (int)(((Pal>>4)&0x0f)*GAMMA)<<1;
+	b = (int)((Pal&0x0f)*GAMMA)<<1;
+
+	if (r > 31) r = 31;
+	if (g > 31) g = 31;
+	if (b > 31) b = 31;
+
+	HWPALETTE[Index >> 1] = RGB555(r,g,b);
 
 	return;
 }
 
+void  RebuildPalette()
+{
+	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
+	uint16 Pal;
+	int i,j;
+	int r,g,b;
+
+	for (i = 0; i < 512; i+=2)
+	{
+		j=i&0x3FE;
+		Pal=(ColTbl[j+1]<<8) |ColTbl[j];
+
+		r = (int)(((Pal>>8)&0x0f)*GAMMA)<<1;
+		g = (int)(((Pal>>4)&0x0f)*GAMMA)<<1;
+		b = (int)((Pal&0x0f)*GAMMA)<<1;
+
+		if (r > 31) r = 31;
+		if (g > 31) g = 31;
+		if (b > 31) b = 31;
+
+		HWPALETTE[i >> 1] = RGB555(r,g,b);
+	}
+	return;
+}
 
 //---------------------------------------------------------------------------
 void  WsDrawClear(void)
@@ -250,8 +292,8 @@ void  WsDrawClear(void)
 	*/
 	for (i=(320*240)-1;i>=0;--i)
 	{
-		*((uint8*)gtSurface[0].ptbuffer+i) = 0;
-		*((uint8*)gtSurface[1].ptbuffer+i) = 0;
+		*((uint8*)gtSurface[0].ptbuffer+i) = BORDER;
+		*((uint8*)gtSurface[1].ptbuffer+i) = BORDER;
 	}
 
 }
@@ -268,6 +310,3 @@ int  GetDrawMode()
 {
 	return DrawMode;
 }
-
-
-

@@ -14,7 +14,7 @@ AUTHOR		=	Rattboi
 FXETOOL		=	b2fxec
 
 # gpSDK root directory
-GPSDK           =       /c/devkitARM/gamepark_sdk
+GPSDK           =       /d/programming/gp32/devkitARM/gamepark_sdk
 #MAC#			/Users/Bradon/devkitARM/gamepark_sdk
 #HOME#			/c/devkitARM/gamepark_sdk
 #WORK#			/d/devkitARM/gamepark_sdk
@@ -27,10 +27,9 @@ LD			=	arm-elf-gcc
 AS			=	arm-elf-as
 OBJCOPY			=	arm-elf-objcopy
  
-.SFILES			=	horz_render_normal.s \
-					vert_render_normal.s \
-					horz_render_hstretch.s \
-					horz_render_hvstretch.s \
+.SFILES			=	horz_render_fullscreen.s \
+					horz_render_widescreen.s \
+					horz_render_square.s \
 					cpuspeed.s \
 					wscbmp.s
  

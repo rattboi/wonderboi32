@@ -237,11 +237,11 @@ void fill_videoconfig_menu (stMenu *menu) {
 
 		GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].name,"Frameskip");
 			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[0].name,"0");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[1].name,"2");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[2].name,"4");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[3].name,"6");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[4].name,"8");
-			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[5].name,"10");
+			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[1].name,"1");
+			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[2].name,"2");
+			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[3].name,"3");
+			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[4].name,"4");
+			GPSTRCPY (menu->options[MENU_VIDEOCONFIG_FRAMESKIP].sub_options[5].name,"5");
 			menu->options[MENU_VIDEOCONFIG_FRAMESKIP].num=6;
 			menu->options[MENU_VIDEOCONFIG_FRAMESKIP].selected = 2; // Default to FS4
 
