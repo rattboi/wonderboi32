@@ -2,7 +2,7 @@
 #ifndef WSInputH
 #define WSInputH
 
-int  WsInputInit(void);
+int  WsInputInit(int isVertical);
 
 int  DoKeys(uint16 *state);
 

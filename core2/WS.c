@@ -33,6 +33,8 @@ int TblSkip[5][5]={
     {0,0,0,0,1},
 };
 
+int vert;
+
 void ErrorMsg(char *Msg)
 {
 	char str[128];

@@ -17,7 +17,6 @@
 
 #include "../render.h"
 
-
 //#define DRAW_DEBUG
 
 #define RGB555(R,G,B) ((((int)(R))<<11)|(((int)(G))<<6)|(((int)(B))<<1))
@@ -25,9 +24,7 @@
 //---------------------------------------------------------------------------
 // DirectX 하″시″3 이상으로 확인 이 끝난 상태 하″시″2 에서도 동작 가능
 //---------------------------------------------------------------------------
-int DrawSize=DS_1;						// 묘화 사이스″
-int DrawMode=0;							// 묘화 수평 수직 모트″
-
+int DrawMode=-1;							// 묘화 수평 수직 모트″
 int PixelDepth;							// 히˚쿠셀 당의 하″실수
 
 byte ColTbl[0x210];						// 하˚렛트테″타(16+1후″락, 16쒸트, 2艱″실)
@@ -67,36 +64,44 @@ byte *WndTPal=NULL;						// 윈트″우의 타일하˚렛호˚인터
 void  RefreshLine(int Line, void* lpSurface);
 void  DrawErr(char* Msg);
 
+extern unsigned short WSCBmp_horz[];
+extern unsigned short WSCBmp_vert[];
+
+typedef struct video_mode_tag
+{
+	void (*video_update)(unsigned char*, unsigned char*);
+	int video_x;
+	int video_y;
+	int scroll_x;
+} video_mode;
+
 void (*video_update)(unsigned char*, unsigned char*);
+int video_x = 0;
+int video_y = 0;
+int scroll_x = 0;
+
+video_mode video_modes[4] =
+{
+	horz_render_normal,		48,	41,	0,
+	horz_render_hstretch,	0,	41,	6,
+	horz_render_hvstretch,	0,	12,	6,
+	vert_render_normal,		88,	7,	0
+};
 
 //---------------------------------------------------------------------------
 int  WsDrawCreate()
 {
     int result;
 
-	if(DrawMode)
-	{
-//		DDSD.dwWidth=144;
-//		DDSD.dwHeight=224;
-	}
-	else
-	{
-//		DDSD.dwWidth=224;
-//		DDSD.dwHeight=144;
-	}
-
-
+	video_update = video_modes[DrawMode].video_update;
+	video_x = video_modes[DrawMode].video_x;
+	video_y = video_modes[DrawMode].video_y;
+	scroll_x = video_modes[DrawMode].scroll_x;
+		
     PixelDepth=2;
-
-	video_update = horz_render_normal;
 
     WsDrawClear();
     return 0;
-}
-
-//---------------------------------------------------------------------------
-void  WsDrawRelease(void)
-{
 }
 
 //---------------------------------------------------------------------------
@@ -116,7 +121,7 @@ int  WsDrawLine(int Line)
 //---------------------------------------------------------------------------
 int  WsDrawFlip(void)
 {
-	video_update((byte*)screenbuffer+(0*2), gtSurface[0].ptbuffer+(240*2*48)-(41*2));
+	video_update((byte*)screenbuffer+(scroll_x*2), gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2));
 
 	return 0;
 }
@@ -1252,22 +1257,45 @@ void  RefreshLine(int Line, void* buffer)
 //---------------------------------------------------------------------------
 void  WsDrawClear(void)
 {
-    int result;
-
-	// Clear Screen Here
+	int i;
+	
+	switch(DrawMode)
+	{
+		case 0:
+		{
+			for (i = 0; i < (320*240); i++)
+				*((uint16*)gtSurface[0].ptbuffer+i) = WSCBmp_horz[i];
+		}
+			break;
+		case 1:
+		case 2:
+		{
+			for (i=(320*240)-1;i>=0;--i)
+				*((uint16*)gtSurface[0].ptbuffer+i) = 0;
+		}
+			break;
+		case 3:
+		{
+			for (i = 0; i < (320*240); i++)
+				*((uint16*)gtSurface[0].ptbuffer+i) = WSCBmp_vert[i];
+		}
+			break;
+		default:
+			break;
+	}	
 }
 
 //---------------------------------------------------------------------------
-int  SetDrawMode(int Size, int Mode)
+int  SetDrawMode(int Mode)
 {
-	if((DrawSize!=Size)||(DrawMode!=Mode))
-    {
-		WsDrawRelease();
-		DrawSize=Size;
-		DrawMode=Mode;
-		WsDrawCreate();
-    }
+	DrawMode=Mode;
+	WsDrawCreate();
     return 0;
+}
+
+int  GetDrawMode()
+{
+	return DrawMode;
 }
 
 //---------------------------------------------------------------------------

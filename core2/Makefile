@@ -29,6 +29,9 @@ OBJCOPY			=	arm-elf-objcopy
  
 .SFILES			=	wscbmp.s \
 					horz_render_normal.s \
+					vert_render_normal.s \
+					horz_render_hstretch.s \
+					horz_render_hvstretch.s \
 					../cpuspeed.s
  
 .CFILES			=	gpstart.c \

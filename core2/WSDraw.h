@@ -61,7 +61,8 @@ extern  void  WsDrawRelease(void);
 #define DS_3 0x03
 #define DS_FULL 0xFF
 
-extern  int  SetDrawMode(int Size, int Mode);
+extern  int  SetDrawMode(int Mode);
+extern  int  GetDrawMode(void);
 
 //---------------------------------------------------------------------------
 // WsDrawLine 1×²ÀÎ ¹¦È­

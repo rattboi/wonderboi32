@@ -19,6 +19,8 @@
 
 #include "unzip.h"
 
+#include "WSDraw.h"
+
 #include "types.h"
 
 #define MAX_ROM_SIZE 4*1024*1024
@@ -27,6 +29,7 @@ char *long_program_version="WonderBoi32 v0.7 (new core)";
 char *short_program_version="WB32 v.7";
 
 extern unsigned short WBTitle[];
+extern int vert;
 
 ubyte *base_rom;
 uint32 romSize;
@@ -48,6 +51,11 @@ void ShowCredits()
 	GPSTRCAT(string_version,"\nBased on WSCamp");
 	GPSTRCAT(string_version,"\nUses OKF Font Engine by Oankali");
 	PrintMessage(string_version,1);
+}
+
+int rotated()
+{
+	return base_rom[romSize-4]&1;
 }
 
 int LoadRom(char *filename)
@@ -192,7 +200,7 @@ void Emulate()
 
 //	forcemode = videoconfig_menu.options[MENU_VIDEOCONFIG_FORCEMODE].selected;
 	
-//	screenmode = videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected;
+	SetDrawMode(videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected);
 
 //	fSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected << 1);
 
@@ -207,6 +215,8 @@ void Emulate()
 
 //	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
+	WsInputInit(vert);
+
 	GpSurfaceSet(&gtSurface[0]);
 	
 //	PROFILER_START();
@@ -219,7 +229,7 @@ void Emulate()
 	GpSurfaceSet(&gtSurface[giSurface]);
 	
 //	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = fSkip >> 1;
-//	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = screenmode;
+	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = GetDrawMode();
 	
 	setCpuSpeed(66);
 }
@@ -317,14 +327,13 @@ void GpMain(void *arg)
 	char g_string[256];
 	int result;
 	int running = 0;							// set to 1 if a rom is loaded
-	int vert = 0;
 	F_HANDLE F;
 
 	char *pext;
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
-	setCpuSpeed(166);
+//	setCpuSpeed(166);
 
 	InitGraphics(16);							// Init Graphics and Fonts
 
@@ -359,8 +368,7 @@ void GpMain(void *arg)
 	fill_horz_keys_menu(&horz_keys_menu);
 	fill_vert_keys_menu(&vert_keys_menu);
 
-	WsDrawCreate();
-	WsInputInit();
+//	WsInputInit();
 	
     result = MENU_MAIN_LOAD_ROM; // start by loading a ROM
     
@@ -382,7 +390,7 @@ void GpMain(void *arg)
 					WsRelease();
 				}
 									
-				setCpuSpeed(132);
+//				setCpuSpeed(132);
 
 				if (!LoadRom(fname))
 				{
@@ -390,14 +398,19 @@ void GpMain(void *arg)
 					GpAppExit();
 				}
 
-				setCpuSpeed(66);
+//				setCpuSpeed(66);
 				
 				WsCreate(base_rom, romSize);
 				
-//				vert = ws_rotated();
+				vert = rotated();
 				
-//				if (vert == 1)
-//					videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = 3;
+				if (vert == 1)
+				{
+					videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = 3;
+					WsInputInit(1);
+				}
+				else
+					WsInputInit(0);
 				
 				pext = (char*)yo_strrchr(fname, '.'); 	// cut off extension of filename (for use with save states and config files)
 				*pext = '\0';
@@ -405,8 +418,6 @@ void GpMain(void *arg)
 				pext = (char*)yo_strrchr(fname, '\\');
 				if (pext)
 					GPSTRCPY(fname,pext+1);
-
-
 
 /*
 				GPSPRINTF(g_string, "gp:\\GPMM\\WB32\\SRAM\\%s.srm",fname); // sram save = filename.srm
