@@ -138,24 +138,12 @@ int  WsDrawCreate()
 //---------------------------------------------------------------------------
 int  WsDrawLine(int Line)
 {
-    int result;
-	char debug[100];
-
 #if BUFFER_MODE == HORZ_BUFFER_MODE
 //	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(240-(Line))); // works for horz
 	RefreshLine(Line, screenbuffer+(144-Line)); // works for horz
 #else
 	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(Line*240)); // works for vert
 #endif
-
-/*
-	GPSPRINTF(debug, "videomode = %x", IO[0x60]);
-
-	okf.x = 12;
-	okf.y = 225;
-
-	OkfPrintSurface(debug,0);
-*/
 
     return 0;
 }
@@ -177,6 +165,7 @@ int i,j;
 */
 	if (video_update != NULL)
 		video_update((uint8*)screenbuffer+(8*240)+(scroll_x*240), gtSurface[giSurface].ptbuffer+(240*video_x)+(video_y));
+
 	SurfaceFlip();
 	return 0;
 }
@@ -202,7 +191,8 @@ void  SetPalette(int Index, byte PalData)
 	if (g > 31) g = 31;
 	if (b > 31) b = 31;
 
-	HWPALETTE[Index >> 1] = RGB555(r,g,b);
+	if ((Index >> 1) < 255)	
+		HWPALETTE[Index >> 1] = RGB555(r,g,b);
 
 	return;
 }
@@ -227,7 +217,8 @@ void  RebuildPalette()
 		if (g > 31) g = 31;
 		if (b > 31) b = 31;
 
-		HWPALETTE[i >> 1] = RGB555(r,g,b);
+		if ((i >> 1) < 255)
+			HWPALETTE[i >> 1] = RGB555(r,g,b);
 	}
 	return;
 }
@@ -236,6 +227,7 @@ void  RebuildPalette()
 void  WsDrawClear(void)
 {
 	int i;
+	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
 	
 /*	switch(DrawMode)
 	{
@@ -292,10 +284,13 @@ void  WsDrawClear(void)
 			break;
 	}
 	*/
+
+	HWPALETTE[0xFF] = RGB555(0,0,0);
+
 	for (i=(320*240)-1;i>=0;--i)
 	{
-		*((uint8*)gtSurface[0].ptbuffer+i) = BORDER;
-		*((uint8*)gtSurface[1].ptbuffer+i) = BORDER;
+		*((uint8*)gtSurface[0].ptbuffer+i) = 0xFF;
+		*((uint8*)gtSurface[1].ptbuffer+i) = 0xFF;
 	}
 
 }
@@ -315,5 +310,6 @@ int  GetDrawMode()
 
 void WsClearGpuCache(void)
 {
+	GPMEMSET(ws_modified_tile,0x01,512);
 	GPMEMSET(wsc_modified_tile,0x01,1024);
 }

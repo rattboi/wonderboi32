@@ -19,6 +19,7 @@ extern int 		DrawLine;
 
 extern float	gammaC;
 
+extern uint8	*ws_modified_tile;
 extern uint8	*wsc_modified_tile;
 
 extern int		WsDrawCreate();

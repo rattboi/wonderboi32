@@ -262,6 +262,13 @@ static void WriteIRam(unsigned A, byte V)
 	{
     	SetPalette(A&0x1FF, V);
 	}
+	else
+	if (((A&0xFFFF)>=0x2000)&&((A&0xFFFF)<0x4000))
+	{
+		if (IRAM[A&0xFFFF]!=V)
+			ws_modified_tile[(A&0x1fff)>>4]=1;
+	}
+	else
 	// wsc 16 color tiles bank 0
 	if (((A&0xFFFF)>=0x4000)&&((A&0xFFFF)<0x8000))
 	{
@@ -275,7 +282,6 @@ static void WriteIRam(unsigned A, byte V)
 		if (IRAM[(A&0xFFFF)]!=V)
 			wsc_modified_tile[((A&0x3fff)>>5)+512]=1;
 	}
-	IRAM[A&0xFFFF]=V;
 /*
 	if(!((A-WaveMap) &0xFFC0))
 	{
@@ -286,6 +292,7 @@ static void WriteIRam(unsigned A, byte V)
 		SetSoundPBuf(A&0x003F, V);
 	}
 */
+	IRAM[A&0xFFFF]=V;
 }
 
 static void  WriteCRam(unsigned A, byte V)
@@ -461,19 +468,25 @@ LogFile(LK_SPRITE, str);
 
 		case 0x60:
 			{
+				WsClearGpuCache();
 				switch((V&0xE0))
 				{
-				case 0xE0:
+/*				case 0xE0:
 					RefreshLine = renderLine[0];
 					break;
 				case 0xC0:
-					RefreshLine = renderLine[1];
+					RefreshLine = renderLine[0];
+					break;
+				case 0x60:
+					RefreshLine = renderLine[0];
 					break;
 				case 0x40:
-					RefreshLine = renderLine[2];
+					RefreshLine = renderLine[0];
 					break;
+*/
 				default:
-					RefreshLine = renderLine[3];
+					RefreshLine = renderLine[1];
+					break;
 				}
 			}
 			break;

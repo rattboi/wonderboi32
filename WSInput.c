@@ -149,7 +149,7 @@ int WsKeys(uint16 *state)
 		if ((ExKey & GPC_VK_LEFT)  && !(LastKey & GPC_VK_LEFT)) // select + LEFT
 		{
 			if (FrameSkip == 0)
-				FrameSkip = 6;
+				FrameSkip = 9;
 			FrameSkip -= 1;
 
 			selectPressed = 1;
@@ -158,7 +158,7 @@ int WsKeys(uint16 *state)
 		if ((ExKey & GPC_VK_RIGHT)  && !(LastKey & GPC_VK_RIGHT)) // select + RIGHT
 		{
 			FrameSkip += 1;
-			FrameSkip %= 6;
+			FrameSkip %= 9;
 
 			selectPressed = 1;
 		}

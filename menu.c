@@ -206,8 +206,11 @@ void fill_config_menu (stMenu *menu) {
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[3].name,"3");
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[4].name,"4");
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[5].name,"5");
-			menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].num=6;
-			menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = 2; // Default to FS4
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[6].name,"6");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[7].name,"7");
+			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[8].name,"8");
+			menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].num=9;
+			menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = 4; // Default to FS4
 
 		GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].name,"Video");
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_STRETCH].sub_options[0].name,"S");

@@ -88,7 +88,7 @@ void InitializeFont (void)
    mInfo.eng_h = ENGFONT_H;
    mInfo.chargap = FONT_CHARGAP;
    mInfo.linegap = FONT_LINEGAP;
-   GpFontInit16 (&mInfo);
+//   GpFontInit16 (&mInfo);
 
    GpFontResSet ((unsigned char*)fontresKor, (unsigned char*)fontresEng);
    }
