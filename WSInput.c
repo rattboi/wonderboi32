@@ -170,6 +170,8 @@ int WsKeys(uint16 *state)
 			if (gammaC < 1.0f)
 				gammaC = 1.0f;
 
+			RebuildPalette();
+
 			selectPressed = 1;
 		}
 				
@@ -179,6 +181,8 @@ int WsKeys(uint16 *state)
 
 			if (gammaC > 3.0f)
 				gammaC = 3.0f;
+
+			RebuildPalette();
 
 			selectPressed = 1;
 		}

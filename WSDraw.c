@@ -111,6 +111,7 @@ void (*renderLine[]) (int Line, void *buffer) = {
 
 void  (*RefreshLine)(int Line, void* lpSurface);
 
+void  SetHWPalette();
 void  RebuildPalette();
 
 //---------------------------------------------------------------------------
@@ -146,7 +147,7 @@ int  WsDrawCreate()
 
     WsDrawClear();
 	WriteIO(0x60, IO[0x60]);
-//	RebuildPalette();
+	RebuildPalette();
     return 0;
 }
 
@@ -207,7 +208,7 @@ int  WsDrawFlip(void)
 	}
 
 	SurfaceFlip();
-	RebuildPalette();
+	SetHWPalette();
 	return 0;
 }
 
@@ -251,7 +252,30 @@ inline void  SetPalette(int Index, byte PalData)
 	return;
 }
 
-void  RebuildPalette()
+void	RebuildPalette()
+{
+	uint16 Pal;
+	int i;
+	int r,g,b;
+
+	for (i = 0; i < 512; i+=2)
+	{
+		Pal=(ColTbl[i+1]<<8) |ColTbl[i];
+
+		r = (int)(((Pal>>8)&0x0f)*gammaC)<<1;
+		g = (int)(((Pal>>4)&0x0f)*gammaC)<<1;
+		b = (int)((Pal&0x0f)*gammaC)<<1;
+
+		if (r > 31) r = 31;
+		if (g > 31) g = 31;
+		if (b > 31) b = 31;
+
+		if ((i >> 1) < 255)	
+			Palette[i >> 1] = RGB555(r,g,b);
+	}
+}
+//---------------------------------------------------------------------------
+void	SetHWPalette()
 {
 	uint32 *HWPALETTE=(uint32 *)0x14A00400;
 	int i;

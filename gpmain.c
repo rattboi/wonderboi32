@@ -242,19 +242,9 @@ int SaveStatesEmulate(char *savestate)
 	);
 
 	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
-
 	InitGraphics(8);
 
-/*
-	StateDrawMode = GetDrawMode();
-	if (StateDrawMode == 3)
-		SetDrawMode(5);
-	else
-		SetDrawMode(4);
-*/
-
 	StateInputInit();
-//	GpSurfaceSet(&gtSurface[0]);
 	
 	while (1)
 	{
@@ -302,43 +292,20 @@ int SaveStatesEmulate(char *savestate)
 
 			if (loadOK == -1)
 			{
-				if (GetDrawMode() == 4)
-				{
-					okf.x = 12;
-					okf.y = 220;
-				}
-				else
-				{
-					okf.x = 12;
-					okf.y = 225;
-				}
 				GPSPRINTF(printstring, "Slot %d: Empty Slot", selectedState + 1);
 			}
 			else
 			{
-				if (GetDrawMode() == 4)  // horizontal
-				{
-					okf.x = 12;
-					okf.y = 220;
-				}
-				else
-				{
-					okf.x = 12;
-					okf.y = 225;
-				}
-
 				GPSPRINTF(printstring, "Slot %d: %s.sa%d", selectedState + 1, basename, selectedState + 1);
 				WsClearGpuCache();
-//				RebuildPalette();
+				RebuildPalette();
 			}
 //			OkfPrintSurface(printstring,giSurface);
 		}
 		LastKey = ExKey;
 	}
 
-//	SetDrawMode(StateDrawMode);
 	setCpuSpeed(66);
-
 	InitGraphics(16);
 
 	return SaveStateSelected;
@@ -362,6 +329,10 @@ int	SaveConfig(char *configPath)
 			GpFileWrite(F, &config_menu.options[i].selected,sizeof(int));
 		GpFileWrite(F, &config_menu.selected,sizeof(int));
 		
+		for (i = 0; i < debug_menu.num; i++)
+			GpFileWrite(F, &debug_menu.options[i].selected,sizeof(int));
+		GpFileWrite(F, &debug_menu.selected,sizeof(int));
+
 		for (i = 0; i < horz_keys_menu.num; i++)
 			GpFileWrite(F, &horz_keys_menu.options[i].selected,sizeof(int));
 		GpFileWrite(F, &horz_keys_menu.selected,sizeof(int));
@@ -400,6 +371,10 @@ int	LoadConfig(char *configPath)
 		GpFileRead(F, &config_menu.options[i].selected,sizeof(int),&sizeread);
 	GpFileRead(F, &config_menu.selected,sizeof(int),&sizeread);
 	
+	for (i = 0; i < debug_menu.num; i++)
+		GpFileRead(F, &debug_menu.options[i].selected,sizeof(int),&sizeread);
+	GpFileRead(F, &debug_menu.selected,sizeof(int),&sizeread);
+
 	for (i = 0; i < horz_keys_menu.num; i++)
 		GpFileRead(F, &horz_keys_menu.options[i].selected,sizeof(int),&sizeread);
 	GpFileRead(F, &horz_keys_menu.selected,sizeof(int),&sizeread);
