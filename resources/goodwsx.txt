@@ -1,0 +1,260 @@
+[CREDITS]
+Author=Rob v/d Drift " With the courtesy of Cowering - Email him at hotmail@hotemu.com"
+Email=http://gooddat.rcroms.com
+Web=rvanderdrift@hotmail.com
+Version=GoodWBX 0.999.6
+Date=21 - AUG - 2002
+Comment=You have 248 of 249 known Bandai WonderSwan/WS Color (0.999.6 BETA) ROMS
+[DAT]
+version=2.00
+plugin=arcade.dll
+[EMULATOR]
+refname=WSX
+version=
+[GAMES]
+¬Armored Unit (J) [M][o1]¬Armored Unit (J) [M][o1]¬Armored Unit (J) [M][o1]¬Armored Unit (J) [M][o1]¬armored unit (j) [m][o1].ws¬04366d92¬1048576¬¬¬
+¬Clock Tower (J) [M][o1]¬Clock Tower (J) [M][o1]¬Clock Tower (J) [M][o1]¬Clock Tower (J) [M][o1]¬clock tower (j) [m][o1].ws¬4e8909d1¬4194304¬¬¬
+¬Crazy Climber (J) [M][o1]¬Crazy Climber (J) [M][o1]¬Crazy Climber (J) [M][o1]¬Crazy Climber (J) [M][o1]¬crazy climber (j) [m][o1].ws¬0cb57376¬1048576¬¬¬
+¬Glocal Hexcite (J) [M][o1]¬Glocal Hexcite (J) [M][o1]¬Glocal Hexcite (J) [M][o1]¬Glocal Hexcite (J) [M][o1]¬glocal hexcite (j) [m][o1].ws¬4aed3911¬1048576¬¬¬
+¬Hanafuda Shiyou Yo (J) [M][o1]¬Hanafuda Shiyou Yo (J) [M][o1]¬Hanafuda Shiyou Yo (J) [M][o1]¬Hanafuda Shiyou Yo (J) [M][o1]¬hanafuda shiyou yo (j) [m][o1].ws¬4b22270d¬1048576¬¬¬
+¬Lode Runner (J) [M][o1]¬Lode Runner (J) [M][o1]¬Lode Runner (J) [M][o1]¬Lode Runner (J) [M][o1]¬lode runner (j) [m][o1].ws¬21279e82¬1048576¬¬¬
+¬Nobunaga no Yabo (J) [M][o1]¬Nobunaga no Yabo (J) [M][o1]¬Nobunaga no Yabo (J) [M][o1]¬Nobunaga no Yabo (J) [M][o1]¬nobunaga no yabo (j) [m][o1].ws¬04531734¬1048576¬¬¬
+¬Shogi Touryuumon (J) [M][o1]¬Shogi Touryuumon (J) [M][o1]¬Shogi Touryuumon (J) [M][o1]¬Shogi Touryuumon (J) [M][o1]¬shogi touryuumon (j) [m][o1].ws¬3ad194eb¬1048576¬¬¬
+¬Slither Link (J) [M][o1]¬Slither Link (J) [M][o1]¬Slither Link (J) [M][o1]¬Slither Link (J) [M][o1]¬slither link (j) [m][o1].ws¬352a570d¬1048576¬¬¬
+¬Slither Link (J) [M][o1][f1]¬Slither Link (J) [M][o1][f1]¬Slither Link (J) [M][o1][f1]¬Slither Link (J) [M][o1][f1]¬slither link (j) [m][o1][f1].ws¬eaf7f3d9¬1048576¬¬¬
+¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][o1]¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][o1]¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][o1]¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][o1]¬trump collection bottom up teki trump seikatsu (j) [m][o1].ws¬c283ec5f¬1048576¬¬¬
+¬Uchuu Senkan Yamato (J) [b1]¬Uchuu Senkan Yamato (J) [b1]¬Uchuu Senkan Yamato (J) [b1]¬Uchuu Senkan Yamato (J) [b1]¬uchuu senkan yamato (j) [b1].wsc¬d56b4fd8¬4194304¬¬¬
+¬Alchemist Marie & Elie - Futari no Atelier (J) [!]¬Alchemist Marie & Elie - Futari no Atelier (J) [!]¬Alchemist Marie & Elie - Futari no Atelier (J) [!]¬Alchemist Marie & Elie - Futari no Atelier (J) [!]¬alchemist marie & elie - futari no atelier (j) [!].wsc¬b18cdc0d¬4194304¬¬¬
+¬Dark Eyes - Battle Gate (J) [!]¬Dark Eyes - Battle Gate (J) [!]¬Dark Eyes - Battle Gate (J) [!]¬Dark Eyes - Battle Gate (J) [!]¬dark eyes - battle gate (j) [!].wsc¬12ae932c¬4194304¬¬¬
+¬Digimon Tamers - Digimon Medley (J) [!]¬Digimon Tamers - Digimon Medley (J) [!]¬Digimon Tamers - Digimon Medley (J) [!]¬Digimon Tamers - Digimon Medley (J) [!]¬digimon tamers - digimon medley (j) [!].wsc¬fa92418d¬4194304¬¬¬
+¬Dokodemo Hamster 3 - O Dekake Saffron (J)¬Dokodemo Hamster 3 - O Dekake Saffron (J)¬Dokodemo Hamster 3 - O Dekake Saffron (J)¬Dokodemo Hamster 3 - O Dekake Saffron (J)¬dokodemo hamster 3 - o dekake saffron (j).wsc¬93e19f13¬2097152¬¬¬
+¬Final Fantasy (J) [!]¬Final Fantasy (J) [!]¬Final Fantasy (J) [!]¬Final Fantasy (J) [!]¬final fantasy (j) [!].wsc¬b7243e88¬4194304¬¬¬
+¬Final Fantasy II (J) [!]¬Final Fantasy II (J) [!]¬Final Fantasy II (J) [!]¬Final Fantasy II (J) [!]¬final fantasy ii (j) [!].wsc¬f09e752f¬4194304¬¬¬
+¬Flash - Koibito Kun (J) [!]¬Flash - Koibito Kun (J) [!]¬Flash - Koibito Kun (J) [!]¬Flash - Koibito Kun (J) [!]¬flash - koibito kun (j) [!].wsc¬69d8d433¬2097152¬¬¬
+¬From TV Animation - One Piece - Niji no Shima Densetsu (J)[!]¬From TV Animation - One Piece - Niji no Shima Densetsu (J)[!]¬From TV Animation - One Piece - Niji no Shima Densetsu (J)[!]¬From TV Animation - One Piece - Niji no Shima Densetsu (J)[!]¬from tv animation - one piece - niji no shima densetsu (j)[!].wsc¬427056c4¬4194304¬¬¬
+¬Gensou Maden Saiyuuki Retribution (J) [!]¬Gensou Maden Saiyuuki Retribution (J) [!]¬Gensou Maden Saiyuuki Retribution (J) [!]¬Gensou Maden Saiyuuki Retribution (J) [!]¬gensou maden saiyuuki retribution (j) [!].wsc¬446e2581¬2097152¬¬¬
+¬Guilty Gear Petit (J)¬Guilty Gear Petit (J)¬Guilty Gear Petit (J)¬Guilty Gear Petit (J)¬guilty gear petit (j).wsc¬9750bc2a¬2097152¬¬¬
+¬Guilty Gear Petit 2 (J) [!]¬Guilty Gear Petit 2 (J) [!]¬Guilty Gear Petit 2 (J) [!]¬Guilty Gear Petit 2 (J) [!]¬guilty gear petit 2 (j) [!].wsc¬d7a12bd5¬4194304¬¬¬
+¬GunPey Ex (J) [!]¬GunPey Ex (J) [!]¬GunPey Ex (J) [!]¬GunPey Ex (J) [!]¬gunpey ex (j) [!].wsc¬0c9cb12c¬1048576¬¬¬
+¬Hataraku Chocobo (J) [!]¬Hataraku Chocobo (J) [!]¬Hataraku Chocobo (J) [!]¬Hataraku Chocobo (J) [!]¬hataraku chocobo (j) [!].wsc¬7a29e9a6¬1048576¬¬¬
+¬Hunter X Hunter - Michibi Kareshi Mono (J) [!]¬Hunter X Hunter - Michibi Kareshi Mono (J) [!]¬Hunter X Hunter - Michibi Kareshi Mono (J) [!]¬Hunter X Hunter - Michibi Kareshi Mono (J) [!]¬hunter x hunter - michibi kareshi mono (j) [!].wsc¬9402bca9¬4194304¬¬¬
+¬Kidou Senshi Gundam Vol.1 -Side 7- (J) [!]¬Kidou Senshi Gundam Vol.1 -Side 7- (J) [!]¬Kidou Senshi Gundam Vol.1 -Side 7- (J) [!]¬Kidou Senshi Gundam Vol.1 -Side 7- (J) [!]¬kidou senshi gundam vol.1 -side 7- (j) [!].wsc¬08c0247b¬4194304¬¬¬
+¬Kurupara! (J) [!]¬Kurupara! (J) [!]¬Kurupara! (J) [!]¬Kurupara! (J) [!]¬kurupara! (j) [!].wsc¬274719f5¬2097152¬¬¬
+¬Memories of Festa (J) [!]¬Memories of Festa (J) [!]¬Memories of Festa (J) [!]¬Memories of Festa (J) [!]¬memories of festa (j) [!].wsc¬8e123373¬2097152¬¬¬
+¬Mikeneko Holme's Ghost Panic (J) [!]¬Mikeneko Holme's Ghost Panic (J) [!]¬Mikeneko Holme's Ghost Panic (J) [!]¬Mikeneko Holme's Ghost Panic (J) [!]¬mikeneko holme's ghost panic (j) [!].wsc¬d75effc2¬4194304¬¬¬
+¬Mobile Suit Gundam - Volume 2 - JABURO (J) [!]¬Mobile Suit Gundam - Volume 2 - JABURO (J) [!]¬Mobile Suit Gundam - Volume 2 - JABURO (J) [!]¬Mobile Suit Gundam - Volume 2 - JABURO (J) [!]¬mobile suit gundam - volume 2 - jaburo (j) [!].wsc¬39a1391a¬8388608¬¬¬
+¬Hunter X Hunter - Sorezore no Ketsui (J) [!]¬Hunter X Hunter - Sorezore no Ketsui (J) [!]¬Hunter X Hunter - Sorezore no Ketsui (J) [!]¬Hunter X Hunter - Sorezore no Ketsui (J) [!]¬hunter x hunter - sorezore no ketsui (j) [!].wsc¬d0b20c5a¬4194304¬¬¬
+¬With You Mitsumete Itai (J) [!]¬With You Mitsumete Itai (J) [!]¬With You Mitsumete Itai (J) [!]¬With You Mitsumete Itai (J) [!]¬with you mitsumete itai (j) [!].wsc¬e14e9d36¬4194304¬¬¬
+¬Wild Card (J) [!]¬Wild Card (J) [!]¬Wild Card (J) [!]¬Wild Card (J) [!]¬wild card (j) [!].wsc¬d9401f0a¬2097152¬¬¬
+¬Ultraman - Hikari no Kuni no Shisha (J)¬Ultraman - Hikari no Kuni no Shisha (J)¬Ultraman - Hikari no Kuni no Shisha (J)¬Ultraman - Hikari no Kuni no Shisha (J)¬ultraman - hikari no kuni no shisha (j).wsc¬de2208ab¬2097152¬¬¬
+¬Uchuu Senkan Yamato (J) [!]¬Uchuu Senkan Yamato (J) [!]¬Uchuu Senkan Yamato (J) [!]¬Uchuu Senkan Yamato (J) [!]¬uchuu senkan yamato (j) [!].wsc¬5793bdda¬4194304¬¬¬
+¬Terrors 2 (J) [!]¬Terrors 2 (J) [!]¬Terrors 2 (J) [!]¬Terrors 2 (J) [!]¬terrors 2 (j) [!].wsc¬9bd8f08c¬4194304¬¬¬
+¬Star Hearts (J) [!]¬Star Hearts (J) [!]¬Star Hearts (J) [!]¬Star Hearts (J) [!]¬star hearts (j) [!].wsc¬138d1018¬4194304¬¬¬
+¬Soroban Gu (J) [!]¬Soroban Gu (J) [!]¬Soroban Gu (J) [!]¬Soroban Gu (J) [!]¬soroban gu (j) [!].wsc¬0e467d97¬1048576¬¬¬
+¬SD Gundam G Generation - Gather Beat 2 (J) [!]¬SD Gundam G Generation - Gather Beat 2 (J) [!]¬SD Gundam G Generation - Gather Beat 2 (J) [!]¬SD Gundam G Generation - Gather Beat 2 (J) [!]¬sd gundam g generation - gather beat 2 (j) [!].wsc¬4d21a347¬8388608¬¬¬
+¬Rhyme Rider Kerorikan (J) [!]¬Rhyme Rider Kerorikan (J) [!]¬Rhyme Rider Kerorikan (J) [!]¬Rhyme Rider Kerorikan (J) [!]¬rhyme rider kerorikan (j) [!].wsc¬60706555¬4194304¬¬¬
+¬Raku Jongg (J) [!]¬Raku Jongg (J) [!]¬Raku Jongg (J) [!]¬Raku Jongg (J) [!]¬raku jongg (j) [!].wsc¬fe4ff701¬1048576¬¬¬
+¬Mr. Driller (J) [!]¬Mr. Driller (J) [!]¬Mr. Driller (J) [!]¬Mr. Driller (J) [!]¬mr. driller (j) [!].wsc¬5555d95c¬2097152¬¬¬
+¬Final Lap Special (J) [!]¬Final Lap Special (J) [!]¬Final Lap Special (J) [!]¬Final Lap Special (J) [!]¬final lap special (j) [!].wsc¬b07e6a56¬4194304¬¬¬
+¬Super Robot Taisen Compact (J) [!]¬Super Robot Taisen Compact (J) [!]¬Super Robot Taisen Compact (J) [!]¬Super Robot Taisen Compact (J) [!]¬super robot taisen compact (j) [!].wsc¬16e0d929¬4194304¬¬¬
+¬Romancing Saga (J) [!]¬Romancing Saga (J) [!]¬Romancing Saga (J) [!]¬Romancing Saga (J) [!]¬romancing saga (j) [!].wsc¬9c98d97d¬4194304¬¬¬
+¬Last Alive (J)¬Last Alive (J)¬Last Alive (J)¬Last Alive (J)¬last alive (j).wsc¬da4479bf¬4194304¬¬¬
+¬Pocket no Naka no Doraemon (J)¬Pocket no Naka no Doraemon (J)¬Pocket no Naka no Doraemon (J)¬Pocket no Naka no Doraemon (J)¬pocket no naka no doraemon (j).wsc¬2b61bb2b¬4194304¬¬¬
+¬XI (Sai) Little (J)¬XI (Sai) Little (J)¬XI (Sai) Little (J)¬XI (Sai) Little (J)¬xi (sai) little (j).wsc¬25e2ba75¬2097152¬¬¬
+¬Inu Yasha (J) [!]¬Inu Yasha (J) [!]¬Inu Yasha (J) [!]¬Inu Yasha (J) [!]¬inu yasha (j) [!].wsc¬0c23d551¬2097152¬¬¬
+¬Trump Collection 2 (J) [!]¬Trump Collection 2 (J) [!]¬Trump Collection 2 (J) [!]¬Trump Collection 2 (J) [!]¬trump collection 2 (j) [!].wsc¬64aaf392¬1048576¬¬¬
+¬Tonpusou (J) [!]¬Tonpusou (J) [!]¬Tonpusou (J) [!]¬Tonpusou (J) [!]¬tonpusou (j) [!].wsc¬47659b2c¬1048576¬¬¬
+¬Star Hearts Taikenban (J) [!]¬Star Hearts Taikenban (J) [!]¬Star Hearts Taikenban (J) [!]¬Star Hearts Taikenban (J) [!]¬star hearts taikenban (j) [!].wsc¬9874e9a2¬4194304¬¬¬
+¬Meitantei Conan - Yugure no Koujo (J) [!]¬Meitantei Conan - Yugure no Koujo (J) [!]¬Meitantei Conan - Yugure no Koujo (J) [!]¬Meitantei Conan - Yugure no Koujo (J) [!]¬meitantei conan - yugure no koujo (j) [!].wsc¬9f6e3f8d¬4194304¬¬¬
+¬Hanjyuku Hero - Aah Sekai yo Hanjuku Nare (J) [!]¬Hanjyuku Hero - Aah Sekai yo Hanjuku Nare (J) [!]¬Hanjyuku Hero - Aah Sekai yo Hanjuku Nare (J) [!]¬Hanjyuku Hero - Aah Sekai yo Hanjuku Nare (J) [!]¬hanjyuku hero - aah sekai yo hanjuku nare (j) [!].wsc¬31e09bed¬4194304¬¬¬
+¬Final Fantasy 4 (J) [!]¬Final Fantasy 4 (J) [!]¬Final Fantasy 4 (J) [!]¬Final Fantasy 4 (J) [!]¬final fantasy 4 (j) [!].wsc¬f699d6d1¬4194304¬¬¬
+¬Golden Axe (J) [!]¬Golden Axe (J) [!]¬Golden Axe (J) [!]¬Golden Axe (J) [!]¬golden axe (j) [!].wsc¬bc944a98¬4194304¬¬¬
+¬Digimon Digital Monsters for WonderSwanColor (J) [!]¬Digimon Digital Monsters for WonderSwanColor (J) [!]¬Digimon Digital Monsters for WonderSwanColor (J) [!]¬Digimon Digital Monsters for WonderSwanColor (J) [!]¬digimon digital monsters for wonderswancolor (j) [!].wsc¬603cb5e6¬4194304¬¬¬
+¬Kinniku Man Second Generations Dream Tag Match (J) [!]¬Kinniku Man Second Generations Dream Tag Match (J) [!]¬Kinniku Man Second Generations Dream Tag Match (J) [!]¬Kinniku Man Second Generations Dream Tag Match (J) [!]¬kinniku man second generations dream tag match (j) [!].wsc¬462f9275¬2097152¬¬¬
+¬Makai Toushi Sa-Ga (J) [!]¬Makai Toushi Sa-Ga (J) [!]¬Makai Toushi Sa-Ga (J) [!]¬Makai Toushi Sa-Ga (J) [!]¬makai toushi sa-ga (j) [!].wsc¬1b6f5f30¬4194304¬¬¬
+¬Digimon Tamers - Brave Tamer (J) [!]¬Digimon Tamers - Brave Tamer (J) [!]¬Digimon Tamers - Brave Tamer (J) [!]¬Digimon Tamers - Brave Tamer (J) [!]¬digimon tamers - brave tamer (j) [!].wsc¬f1f4d41f¬4194304¬¬¬
+¬Final Fantasy (J) [T-Eng0.91_Kalas]¬Final Fantasy (J) [T-Eng0.91_Kalas]¬Final Fantasy (J) [T-Eng0.91_Kalas]¬Final Fantasy (J) [T-Eng0.91_Kalas]¬final fantasy (j) [t-eng0.91_kalas].wsc¬df94a149¬4194304¬¬¬
+¬Golden Axe (J) [t1]¬Golden Axe (J) [t1]¬Golden Axe (J) [t1]¬Golden Axe (J) [t1]¬golden axe (j) [t1].wsc¬6887257f¬4194304¬¬¬
+¬Final Fantasy II (J) [T-Eng095_RPGOne]¬Final Fantasy II (J) [T-Eng095_RPGOne]¬Final Fantasy II (J) [T-Eng095_RPGOne]¬Final Fantasy II (J) [T-Eng095_RPGOne]¬final fantasy ii (j) [t-eng095_rpgone].wsc¬6045df59¬4194304¬¬¬
+¬Final Fantasy II (J) [T-Eng097_RPGOne]¬Final Fantasy II (J) [T-Eng097_RPGOne]¬Final Fantasy II (J) [T-Eng097_RPGOne]¬Final Fantasy II (J) [T-Eng097_RPGOne]¬final fantasy ii (j) [t-eng097_rpgone].wsc¬15ec0525¬4194304¬¬¬
+¬Guilty Gear Petit 2 (J) [t1]¬Guilty Gear Petit 2 (J) [t1]¬Guilty Gear Petit 2 (J) [t1]¬Guilty Gear Petit 2 (J) [t1]¬guilty gear petit 2 (j) [t1].wsc¬30dd9cee¬4194304¬¬¬
+¬Digimon Tamers - Digimon Medley (J) [f1]¬Digimon Tamers - Digimon Medley (J) [f1]¬Digimon Tamers - Digimon Medley (J) [f1]¬Digimon Tamers - Digimon Medley (J) [f1]¬digimon tamers - digimon medley (j) [f1].wsc¬224f688a¬4194304¬¬¬
+¬Flash - Koibito Kun (J) [f1]¬Flash - Koibito Kun (J) [f1]¬Flash - Koibito Kun (J) [f1]¬Flash - Koibito Kun (J) [f1]¬flash - koibito kun (j) [f1].wsc¬03a2288c¬2097152¬¬¬
+¬GunPey Ex (J) [f1]¬GunPey Ex (J) [f1]¬GunPey Ex (J) [f1]¬GunPey Ex (J) [f1]¬gunpey ex (j) [f1].wsc¬a97dccd9¬1048576¬¬¬
+¬Hunter X Hunter - Michibi Kareshi Mono (J) [f1]¬Hunter X Hunter - Michibi Kareshi Mono (J) [f1]¬Hunter X Hunter - Michibi Kareshi Mono (J) [f1]¬Hunter X Hunter - Michibi Kareshi Mono (J) [f1]¬hunter x hunter - michibi kareshi mono (j) [f1].wsc¬92bb2e53¬4194304¬¬¬
+¬Hunter X Hunter - Sorezore no Ketsui (J) [f1]¬Hunter X Hunter - Sorezore no Ketsui (J) [f1]¬Hunter X Hunter - Sorezore no Ketsui (J) [f1]¬Hunter X Hunter - Sorezore no Ketsui (J) [f1]¬hunter x hunter - sorezore no ketsui (j) [f1].wsc¬0f1d6710¬4194304¬¬¬
+¬Mikeneko Holme's Ghost Panic (J) [f1]¬Mikeneko Holme's Ghost Panic (J) [f1]¬Mikeneko Holme's Ghost Panic (J) [f1]¬Mikeneko Holme's Ghost Panic (J) [f1]¬mikeneko holme's ghost panic (j) [f1].wsc¬4e9020b3¬4194304¬¬¬
+¬Digimon Digital Monsters for WonderSwanColor (J) [f1]¬Digimon Digital Monsters for WonderSwanColor (J) [f1]¬Digimon Digital Monsters for WonderSwanColor (J) [f1]¬Digimon Digital Monsters for WonderSwanColor (J) [f1]¬digimon digital monsters for wonderswancolor (j) [f1].wsc¬0b03ccde¬4194304¬¬¬
+¬Final Lap Special (J) [f1]¬Final Lap Special (J) [f1]¬Final Lap Special (J) [f1]¬Final Lap Special (J) [f1]¬final lap special (j) [f1].wsc¬c940c482¬4194304¬¬¬
+¬Gensou Maden Saiyuuki Retribution (J) [f1]¬Gensou Maden Saiyuuki Retribution (J) [f1]¬Gensou Maden Saiyuuki Retribution (J) [f1]¬Gensou Maden Saiyuuki Retribution (J) [f1]¬gensou maden saiyuuki retribution (j) [f1].wsc¬67cba5c9¬2097152¬¬¬
+¬Last Alive (J) [f1]¬Last Alive (J) [f1]¬Last Alive (J) [f1]¬Last Alive (J) [f1]¬last alive (j) [f1].wsc¬9b6177e3¬4194304¬¬¬
+¬Pocket no Naka no Doraemon (J) [f1]¬Pocket no Naka no Doraemon (J) [f1]¬Pocket no Naka no Doraemon (J) [f1]¬Pocket no Naka no Doraemon (J) [f1]¬pocket no naka no doraemon (j) [f1].wsc¬d3092e88¬4194304¬¬¬
+¬Raku Jongg (J) [f1]¬Raku Jongg (J) [f1]¬Raku Jongg (J) [f1]¬Raku Jongg (J) [f1]¬raku jongg (j) [f1].wsc¬76309525¬1048576¬¬¬
+¬With You Mitsumete Itai (J) [f1]¬With You Mitsumete Itai (J) [f1]¬With You Mitsumete Itai (J) [f1]¬With You Mitsumete Itai (J) [f1]¬with you mitsumete itai (j) [f1].wsc¬a44b167e¬4194304¬¬¬
+¬Terrors 2 (J) [f1]¬Terrors 2 (J) [f1]¬Terrors 2 (J) [f1]¬Terrors 2 (J) [f1]¬terrors 2 (j) [f1].wsc¬ad9d62fe¬4194304¬¬¬
+¬Tonpusou (J) [f1]¬Tonpusou (J) [f1]¬Tonpusou (J) [f1]¬Tonpusou (J) [f1]¬tonpusou (j) [f1].wsc¬c31064f6¬1048576¬¬¬
+¬#Wonderwitch Promo Demo by Dox (PD)¬#Wonderwitch Promo Demo by Dox (PD)¬#Wonderwitch Promo Demo by Dox (PD)¬#Wonderwitch Promo Demo by Dox (PD)¬#wonderwitch promo demo by dox (pd).wsc¬14d19b25¬524288¬¬¬
+¬Bank Test by Sir Dragoon (PD)¬Bank Test by Sir Dragoon (PD)¬Bank Test by Sir Dragoon (PD)¬Bank Test by Sir Dragoon (PD)¬bank test by sir dragoon (pd).wsc¬09590272¬1048576¬¬¬
+¬Chaos Demo V1.0 by Charles Doty (PD)¬Chaos Demo V1.0 by Charles Doty (PD)¬Chaos Demo V1.0 by Charles Doty (PD)¬Chaos Demo V1.0 by Charles Doty (PD)¬chaos demo v1.0 by charles doty (pd).wsc¬3d6951ca¬1048576¬¬¬
+¬Chaos Demo V1.1 by Charles Doty (PD)¬Chaos Demo V1.1 by Charles Doty (PD)¬Chaos Demo V1.1 by Charles Doty (PD)¬Chaos Demo V1.1 by Charles Doty (PD)¬chaos demo v1.1 by charles doty (pd).wsc¬c06c68f6¬1048576¬¬¬
+¬Chaos Demo V2.1 by Charles Doty (PD)¬Chaos Demo V2.1 by Charles Doty (PD)¬Chaos Demo V2.1 by Charles Doty (PD)¬Chaos Demo V2.1 by Charles Doty (PD)¬chaos demo v2.1 by charles doty (pd).wsc¬ad2b1d5a¬1048576¬¬¬
+¬Color Bars Demo by Sir Dragoon (PD)¬Color Bars Demo by Sir Dragoon (PD)¬Color Bars Demo by Sir Dragoon (PD)¬Color Bars Demo by Sir Dragoon (PD)¬color bars demo by sir dragoon (pd).wsc¬8d96c62e¬1048576¬¬¬
+¬Color Scrolling Demo by Charles Doty (PD)¬Color Scrolling Demo by Charles Doty (PD)¬Color Scrolling Demo by Charles Doty (PD)¬Color Scrolling Demo by Charles Doty (PD)¬color scrolling demo by charles doty (pd).wsc¬22c786a0¬1048576¬¬¬
+¬Color Test Demo by Sir Dragoon (PD)¬Color Test Demo by Sir Dragoon (PD)¬Color Test Demo by Sir Dragoon (PD)¬Color Test Demo by Sir Dragoon (PD)¬color test demo by sir dragoon (pd).wsc¬318f11ad¬1048576¬¬¬
+¬Girl Demo by Dox (PD)¬Girl Demo by Dox (PD)¬Girl Demo by Dox (PD)¬Girl Demo by Dox (PD)¬girl demo by dox (pd).wsc¬eaadc794¬524288¬¬¬
+¬Hello World by Sir Dragoon (PD)¬Hello World by Sir Dragoon (PD)¬Hello World by Sir Dragoon (PD)¬Hello World by Sir Dragoon (PD)¬hello world by sir dragoon (pd).wsc¬f207546c¬1048576¬¬¬
+¬Wondersnake Beta by Dox (PD)¬Wondersnake Beta by Dox (PD)¬Wondersnake Beta by Dox (PD)¬Wondersnake Beta by Dox (PD)¬wondersnake beta by dox (pd).wsc¬e529d0c1¬524288¬¬¬
+¬Wondersnake Final Sep 11 2001 by Dox & Kojote (PD)¬Wondersnake Final Sep 11 2001 by Dox & Kojote (PD)¬Wondersnake Final Sep 11 2001 by Dox & Kojote (PD)¬Wondersnake Final Sep 11 2001 by Dox & Kojote (PD)¬wondersnake final sep 11 2001 by dox & kojote (pd).wsc¬a0591f00¬524288¬¬¬
+¬#Wonderwitch Promo Demo V1.3 by Dox (PD)¬#Wonderwitch Promo Demo V1.3 by Dox (PD)¬#Wonderwitch Promo Demo V1.3 by Dox (PD)¬#Wonderwitch Promo Demo V1.3 by Dox (PD)¬#wonderwitch promo demo v1.3 by dox (pd).wsc¬04e84608¬524288¬¬¬
+¬#Wonderwitch Promo Demo V1.4 by Dox (PD)¬#Wonderwitch Promo Demo V1.4 by Dox (PD)¬#Wonderwitch Promo Demo V1.4 by Dox (PD)¬#Wonderwitch Promo Demo V1.4 by Dox (PD)¬#wonderwitch promo demo v1.4 by dox (pd).wsc¬9439802d¬524288¬¬¬
+¬#Wonderwitch Promo Demo Vx.x by Dox (PD) [a1]¬#Wonderwitch Promo Demo Vx.x by Dox (PD) [a1]¬#Wonderwitch Promo Demo Vx.x by Dox (PD) [a1]¬#Wonderwitch Promo Demo Vx.x by Dox (PD) [a1]¬#wonderwitch promo demo vx.x by dox (pd) [a1].wsc¬2cbe41a6¬524288¬¬¬
+¬#Wonderwitch Promo Demo Vx.x by Dox (PD)¬#Wonderwitch Promo Demo Vx.x by Dox (PD)¬#Wonderwitch Promo Demo Vx.x by Dox (PD)¬#Wonderwitch Promo Demo Vx.x by Dox (PD)¬#wonderwitch promo demo vx.x by dox (pd).wsc¬a1f2d257¬524288¬¬¬
+¬Chaos Demo V2.0 by Charles Doty (PD)¬Chaos Demo V2.0 by Charles Doty (PD)¬Chaos Demo V2.0 by Charles Doty (PD)¬Chaos Demo V2.0 by Charles Doty (PD)¬chaos demo v2.0 by charles doty (pd).wsc¬86f6a2a6¬1048576¬¬¬
+¬#Wonderwitch Promo Demo V1.2 by Dox (PD)¬#Wonderwitch Promo Demo V1.2 by Dox (PD)¬#Wonderwitch Promo Demo V1.2 by Dox (PD)¬#Wonderwitch Promo Demo V1.2 by Dox (PD)¬#wonderwitch promo demo v1.2 by dox (pd).wsc¬6bd08da3¬524288¬¬¬
+¬Wonderswan Register Diagnostic by Zalas (PD)¬Wonderswan Register Diagnostic by Zalas (PD)¬Wonderswan Register Diagnostic by Zalas (PD)¬Wonderswan Register Diagnostic by Zalas (PD)¬wonderswan register diagnostic by zalas (pd).wsc¬7e0d787b¬1048576¬¬¬
+¬Anchor Field Z (J) [M]¬Anchor Field Z (J) [M]¬Anchor Field Z (J) [M]¬Anchor Field Z (J) [M]¬anchor field z (j) [m].ws¬425eb893¬1048576¬¬¬
+¬Armored Unit (J) [M]¬Armored Unit (J) [M]¬Armored Unit (J) [M]¬Armored Unit (J) [M]¬armored unit (j) [m].ws¬c11639af¬524288¬¬¬
+¬Bakusou Dekatora Densetsu (J) [M][!]¬Bakusou Dekatora Densetsu (J) [M][!]¬Bakusou Dekatora Densetsu (J) [M][!]¬Bakusou Dekatora Densetsu (J) [M][!]¬bakusou dekatora densetsu (j) [m][!].ws¬392dd813¬2097152¬¬¬
+¬Beat Mania (J) [M][!]¬Beat Mania (J) [M][!]¬Beat Mania (J) [M][!]¬Beat Mania (J) [M][!]¬beat mania (j) [m][!].ws¬324622c9¬16777216¬¬¬
+¬Blue Wing Blitz (J) [M]¬Blue Wing Blitz (J) [M]¬Blue Wing Blitz (J) [M]¬Blue Wing Blitz (J) [M]¬blue wing blitz (j) [m].ws¬99027238¬2097152¬¬¬
+¬Bokan Densetsu Buta Mo O Daterya Doronbou (Time Bokan Series) (J) [M]¬Bokan Densetsu Buta Mo O Daterya Doronbou (Time Bokan Series) (J) [M]¬Bokan Densetsu Buta Mo O Daterya Doronbou (Time Bokan Series) (J) [M]¬Bokan Densetsu Buta Mo O Daterya Doronbou (Time Bokan Series) (J) [M]¬bokan densetsu buta mo o daterya doronbou (time bokan series) (j) [m].ws¬7da6acb9¬1048576¬¬¬
+¬Buffers Evolution (J) [M]¬Buffers Evolution (J) [M]¬Buffers Evolution (J) [M]¬Buffers Evolution (J) [M]¬buffers evolution (j) [m].ws¬b25a0635¬4194304¬¬¬
+¬Card Captor Sakura - Sakura to Fushigi na Clow Card (J)[M][!]¬Card Captor Sakura - Sakura to Fushigi na Clow Card (J)[M][!]¬Card Captor Sakura - Sakura to Fushigi na Clow Card (J)[M][!]¬Card Captor Sakura - Sakura to Fushigi na Clow Card (J)[M][!]¬card captor sakura - sakura to fushigi na clow card (j)[m][!].ws¬7f3a14c0¬2097152¬¬¬
+¬Chaos Gear - Michibi Kareshi Mono (J) [M][!]¬Chaos Gear - Michibi Kareshi Mono (J) [M][!]¬Chaos Gear - Michibi Kareshi Mono (J) [M][!]¬Chaos Gear - Michibi Kareshi Mono (J) [M][!]¬chaos gear - michibi kareshi mono (j) [m][!].ws¬27b3cc18¬2097152¬¬¬
+¬Cho Denki Card Battle Yofu Makai Kikuchi Shugo (J) [M][!]¬Cho Denki Card Battle Yofu Makai Kikuchi Shugo (J) [M][!]¬Cho Denki Card Battle Yofu Makai Kikuchi Shugo (J) [M][!]¬Cho Denki Card Battle Yofu Makai Kikuchi Shugo (J) [M][!]¬cho denki card battle yofu makai kikuchi shugo (j) [m][!].ws¬56e2c069¬2097152¬¬¬
+¬Chocobo no Fushigi na Dungeon (J) [M]¬Chocobo no Fushigi na Dungeon (J) [M]¬Chocobo no Fushigi na Dungeon (J) [M]¬Chocobo no Fushigi na Dungeon (J) [M]¬chocobo no fushigi na dungeon (j) [m].ws¬ccaa4853¬2097152¬¬¬
+¬Chou Aniki - Otoko no Tamafuda (J) [M]¬Chou Aniki - Otoko no Tamafuda (J) [M]¬Chou Aniki - Otoko no Tamafuda (J) [M]¬Chou Aniki - Otoko no Tamafuda (J) [M]¬chou aniki - otoko no tamafuda (j) [m].ws¬7fff2520¬1048576¬¬¬
+¬Choujikuu Yousai Macross - True Love Song (J) [M][!]¬Choujikuu Yousai Macross - True Love Song (J) [M][!]¬Choujikuu Yousai Macross - True Love Song (J) [M][!]¬Choujikuu Yousai Macross - True Love Song (J) [M][!]¬choujikuu yousai macross - true love song (j) [m][!].ws¬62d419cd¬4194304¬¬¬
+¬Clock Tower (J) [M][!]¬Clock Tower (J) [M][!]¬Clock Tower (J) [M][!]¬Clock Tower (J) [M][!]¬clock tower (j) [m][!].ws¬a9936941¬2097152¬¬¬
+¬Crazy Climber (J) [M][!]¬Crazy Climber (J) [M][!]¬Crazy Climber (J) [M][!]¬Crazy Climber (J) [M][!]¬crazy climber (j) [m][!].ws¬c995274b¬524288¬¬¬
+¬Densha de Go! (J) [M]¬Densha de Go! (J) [M]¬Densha de Go! (J) [M]¬Densha de Go! (J) [M]¬densha de go! (j) [m].ws¬b62e5dd0¬4194304¬¬¬
+¬Densha de Go! 2 (J) [M]¬Densha de Go! 2 (J) [M]¬Densha de Go! 2 (J) [M]¬Densha de Go! 2 (J) [M]¬densha de go! 2 (j) [m].ws¬af9d8f42¬4194304¬¬¬
+¬Digimon Adventure - Anode Tamer (J) [M]¬Digimon Adventure - Anode Tamer (J) [M]¬Digimon Adventure - Anode Tamer (J) [M]¬Digimon Adventure - Anode Tamer (J) [M]¬digimon adventure - anode tamer (j) [m].ws¬6e9dd148¬2097152¬¬¬
+¬Digimon Adventure - Cathode Tamer (J) [M]¬Digimon Adventure - Cathode Tamer (J) [M]¬Digimon Adventure - Cathode Tamer (J) [M]¬Digimon Adventure - Cathode Tamer (J) [M]¬digimon adventure - cathode tamer (j) [m].ws¬42ad238b¬2097152¬¬¬
+¬Digimon Adventure 02 - D1 Tamers (J) [M][!]¬Digimon Adventure 02 - D1 Tamers (J) [M][!]¬Digimon Adventure 02 - D1 Tamers (J) [M][!]¬Digimon Adventure 02 - D1 Tamers (J) [M][!]¬digimon adventure 02 - d1 tamers (j) [m][!].ws¬4d28637e¬4194304¬¬¬
+¬Digimon Adventure 02 - Tag Tamers (J) [M][!]¬Digimon Adventure 02 - Tag Tamers (J) [M][!]¬Digimon Adventure 02 - Tag Tamers (J) [M][!]¬Digimon Adventure 02 - Tag Tamers (J) [M][!]¬digimon adventure 02 - tag tamers (j) [m][!].ws¬6ededaf8¬2097152¬¬¬
+¬Digimon Digital Monsters - Anode & Cathode Tamer - Veedramon Version (Asia) [M][!]¬Digimon Digital Monsters - Anode & Cathode Tamer - Veedramon Version (Asia) [M][!]¬Digimon Digital Monsters - Anode & Cathode Tamer - Veedramon Version (Asia) [M][!]¬Digimon Digital Monsters - Anode & Cathode Tamer - Veedramon Version (Asia) [M][!]¬digimon digital monsters - anode & cathode tamer - veedramon version (asia) [m][!].ws¬77689273¬4194304¬¬¬
+¬Digimon Digital Monsters (Asia) [M]¬Digimon Digital Monsters (Asia) [M]¬Digimon Digital Monsters (Asia) [M]¬Digimon Digital Monsters (Asia) [M]¬digimon digital monsters (asia) [m].ws¬94ea6ffc¬2097152¬¬¬
+¬Digimon Tamers - Battle Spirit (J) [M][!]¬Digimon Tamers - Battle Spirit (J) [M][!]¬Digimon Tamers - Battle Spirit (J) [M][!]¬Digimon Tamers - Battle Spirit (J) [M][!]¬digimon tamers - battle spirit (j) [m][!].ws¬c927bfcb¬4194304¬¬¬
+¬Digital Partner (J) [M][!]¬Digital Partner (J) [M][!]¬Digital Partner (J) [M][!]¬Digital Partner (J) [M][!]¬digital partner (j) [m][!].ws¬b5e675ae¬2097152¬¬¬
+¬Dokodemo Hamster (J) [M][!]¬Dokodemo Hamster (J) [M][!]¬Dokodemo Hamster (J) [M][!]¬Dokodemo Hamster (J) [M][!]¬dokodemo hamster (j) [m][!].ws¬89e7d950¬1048576¬¬¬
+¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][!]¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][!]¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][!]¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][!]¬d's garage 21 koubo game - tane wo maku tori (j) [m][!].ws¬b1caec06¬1048576¬¬¬
+¬Engacho! (J) [M][!]¬Engacho! (J) [M][!]¬Engacho! (J) [M][!]¬Engacho! (J) [M][!]¬engacho! (j) [m][!].ws¬4e467626¬1048576¬¬¬
+¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M]¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M]¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M]¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M]¬fever sankyo - koushiki pachinko simulation (j) [m].ws¬8922dd0b¬2097152¬¬¬
+¬Final Lap 2000 (J) [M][!]¬Final Lap 2000 (J) [M][!]¬Final Lap 2000 (J) [M][!]¬Final Lap 2000 (J) [M][!]¬final lap 2000 (j) [m][!].ws¬ce2f1a1d¬1048576¬¬¬
+¬Fishing Freaks - Bass Rise (J) [M]¬Fishing Freaks - Bass Rise (J) [M]¬Fishing Freaks - Bass Rise (J) [M]¬Fishing Freaks - Bass Rise (J) [M]¬fishing freaks - bass rise (j) [m].ws¬a1fb16fc¬1048576¬¬¬
+¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M]¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M]¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M]¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M]¬from tv animation - one piece - mezase kaizoku ou (j) [m].ws¬f2e362b8¬1048576¬¬¬
+¬Ganso Jajamaru Kun (J) [M][!]¬Ganso Jajamaru Kun (J) [M][!]¬Ganso Jajamaru Kun (J) [M][!]¬Ganso Jajamaru Kun (J) [M][!]¬ganso jajamaru kun (j) [m][!].ws¬a193458c¬524288¬¬¬
+¬Glocal Hexcite (J) [M][!]¬Glocal Hexcite (J) [M][!]¬Glocal Hexcite (J) [M][!]¬Glocal Hexcite (J) [M][!]¬glocal hexcite (j) [m][!].ws¬8fcd6d2c¬524288¬¬¬
+¬Gomoku Narabe & Reversi Touryuumon (J) [M]¬Gomoku Narabe & Reversi Touryuumon (J) [M]¬Gomoku Narabe & Reversi Touryuumon (J) [M]¬Gomoku Narabe & Reversi Touryuumon (J) [M]¬gomoku narabe & reversi touryuumon (j) [m].ws¬6cd1411e¬524288¬¬¬
+¬GunPey (J) [M]¬GunPey (J) [M]¬GunPey (J) [M]¬GunPey (J) [M]¬gunpey (j) [m].ws¬a1656bbb¬1048576¬¬¬
+¬Hanafuda Shiyou Yo (J) [M][!]¬Hanafuda Shiyou Yo (J) [M][!]¬Hanafuda Shiyou Yo (J) [M][!]¬Hanafuda Shiyou Yo (J) [M][!]¬hanafuda shiyou yo (j) [m][!].ws¬8e027330¬524288¬¬¬
+¬Harobots (J) [M][!]¬Harobots (J) [M][!]¬Harobots (J) [M][!]¬Harobots (J) [M][!]¬harobots (j) [m][!].ws¬aa525c04¬2097152¬¬¬
+¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][!]¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][!]¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][!]¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][!]¬itou jun ni uzumaki noroi simulation (j) [m][!].ws¬ca3f0b00¬2097152¬¬¬
+¬Kaze no Klonoa - Moonlight Museum (J) [M]¬Kaze no Klonoa - Moonlight Museum (J) [M]¬Kaze no Klonoa - Moonlight Museum (J) [M]¬Kaze no Klonoa - Moonlight Museum (J) [M]¬kaze no klonoa - moonlight museum (j) [m].ws¬80c6ef12¬1048576¬¬¬
+¬Kiss Yori... - Seaside Serenade (J) [M]¬Kiss Yori... - Seaside Serenade (J) [M]¬Kiss Yori... - Seaside Serenade (J) [M]¬Kiss Yori... - Seaside Serenade (J) [M]¬kiss yori... - seaside serenade (j) [m].ws¬3b4c60c6¬2097152¬¬¬
+¬Langrisser Millenium WS - The Last Century (J) [M][!]¬Langrisser Millenium WS - The Last Century (J) [M][!]¬Langrisser Millenium WS - The Last Century (J) [M][!]¬Langrisser Millenium WS - The Last Century (J) [M][!]¬langrisser millenium ws - the last century (j) [m][!].ws¬9e0854e2¬1048576¬¬¬
+¬Lode Runner (J) [M][!]¬Lode Runner (J) [M][!]¬Lode Runner (J) [M][!]¬Lode Runner (J) [M][!]¬lode runner (j) [m][!].ws¬e407cabf¬524288¬¬¬
+¬Magical Drop (J) [M][!]¬Magical Drop (J) [M][!]¬Magical Drop (J) [M][!]¬Magical Drop (J) [M][!]¬magical drop (j) [m][!].ws¬637ada93¬1048576¬¬¬
+¬Mahjong Touryuumon (J) [M][!]¬Mahjong Touryuumon (J) [M][!]¬Mahjong Touryuumon (J) [M][!]¬Mahjong Touryuumon (J) [M][!]¬mahjong touryuumon (j) [m][!].ws¬e7e7fd4c¬1048576¬¬¬
+¬Makaimura (J) [M]¬Makaimura (J) [M]¬Makaimura (J) [M]¬Makaimura (J) [M]¬makaimura (j) [m].ws¬00b31fbb¬2097152¬¬¬
+¬Medarot - Perfect Edition Kabuto Version (J) [M][!]¬Medarot - Perfect Edition Kabuto Version (J) [M][!]¬Medarot - Perfect Edition Kabuto Version (J) [M][!]¬Medarot - Perfect Edition Kabuto Version (J) [M][!]¬medarot - perfect edition kabuto version (j) [m][!].ws¬12fb8b28¬1048576¬¬¬
+¬Medarot - Perfect Edition Kuwagata Version (J) [M][!]¬Medarot - Perfect Edition Kuwagata Version (J) [M][!]¬Medarot - Perfect Edition Kuwagata Version (J) [M][!]¬Medarot - Perfect Edition Kuwagata Version (J) [M][!]¬medarot - perfect edition kuwagata version (j) [m][!].ws¬2b40745d¬1048576¬¬¬
+¬Meitantei Conan - Majutsushi no Chousenjou! (J) [M][!]¬Meitantei Conan - Majutsushi no Chousenjou! (J) [M][!]¬Meitantei Conan - Majutsushi no Chousenjou! (J) [M][!]¬Meitantei Conan - Majutsushi no Chousenjou! (J) [M][!]¬meitantei conan - majutsushi no chousenjou! (j) [m][!].ws¬92fbf7fb¬1048576¬¬¬
+¬Meta Communication Therapy nee Kiite! (J) [M][!]¬Meta Communication Therapy nee Kiite! (J) [M][!]¬Meta Communication Therapy nee Kiite! (J) [M][!]¬Meta Communication Therapy nee Kiite! (J) [M][!]¬meta communication therapy nee kiite! (j) [m][!].ws¬a3ead689¬2097152¬¬¬
+¬Mingle Magnet (J) [M]¬Mingle Magnet (J) [M]¬Mingle Magnet (J) [M]¬Mingle Magnet (J) [M]¬mingle magnet (j) [m].ws¬9baac7bb¬524288¬¬¬
+¬Mobile Suit Gundam MSVS (J) [M][!]¬Mobile Suit Gundam MSVS (J) [M][!]¬Mobile Suit Gundam MSVS (J) [M][!]¬Mobile Suit Gundam MSVS (J) [M][!]¬mobile suit gundam msvs (j) [m][!].ws¬53b9fef8¬2097152¬¬¬
+¬Nazo Ou Pocket (J) [M]¬Nazo Ou Pocket (J) [M]¬Nazo Ou Pocket (J) [M]¬Nazo Ou Pocket (J) [M]¬nazo ou pocket (j) [m].ws¬4ed8820c¬1048576¬¬¬
+¬Neon Genesis Evangelion Shito Ikusei (J) [M][!]¬Neon Genesis Evangelion Shito Ikusei (J) [M][!]¬Neon Genesis Evangelion Shito Ikusei (J) [M][!]¬Neon Genesis Evangelion Shito Ikusei (J) [M][!]¬neon genesis evangelion shito ikusei (j) [m][!].ws¬bf8d9212¬2097152¬¬¬
+¬Nice On (J) [M][!]¬Nice On (J) [M][!]¬Nice On (J) [M][!]¬Nice On (J) [M][!]¬nice on (j) [m][!].ws¬b5dbcf12¬1048576¬¬¬
+¬Nobunaga no Yabo (J) [M][!]¬Nobunaga no Yabo (J) [M][!]¬Nobunaga no Yabo (J) [M][!]¬Nobunaga no Yabo (J) [M][!]¬nobunaga no yabo (j) [m][!].ws¬c1734309¬524288¬¬¬
+¬Ouchan no Oekaki Logic (J) [M]¬Ouchan no Oekaki Logic (J) [M]¬Ouchan no Oekaki Logic (J) [M]¬Ouchan no Oekaki Logic (J) [M]¬ouchan no oekaki logic (j) [m].ws¬631bd97a¬524288¬¬¬
+¬Pocket Fighter (J) [M]¬Pocket Fighter (J) [M]¬Pocket Fighter (J) [M]¬Pocket Fighter (J) [M]¬pocket fighter (j) [m].ws¬35361250¬2097152¬¬¬
+¬Pro Mahjong Kiwame (J) [M][!]¬Pro Mahjong Kiwame (J) [M][!]¬Pro Mahjong Kiwame (J) [M][!]¬Pro Mahjong Kiwame (J) [M][!]¬pro mahjong kiwame (j) [m][!].ws¬90f7e6d6¬1048576¬¬¬
+¬Puyo Puyo Tsu (J) [M][!]¬Puyo Puyo Tsu (J) [M][!]¬Puyo Puyo Tsu (J) [M][!]¬Puyo Puyo Tsu (J) [M][!]¬puyo puyo tsu (j) [m][!].ws¬5a41a7ba¬1048576¬¬¬
+¬Puzzle Bobble (J) [M]¬Puzzle Bobble (J) [M]¬Puzzle Bobble (J) [M]¬Puzzle Bobble (J) [M]¬puzzle bobble (j) [m].ws¬302499b9¬524288¬¬¬
+¬Rainbow Islands - Putty's Party (J) [M]¬Rainbow Islands - Putty's Party (J) [M]¬Rainbow Islands - Putty's Party (J) [M]¬Rainbow Islands - Putty's Party (J) [M]¬rainbow islands - putty's party (j) [m].ws¬8f8608ad¬2097152¬¬¬
+¬Rekishi Simulation Sangokushi II (J) [M]¬Rekishi Simulation Sangokushi II (J) [M]¬Rekishi Simulation Sangokushi II (J) [M]¬Rekishi Simulation Sangokushi II (J) [M]¬rekishi simulation sangokushi ii (j) [m].ws¬812b720d¬524288¬¬¬
+¬Ring Infinity (J) [M][!]¬Ring Infinity (J) [M][!]¬Ring Infinity (J) [M][!]¬Ring Infinity (J) [M][!]¬ring infinity (j) [m][!].ws¬14adbd4b¬4194304¬¬¬
+¬Robot Works (J) [M][!]¬Robot Works (J) [M][!]¬Robot Works (J) [M][!]¬Robot Works (J) [M][!]¬robot works (j) [m][!].ws¬6adf0e32¬1048576¬¬¬
+¬Rockman & Forte - Mirai Kara no Chousen Sha (J) [M][!]¬Rockman & Forte - Mirai Kara no Chousen Sha (J) [M][!]¬Rockman & Forte - Mirai Kara no Chousen Sha (J) [M][!]¬Rockman & Forte - Mirai Kara no Chousen Sha (J) [M][!]¬rockman & forte - mirai kara no chousen sha (j) [m][!].ws¬cd206a9e¬2097152¬¬¬
+¬Sangokushi (J) [M]¬Sangokushi (J) [M]¬Sangokushi (J) [M]¬Sangokushi (J) [M]¬sangokushi (j) [m].ws¬e385ee88¬524288¬¬¬
+¬SD Gundam - Emotional Jam (J) [M][!]¬SD Gundam - Emotional Jam (J) [M][!]¬SD Gundam - Emotional Jam (J) [M][!]¬SD Gundam - Emotional Jam (J) [M][!]¬sd gundam - emotional jam (j) [m][!].ws¬ae83f873¬2097152¬¬¬
+¬SD Gundam Eiyuuden - Eiyuuden Kishi Densetsu (J) [M][!]¬SD Gundam Eiyuuden - Eiyuuden Kishi Densetsu (J) [M][!]¬SD Gundam Eiyuuden - Eiyuuden Kishi Densetsu (J) [M][!]¬SD Gundam Eiyuuden - Eiyuuden Kishi Densetsu (J) [M][!]¬sd gundam eiyuuden - eiyuuden kishi densetsu (j) [m][!].ws¬c60e5162¬4194304¬¬¬
+¬SD Gundam Eiyuuden - Eiyuuden Musha Densetsu (J) [M][!]¬SD Gundam Eiyuuden - Eiyuuden Musha Densetsu (J) [M][!]¬SD Gundam Eiyuuden - Eiyuuden Musha Densetsu (J) [M][!]¬SD Gundam Eiyuuden - Eiyuuden Musha Densetsu (J) [M][!]¬sd gundam eiyuuden - eiyuuden musha densetsu (j) [m][!].ws¬18ecffb8¬4194304¬¬¬
+¬SD Gundam G Generation - Gather Beat (J) [M]¬SD Gundam G Generation - Gather Beat (J) [M]¬SD Gundam G Generation - Gather Beat (J) [M]¬SD Gundam G Generation - Gather Beat (J) [M]¬sd gundam g generation - gather beat (j) [m].ws¬e4eb3ab1¬4194304¬¬¬
+¬SD Gundam Gashapon Senki - Episode 1 (J) [M][!]¬SD Gundam Gashapon Senki - Episode 1 (J) [M][!]¬SD Gundam Gashapon Senki - Episode 1 (J) [M][!]¬SD Gundam Gashapon Senki - Episode 1 (J) [M][!]¬sd gundam gashapon senki - episode 1 (j) [m][!].ws¬21eb4c59¬1048576¬¬¬
+¬Senkaiden - TV Animation Senkaiden Houshin Engi Yori (J) [M]¬Senkaiden - TV Animation Senkaiden Houshin Engi Yori (J) [M]¬Senkaiden - TV Animation Senkaiden Houshin Engi Yori (J) [M]¬Senkaiden - TV Animation Senkaiden Houshin Engi Yori (J) [M]¬senkaiden - tv animation senkaiden houshin engi yori (j) [m].ws¬07a3dd46¬2097152¬¬¬
+¬Senkaiden Ni - TV Animation Senkaiden Houshin Engi Yori (J) [M][!]¬Senkaiden Ni - TV Animation Senkaiden Houshin Engi Yori (J) [M][!]¬Senkaiden Ni - TV Animation Senkaiden Houshin Engi Yori (J) [M][!]¬Senkaiden Ni - TV Animation Senkaiden Houshin Engi Yori (J) [M][!]¬senkaiden ni - tv animation senkaiden houshin engi yori (j) [m][!].ws¬9f35d00f¬4194304¬¬¬
+¬Sennou Millenium (J) [M][!]¬Sennou Millenium (J) [M][!]¬Sennou Millenium (J) [M][!]¬Sennou Millenium (J) [M][!]¬sennou millenium (j) [m][!].ws¬301436ac¬1048576¬¬¬
+¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M]¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M]¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M]¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M]¬shin nihon pro wrestling toukon retsuden (j) [m].ws¬5b76f901¬1048576¬¬¬
+¬Shogi Touryuumon (J) [M][!]¬Shogi Touryuumon (J) [M][!]¬Shogi Touryuumon (J) [M][!]¬Shogi Touryuumon (J) [M][!]¬shogi touryuumon (j) [m][!].ws¬fff1c0d6¬524288¬¬¬
+¬Side Pocket (J) [M][!]¬Side Pocket (J) [M][!]¬Side Pocket (J) [M][!]¬Side Pocket (J) [M][!]¬side pocket (j) [m][!].ws¬8655269e¬1048576¬¬¬
+¬Slither Link (J) [M][!]¬Slither Link (J) [M][!]¬Slither Link (J) [M][!]¬Slither Link (J) [M][!]¬slither link (j) [m][!].ws¬f00a0330¬524288¬¬¬
+¬Soccer Yarou! - Challenge the World (J) [M]¬Soccer Yarou! - Challenge the World (J) [M]¬Soccer Yarou! - Challenge the World (J) [M]¬Soccer Yarou! - Challenge the World (J) [M]¬soccer yarou! - challenge the world (j) [m].ws¬d7438e58¬524288¬¬¬
+¬Soccer Yarou! - Challenge the World (J) [M][a1]¬Soccer Yarou! - Challenge the World (J) [M][a1]¬Soccer Yarou! - Challenge the World (J) [M][a1]¬Soccer Yarou! - Challenge the World (J) [M][a1]¬soccer yarou! - challenge the world (j) [m][a1].ws¬1263da65¬1048576¬¬¬
+¬Sotsugyou (J) [M]¬Sotsugyou (J) [M]¬Sotsugyou (J) [M]¬Sotsugyou (J) [M]¬sotsugyou (j) [m].ws¬f016dfe1¬2097152¬¬¬
+¬Space Invaders (J) [M][!]¬Space Invaders (J) [M][!]¬Space Invaders (J) [M][!]¬Space Invaders (J) [M][!]¬space invaders (j) [m][!].ws¬8d83014f¬1048576¬¬¬
+¬Super Robot Taisen Compact (J) [M][!]¬Super Robot Taisen Compact (J) [M][!]¬Super Robot Taisen Compact (J) [M][!]¬Super Robot Taisen Compact (J) [M][!]¬super robot taisen compact (j) [m][!].ws¬7021d54f¬2097152¬¬¬
+¬Super Robot Taisen Compact 2 - Dai Ichibu - Chijou Gekidou Hen (J) [M]¬Super Robot Taisen Compact 2 - Dai Ichibu - Chijou Gekidou Hen (J) [M]¬Super Robot Taisen Compact 2 - Dai Ichibu - Chijou Gekidou Hen (J) [M]¬Super Robot Taisen Compact 2 - Dai Ichibu - Chijou Gekidou Hen (J) [M]¬super robot taisen compact 2 - dai ichibu - chijou gekidou hen (j) [m].ws¬782877bc¬4194304¬¬¬
+¬Super Robot Taisen Compact 2 - Dai Nibu - Uchuu Gekishin Hen (J) [M][!]¬Super Robot Taisen Compact 2 - Dai Nibu - Uchuu Gekishin Hen (J) [M][!]¬Super Robot Taisen Compact 2 - Dai Nibu - Uchuu Gekishin Hen (J) [M][!]¬Super Robot Taisen Compact 2 - Dai Nibu - Uchuu Gekishin Hen (J) [M][!]¬super robot taisen compact 2 - dai nibu - uchuu gekishin hen (j) [m][!].ws¬ecbb46de¬4194304¬¬¬
+¬Super Robot Taisen Compact 2 - Dai Sanbu - Ginga Kessen Hen (J) [M]¬Super Robot Taisen Compact 2 - Dai Sanbu - Ginga Kessen Hen (J) [M]¬Super Robot Taisen Compact 2 - Dai Sanbu - Ginga Kessen Hen (J) [M]¬Super Robot Taisen Compact 2 - Dai Sanbu - Ginga Kessen Hen (J) [M]¬super robot taisen compact 2 - dai sanbu - ginga kessen hen (j) [m].ws¬0b0f8981¬4194304¬¬¬
+¬Tanjou - Debut (J) [M][!]¬Tanjou - Debut (J) [M][!]¬Tanjou - Debut (J) [M][!]¬Tanjou - Debut (J) [M][!]¬tanjou - debut (j) [m][!].ws¬8b74f59a¬2097152¬¬¬
+¬Tare Pan no Gunpei (J) [M][!]¬Tare Pan no Gunpei (J) [M][!]¬Tare Pan no Gunpei (J) [M][!]¬Tare Pan no Gunpei (J) [M][!]¬tare pan no gunpei (j) [m][!].ws¬a5643aa3¬1048576¬¬¬
+¬Tekken Card Challenge (J) [M][!]¬Tekken Card Challenge (J) [M][!]¬Tekken Card Challenge (J) [M][!]¬Tekken Card Challenge (J) [M][!]¬tekken card challenge (j) [m][!].ws¬e7c608e5¬1048576¬¬¬
+¬Terrors (J) [M]¬Terrors (J) [M]¬Terrors (J) [M]¬Terrors (J) [M]¬terrors (j) [m].ws¬ef5b6b82¬4194304¬¬¬
+¬Tetsujin 28 Gou (J) [M]¬Tetsujin 28 Gou (J) [M]¬Tetsujin 28 Gou (J) [M]¬Tetsujin 28 Gou (J) [M]¬tetsujin 28 gou (j) [m].ws¬6f304dca¬4194304¬¬¬
+¬Tetsuman (J) [M][!]¬Tetsuman (J) [M][!]¬Tetsuman (J) [M][!]¬Tetsuman (J) [M][!]¬tetsuman (j) [m][!].ws¬44b3e67c¬1048576¬¬¬
+¬Tokyo Majin Gakuen Fuju Fuuroku (J) [M][!]¬Tokyo Majin Gakuen Fuju Fuuroku (J) [M][!]¬Tokyo Majin Gakuen Fuju Fuuroku (J) [M][!]¬Tokyo Majin Gakuen Fuju Fuuroku (J) [M][!]¬tokyo majin gakuen fuju fuuroku (j) [m][!].ws¬91117d1b¬8388608¬¬¬
+¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][!]¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][!]¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][!]¬Trump Collection Bottom Up Teki Trump Seikatsu (J) [M][!]¬trump collection bottom up teki trump seikatsu (j) [m][!].ws¬07a3b862¬524288¬¬¬
+¬Turntablist - DJ Battle (J) [M][!]¬Turntablist - DJ Battle (J) [M][!]¬Turntablist - DJ Battle (J) [M][!]¬Turntablist - DJ Battle (J) [M][!]¬turntablist - dj battle (j) [m][!].ws¬0d5171f0¬4194304¬¬¬
+¬Umizuri Ni Ikou (J) [M][!]¬Umizuri Ni Ikou (J) [M][!]¬Umizuri Ni Ikou (J) [M][!]¬Umizuri Ni Ikou (J) [M][!]¬umizuri ni ikou (j) [m][!].ws¬86b56511¬524288¬¬¬
+¬Uzumaki - Denshi Kaiki Hen (J) [M][!]¬Uzumaki - Denshi Kaiki Hen (J) [M][!]¬Uzumaki - Denshi Kaiki Hen (J) [M][!]¬Uzumaki - Denshi Kaiki Hen (J) [M][!]¬uzumaki - denshi kaiki hen (j) [m][!].ws¬812020ef¬2097152¬¬¬
+¬Vaitz Blade (J) [M][!]¬Vaitz Blade (J) [M][!]¬Vaitz Blade (J) [M][!]¬Vaitz Blade (J) [M][!]¬vaitz blade (j) [m][!].ws¬8fc9e145¬4194304¬¬¬
+¬Wasabi Produce - Street Dancer (J) [M][!]¬Wasabi Produce - Street Dancer (J) [M][!]¬Wasabi Produce - Street Dancer (J) [M][!]¬Wasabi Produce - Street Dancer (J) [M][!]¬wasabi produce - street dancer (j) [m][!].ws¬1860b655¬4194304¬¬¬
+¬Wizardry - Scenario 1 - Kyounou no Shiren Jou (J) [M][!]¬Wizardry - Scenario 1 - Kyounou no Shiren Jou (J) [M][!]¬Wizardry - Scenario 1 - Kyounou no Shiren Jou (J) [M][!]¬Wizardry - Scenario 1 - Kyounou no Shiren Jou (J) [M][!]¬wizardry - scenario 1 - kyounou no shiren jou (j) [m][!].ws¬15e55706¬2097152¬¬¬
+¬Wonder Classic (J) [M][!]¬Wonder Classic (J) [M][!]¬Wonder Classic (J) [M][!]¬Wonder Classic (J) [M][!]¬wonder classic (j) [m][!].ws¬12f10b27¬4194304¬¬¬
+¬Wonder Stadium (J) [M]¬Wonder Stadium (J) [M]¬Wonder Stadium (J) [M]¬Wonder Stadium (J) [M]¬wonder stadium (j) [m].ws¬23bc0309¬1048576¬¬¬
+¬Wonder Stadium '99 (J) [M]¬Wonder Stadium '99 (J) [M]¬Wonder Stadium '99 (J) [M]¬Wonder Stadium '99 (J) [M]¬wonder stadium '99 (j) [m].ws¬e252919d¬1048576¬¬¬
+¬Fire Pro Wrestling (J) [M]¬Fire Pro Wrestling (J) [M]¬Fire Pro Wrestling (J) [M]¬Fire Pro Wrestling (J) [M]¬fire pro wrestling (j) [m].ws¬f246a68e¬4194304¬¬¬
+¬LastStand (J) [M]¬LastStand (J) [M]¬LastStand (J) [M]¬LastStand (J) [M]¬laststand (j) [m].ws¬cccaf8a1¬2097152¬¬¬
+¬WonderSwan Handy Sonar (J) [M]¬WonderSwan Handy Sonar (J) [M]¬WonderSwan Handy Sonar (J) [M]¬WonderSwan Handy Sonar (J) [M]¬wonderswan handy sonar (j) [m].ws¬2ab9852d¬1048576¬¬¬
+¬Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (J) [M]¬Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (J) [M]¬Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (J) [M]¬Meitantei Conan - Nishi no Meitantei Saidai no Kiki! (J) [M]¬meitantei conan - nishi no meitantei saidai no kiki! (j) [m].ws¬e226863b¬2097152¬¬¬
+¬Kyoso Uma Ikusei Simulation Keiba (J) [M]¬Kyoso Uma Ikusei Simulation Keiba (J) [M]¬Kyoso Uma Ikusei Simulation Keiba (J) [M]¬Kyoso Uma Ikusei Simulation Keiba (J) [M]¬kyoso uma ikusei simulation keiba (j) [m].ws¬ecfbcb1d¬1048576¬¬¬
+¬Kakuto Ryori Densetsu Bistro Recipe - Wonder Battle Hen (J) [M]¬Kakuto Ryori Densetsu Bistro Recipe - Wonder Battle Hen (J) [M]¬Kakuto Ryori Densetsu Bistro Recipe - Wonder Battle Hen (J) [M]¬Kakuto Ryori Densetsu Bistro Recipe - Wonder Battle Hen (J) [M]¬kakuto ryori densetsu bistro recipe - wonder battle hen (j) [m].ws¬4d103236¬1048576¬¬¬
+¬Moero !! Pro Yakyu Rookies (J) [M]¬Moero !! Pro Yakyu Rookies (J) [M]¬Moero !! Pro Yakyu Rookies (J) [M]¬Moero !! Pro Yakyu Rookies (J) [M]¬moero !! pro yakyu rookies (j) [m].ws¬eb995e86¬1048576¬¬¬
+¬Kaze no Klonoa - Moonlight Museum (J) [M][t1]¬Kaze no Klonoa - Moonlight Museum (J) [M][t1]¬Kaze no Klonoa - Moonlight Museum (J) [M][t1]¬Kaze no Klonoa - Moonlight Museum (J) [M][t1]¬kaze no klonoa - moonlight museum (j) [m][t1].ws¬411da7a4¬1048576¬¬¬
+¬Robot Works (Asia) [M]¬Robot Works (Asia) [M]¬Robot Works (Asia) [M]¬Robot Works (Asia) [M]¬robot works (asia) [m].ws¬be6be690¬1048576¬¬¬
+¬Shanghai Pocket (J) [M]¬Shanghai Pocket (J) [M]¬Shanghai Pocket (J) [M]¬Shanghai Pocket (J) [M]¬shanghai pocket (j) [m].ws¬1c489351¬524288¬¬¬
+¬Keiba Yosou Shien Shinkaron (J) [M][!]¬Keiba Yosou Shien Shinkaron (J) [M][!]¬Keiba Yosou Shien Shinkaron (J) [M][!]¬Keiba Yosou Shien Shinkaron (J) [M][!]¬keiba yosou shien shinkaron (j) [m][!].ws¬517f962e¬1048576¬¬¬
+¬Digimon Digital Monsters (J) [M]¬Digimon Digital Monsters (J) [M]¬Digimon Digital Monsters (J) [M]¬Digimon Digital Monsters (J) [M]¬digimon digital monsters (j) [m].ws¬ab59de2e¬2097152¬¬¬
+¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][!]¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][!]¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][!]¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][!]¬hunter x hunter - ichi o tsugu mono (j) [m][!].ws¬70aa800e¬4194304¬¬¬
+¬Gorakuoh TANGO! (J) [M]¬Gorakuoh TANGO! (J) [M]¬Gorakuoh TANGO! (J) [M]¬Gorakuoh TANGO! (J) [M]¬gorakuoh tango! (j) [m].ws¬00137e86¬1048576¬¬¬
+¬Morita Shogi (J) [M][!]¬Morita Shogi (J) [M][!]¬Morita Shogi (J) [M][!]¬Morita Shogi (J) [M][!]¬morita shogi (j) [m][!].ws¬d675c265¬1048576¬¬¬
+¬Makaimura (J) [M][t1]¬Makaimura (J) [M][t1]¬Makaimura (J) [M][t1]¬Makaimura (J) [M][t1]¬makaimura (j) [m][t1].ws¬b6ee35c8¬2097152¬¬¬
+¬Anchor Field Z (J) [M][f1]¬Anchor Field Z (J) [M][f1]¬Anchor Field Z (J) [M][f1]¬Anchor Field Z (J) [M][f1]¬anchor field z (j) [m][f1].ws¬d022f6fd¬1048576¬¬¬
+¬Armored Unit (J) [M][f1]¬Armored Unit (J) [M][f1]¬Armored Unit (J) [M][f1]¬Armored Unit (J) [M][f1]¬armored unit (j) [m][f1].ws¬1b73df20¬1048576¬¬¬
+¬Buffers Evolution (J) [M][f1]¬Buffers Evolution (J) [M][f1]¬Buffers Evolution (J) [M][f1]¬Buffers Evolution (J) [M][f1]¬buffers evolution (j) [m][f1].ws¬122591f1¬4194304¬¬¬
+¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][f1]¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][f1]¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][f1]¬D's Garage 21 Koubo Game - Tane wo Maku Tori (J) [M][f1]¬d's garage 21 koubo game - tane wo maku tori (j) [m][f1].ws¬eba41a7f¬1048576¬¬¬
+¬Engacho! (J) [M][f1]¬Engacho! (J) [M][f1]¬Engacho! (J) [M][f1]¬Engacho! (J) [M][f1]¬engacho! (j) [m][f1].ws¬3dcb48bd¬1048576¬¬¬
+¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M][f1]¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M][f1]¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M][f1]¬Fever Sankyo - Koushiki Pachinko Simulation (J) [M][f1]¬fever sankyo - koushiki pachinko simulation (j) [m][f1].ws¬a83eabfd¬2097152¬¬¬
+¬Final Lap 2000 (J) [M][f1]¬Final Lap 2000 (J) [M][f1]¬Final Lap 2000 (J) [M][f1]¬Final Lap 2000 (J) [M][f1]¬final lap 2000 (j) [m][f1].ws¬459afb1d¬1048576¬¬¬
+¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M][f1]¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M][f1]¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M][f1]¬From TV Animation - One Piece - Mezase Kaizoku Ou (J) [M][f1]¬from tv animation - one piece - mezase kaizoku ou (j) [m][f1].ws¬be3dde09¬1048576¬¬¬
+¬GunPey (J) [M][f1]¬GunPey (J) [M][f1]¬GunPey (J) [M][f1]¬GunPey (J) [M][f1]¬gunpey (j) [m][f1].ws¬55df2cbb¬1048576¬¬¬
+¬Nazo Ou Pocket (J) [M][f1]¬Nazo Ou Pocket (J) [M][f1]¬Nazo Ou Pocket (J) [M][f1]¬Nazo Ou Pocket (J) [M][f1]¬nazo ou pocket (j) [m][f1].ws¬8d176482¬1048576¬¬¬
+¬Nice On (J) [M][f1]¬Nice On (J) [M][f1]¬Nice On (J) [M][f1]¬Nice On (J) [M][f1]¬nice on (j) [m][f1].ws¬7638a3db¬1048576¬¬¬
+¬Ouchan no Oekaki Logic (J) [M][f1]¬Ouchan no Oekaki Logic (J) [M][f1]¬Ouchan no Oekaki Logic (J) [M][f1]¬Ouchan no Oekaki Logic (J) [M][f1]¬ouchan no oekaki logic (j) [m][f1].ws¬a16d1d16¬524288¬¬¬
+¬Puzzle Bobble (J) [M][f1]¬Puzzle Bobble (J) [M][f1]¬Puzzle Bobble (J) [M][f1]¬Puzzle Bobble (J) [M][f1]¬puzzle bobble (j) [m][f1].ws¬6a05c838¬524288¬¬¬
+¬Ring Infinity (J) [M][f1]¬Ring Infinity (J) [M][f1]¬Ring Infinity (J) [M][f1]¬Ring Infinity (J) [M][f1]¬ring infinity (j) [m][f1].ws¬ac8db6a3¬4194304¬¬¬
+¬Sennou Millenium (J) [M][f1]¬Sennou Millenium (J) [M][f1]¬Sennou Millenium (J) [M][f1]¬Sennou Millenium (J) [M][f1]¬sennou millenium (j) [m][f1].ws¬3ef0b0c4¬1048576¬¬¬
+¬Slither Link (J) [M][f1]¬Slither Link (J) [M][f1]¬Slither Link (J) [M][f1]¬Slither Link (J) [M][f1]¬slither link (j) [m][f1].ws¬f6e6fcee¬524288¬¬¬
+¬Tare Pan no Gunpei (J) [M][f1]¬Tare Pan no Gunpei (J) [M][f1]¬Tare Pan no Gunpei (J) [M][f1]¬Tare Pan no Gunpei (J) [M][f1]¬tare pan no gunpei (j) [m][f1].ws¬d387c363¬1048576¬¬¬
+¬Tetsujin 28 Gou (J) [M][f1]¬Tetsujin 28 Gou (J) [M][f1]¬Tetsujin 28 Gou (J) [M][f1]¬Tetsujin 28 Gou (J) [M][f1]¬tetsujin 28 gou (j) [m][f1].ws¬82a07866¬4194304¬¬¬
+¬Turntablist - DJ Battle (J) [M][f1]¬Turntablist - DJ Battle (J) [M][f1]¬Turntablist - DJ Battle (J) [M][f1]¬Turntablist - DJ Battle (J) [M][f1]¬turntablist - dj battle (j) [m][f1].ws¬a07482ac¬4194304¬¬¬
+¬Gorakuoh TANGO! (J) [M][f1]¬Gorakuoh TANGO! (J) [M][f1]¬Gorakuoh TANGO! (J) [M][f1]¬Gorakuoh TANGO! (J) [M][f1]¬gorakuoh tango! (j) [m][f1].ws¬1485ab1d¬1048576¬¬¬
+¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][f1]¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][f1]¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][f1]¬Hunter X Hunter - Ichi O Tsugu Mono (J) [M][f1]¬hunter x hunter - ichi o tsugu mono (j) [m][f1].ws¬088db40c¬4194304¬¬¬
+¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][f1]¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][f1]¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][f1]¬Itou Jun Ni Uzumaki Noroi Simulation (J) [M][f1]¬itou jun ni uzumaki noroi simulation (j) [m][f1].ws¬700f4c84¬2097152¬¬¬
+¬Tare Pan no Gunpei (J) [M][f2]¬Tare Pan no Gunpei (J) [M][f2]¬Tare Pan no Gunpei (J) [M][f2]¬Tare Pan no Gunpei (J) [M][f2]¬tare pan no gunpei (j) [m][f2].ws¬2fcf1443¬1048576¬¬¬
+¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M][f1]¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M][f1]¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M][f1]¬Shin Nihon Pro Wrestling Toukon Retsuden (J) [M][f1]¬shin nihon pro wrestling toukon retsuden (j) [m][f1].ws¬6021d9cc¬1048576¬¬¬
+¬Uzumaki - Denshi Kaiki Hen (J) [M][f1]¬Uzumaki - Denshi Kaiki Hen (J) [M][f1]¬Uzumaki - Denshi Kaiki Hen (J) [M][f1]¬Uzumaki - Denshi Kaiki Hen (J) [M][f1]¬uzumaki - denshi kaiki hen (j) [m][f1].ws¬89cbaa7c¬2097152¬¬¬
+¬Magical Drop (J) [M][b1]¬Magical Drop (J) [M][b1]¬Magical Drop (J) [M][b1]¬Magical Drop (J) [M][b1]¬Magical Drop (J) [M][b1].ws¬b096ae0a¬524288¬¬¬
