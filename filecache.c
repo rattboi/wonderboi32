@@ -12,7 +12,7 @@
 
 unsigned long	MyGameSize; 
 unsigned char	*MyGame; 
-unsigned long	MyGameNo, MyGameDatNo;
+unsigned long	MyGameNo;
 
 #define			MAXFS			11
 
@@ -113,11 +113,13 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 	int i;
 	int test=1;
 
+
 	if(force_type==UNK)
 	{
 		test=0;
 		force_type=ini.game[entry].type;
 		GPSPRINTF(filename,"%s\\%s",dir,ini.game[entry].file);
+		PrintMessage(filename,1);
 	}
 	else
 		GPSPRINTF(filename,"%s\\%s",dir,name);  
@@ -203,7 +205,7 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 			}
 
 			*CRC32=gz_crc;
-
+			
 			return 1;
 		}
 		break;
@@ -231,8 +233,10 @@ void fs_scanfile(char *dir, char *name)
 
 	if(head[0]=='P'&&head[1]=='K') //zip
 	{
+
 		fs_loadgame(dir,name,&crc,0,ZIP);
  
+
 		i=DAT_LookFor(crc);
 
 		if(i!=-1) 
@@ -386,14 +390,14 @@ void fs_scandir(char *dir, char *name)
 			PrintMessage(temp,1);
 		}
 
-		PrintMessage("Reading dir, please wait",0);
+		PrintMessage("Reading dir, please wait",1);
 
 		GpDirEnumList(g_path_curr, 0, MAX_COUNT_FILE, (GPDIRENTRY*)&g_list_file, &g_cnt_file);
 
 		for(i=0;i<g_cnt_file;i++)
 		{
 			GPSPRINTF(temp," Scanning file %04d/%04d (%03d%%) \n",i+1,g_cnt_file,(i+1)*100/g_cnt_file/*,g_list_file[i].name*/);
-			PrintMessage(temp,0);
+			PrintMessage(temp,1);
 //			DrawPercentageBar(110, 130, i, 0, g_cnt_file-1);
 //			FlipScreen(1,0);
 
@@ -416,9 +420,11 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 	fs_scandir(dir,name);
 
+	PrintMessage("Finished Scandir",1);
+
 	GpClockSpeedChange(80000000 , 0x48012, 0);
 
-/*	while(choose==-1)
+	while(choose==-1)
 	{
 		static int pos=0, pause=0, touch=0; int max, key; //maxperscreen
 
@@ -439,8 +445,9 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 				if(i>=ini.num_games_in_ini)
 				{
-					GPSPRINTF(pagetemp,"%s%c",page,i==pos+max-1?' ':'\n');
-					GPSPRINTF(page,pagetemp);
+//					GPSPRINTF(pagetemp,"%s%c",page,i==pos+max-1?' ':'\n');
+//					GPSPRINTF(page,pagetemp);
+//					PrintMessage(page,0);
 				}
 				else
 				{
@@ -475,10 +482,9 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 					datname[50]='\0'; //cut name
 
-					GPSPRINTF(pagetemp,"%s%04d. %c %-50s%c",page,i+1,i==pos?'>':' ',datname,i==pos+max-1?' ':'\n');
+					GPSPRINTF(pagetemp,"%s%04d. %s\n",page,i+1,datname);
 					GPSPRINTF(page,pagetemp);
 				}
-
 			}
 
 			GPSPRINTF(pagetemp," %s\n\n%s",title,page);
@@ -486,19 +492,13 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 
 			if(firsttime)
 			{
-				FlipScreen(1,0);
-				DrawMessageC(page);
-				FlipScreen(1,0);
-				DrawMessageC(page);
-				FlipScreen(1,0);
-
+				PrintMessage(page,0);
 				firsttime=0;
 			}
 			else
 			if(needsrepainting)
 			{
-				DrawMessageC(page);
-				FlipScreen(1,0);
+				PrintMessage(page,0);
 				needsrepainting=0;
 			}
 
@@ -572,10 +572,7 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 			{
 				while(GpKeyGet());
 
-				DrawMessageC("Press START to restart GP32\nPress SELECT to rescan dir\nPress A to continue...");
-				FlipScreen(1,0);
-				DrawMessageC("Press START to restart GP32\nPress SELECT to rescan dir\nPress A to continue...");
-				FlipScreen(1,0);
+				PrintMessage("Press START to restart GP32\nPress SELECT to rescan dir\nPress A to continue...",1);
 
 			    while(1)
 				{
@@ -587,8 +584,8 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 						break; 
 					}
 					
-					if(key&GPC_VK_START)
-						GP32_System_Reset();
+//					if(key&GPC_VK_START)
+//						GP32_System_Reset();
 
 					if(key&GPC_VK_SELECT)
 					{
@@ -598,11 +595,8 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
        
 						pos=0;
 
-						DrawMessageC(page);
-						FlipScreen(1,0);
-						DrawMessageC(page);
-						FlipScreen(1,0);
-	
+						PrintMessage(page,0);
+
 						fs_scandir(dir,name);
 
 						break;
@@ -613,13 +607,14 @@ void fs(char *title, char *dir, char *name, unsigned char *dest)
 			}
 		}
 	}
-*/
+
+	PrintMessage("File Chosen",1);
 
 	fs_loadgame(dir,"",&crc,choose,UNK);
-	GPSPRINTF(szRomName,"%08x.tmp",crc);
+//	GPSPRINTF(szRomName,"%08x.tmp",crc);
 
 	MyGameNo=choose;
-	MyGameDatNo=ini.game[choose].entry;
+//	MyGameDatNo=ini.game[choose].entry;
 
-	GpClockSpeedChange(132000000, 0x3a011, 3); //spiv
+//	GpClockSpeedChange(132000000, 0x3a011, 3); //spiv
 }

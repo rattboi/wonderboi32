@@ -622,6 +622,10 @@ void GpMain(void *arg)
 
 	ShowCredits();								// show the opening dialog
 	
+	base_rom = NULL;
+
+    if(base_rom==NULL) base_rom=(byte *)gm_zi_malloc(4*1024*1024);
+
 	result = GpFileOpen("gp:\\GPMM\\WB32\\CFG\\DEFAULT.CFG",OPEN_R, &F);
 	
 	if (result == SM_OK)
@@ -638,12 +642,12 @@ void GpMain(void *arg)
 		{
 		case MENU_MAIN_LOAD_ROM:
 			{
-				if (DoFileSelector(fname) == 0)
+/*				if (DoFileSelector(fname) == 0)
 				{
 					while (GpKeyGet());  // wait for keyrelease			
 					break;
 				}
-								
+*/								
 				if (running == 1)					// release old memory if a rom was already loaded
 				{
 					running = 0;
@@ -652,11 +656,14 @@ void GpMain(void *arg)
 									
 				setCpuSpeed(132);
 
-				if (!LoadRom(fname))
+/*				if (!LoadRom(fname))
 				{
 					PrintError("Error Loading File!", 1);
 					GpAppExit();
 				}
+*/
+				GPSPRINTF(g_string,"Wonderboi");
+				fs(g_string,"gp:\\GPMM\\WB32\\ROM","wb32.ini",base_rom);
 
 				setCpuSpeed(66);
 				

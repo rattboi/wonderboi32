@@ -54,7 +54,8 @@ OBJCOPY			=	arm-elf-objcopy
 					OKF/okf.c \
 					OKF/list.c \
 					OKF/folder.c \
-					OKF/fileSelector.c 
+					OKF/fileSelector.c \
+					filecache.c
 
 OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o)
  
