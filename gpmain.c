@@ -361,14 +361,14 @@ int LoadRom(char *filename)
 			return 0;
 		}
 
-		if (filesize > GPAVAILABLEMEM())
-		{
-			PrintError("Not Enough Memory!",1);
-			return 0;
-		}
+//		if (filesize > GPAVAILABLEMEM())
+//		{
+//			PrintError("Not Enough Memory!",1);
+//			return 0;
+//		}
 		
 		romsize = filesize;
-		base_rom = (uint8*)GPMALLOC(romsize);
+//		base_rom = (uint8*)GPMALLOC(romsize);
 
 		GPSPRINTF(printString,"Opening File...\nFile Size: %i", filesize);
 		PrintMessage(printString,0);
@@ -390,14 +390,14 @@ int LoadRom(char *filename)
 				return 0;
 			}
 
-			if (filesize > GPAVAILABLEMEM())
+/*			if (filesize > GPAVAILABLEMEM())
 			{
 				PrintError("Not Enough Memory!",1);
 				return 0;
 			}
-
+*/
 			romsize = filesize;
-			base_rom = (uint8*)GPMALLOC(romsize);
+//			base_rom = (uint8*)GPMALLOC(romsize);
 		}
 		else
 		{
@@ -642,7 +642,7 @@ void GpMain(void *arg)
 		{
 		case MENU_MAIN_LOAD_ROM:
 			{
-				if (DoFileSelector(fname,"gp:\\GPMM\\WB32\\ROM","wb32.ini",base_rom) == 0)
+				if (DoFileSelector(fname, base_rom) == 0)
 				{
 					while (GpKeyGet());  // wait for keyrelease			
 					break;

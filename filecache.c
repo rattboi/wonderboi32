@@ -99,7 +99,7 @@ int fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int forc
 		test=0;
 		force_type=ini.game[entry].type;
 		GPSPRINTF(filename,"%s\\%s",dir,ini.game[entry].file);
-		PrintMessage(filename,1);
+//		PrintMessage(filename,1);
 	}
 	else
 		GPSPRINTF(filename,"%s\\%s",dir,name);  
@@ -268,12 +268,13 @@ void fs_scanfile(char *dir, char *name)
 
 
 //ok
-void fs_write_ini(char *dir, char *name)
+void fs_write_ini()
 {
 	char filename[255]; F_HANDLE file; unsigned long size;
 	int i,j;
 
-	GPSPRINTF(filename,"%s\\%s",dir,name);
+//	GPSPRINTF(filename,"%s\\%s",dir,name);
+	GPSPRINTF(filename,"gp:\\GPMM\\WB32\\WB32.ini");
 
 	if(GpFileCreate(filename, ALWAYS_CREATE, &file)!=SM_OK) 
 		return;
@@ -325,7 +326,7 @@ void fs_write_ini(char *dir, char *name)
 }
 
 //ok
-int fs_read_ini(char *dir, char *name)
+int fs_read_ini()
 {
 	char filename[255]; 
 	F_HANDLE file; 
@@ -333,7 +334,8 @@ int fs_read_ini(char *dir, char *name)
 
 	GPMEMSET(&ini,0,sizeof(ini));
 
-	GPSPRINTF(filename,"%s\\%s",dir,name);
+//	GPSPRINTF(filename,"%s\\%s",dir,name);
+	GPSPRINTF(filename,"gp:\\GPMM\\WB32\\WB32.ini");
 
 	if(GpFileOpen(filename, OPEN_R, &file)!=SM_OK) 
 		return 0;
@@ -349,30 +351,33 @@ int fs_read_ini(char *dir, char *name)
 
 
 //ok
-void fs_scandir(char *dir, char *name)
+void fs_scandir(char *dir)
 {
-	int i;
+	int i, ok;
 	char temp[255];
 
 	GPSPRINTF(g_path_curr,"%s\\",dir);
 
-	// GpFatInit();
+	PrintMessage("Reading dir, please wait",0);
 
-	if(!fs_read_ini(dir,name))
+	GpDirEnumList(g_path_curr, 0, MAX_COUNT_FILE, (GPDIRENTRY*)&g_list_file, &g_cnt_file);
+
+	ok = fs_read_ini();
+
+	GPSPRINTF(temp, "ok = %d, num_games = %d, cnt_file = %d", ok, ini.num_games_in_ini, g_cnt_file);
+//	PrintMessage(temp, 1);
+
+	if(!ok || ((g_cnt_file - 2) != ini.num_games_in_ini))
 	{
+		GPMEMSET(&ini,0,sizeof(ini));
+
 		if(ini.version_ini!=1)//version_emu)
 		{
 			if(ini.version_ini==0)
 				GPSPRINTF(temp,"Welcome!\nPress A for a new scanning");
 			else
 				GPSPRINTF(temp,"Another emulator version detected\nPress A to force a new scanning");
-
-//			PrintMessage(temp,1);
 		}
-
-		PrintMessage("Reading dir, please wait",0);
-
-		GpDirEnumList(g_path_curr, 0, MAX_COUNT_FILE, (GPDIRENTRY*)&g_list_file, &g_cnt_file);
 
 		for(i=0;i<g_cnt_file;i++)
 		{
@@ -384,18 +389,18 @@ void fs_scandir(char *dir, char *name)
 			fs_scanfile(dir,g_list_file[i].name);
 		}
 
-		if(ini.num_games_in_ini) fs_write_ini(dir,name); 
+		if(ini.num_games_in_ini) fs_write_ini(); 
 	}
 }
 
 
 
-void fs(char *dir, char *name, unsigned char *dest)
+void fs(char *dir, unsigned char *dest)
 {
 
 	MyGame=(unsigned char*)dest;
 
-	fs_scandir(dir,name);
+	fs_scandir(dir);
 
 //	fs_loadgame(dir,"",&crc,choose,UNK);
 

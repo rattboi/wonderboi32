@@ -175,7 +175,7 @@ void ws_memory_reset(void)
 ////////////////////////////////////////////////////////////////////////////////
 void ws_memory_done(void)
 {
-	GPFREE(ws_rom);
+//	GPFREE(ws_rom);
 	GPFREE(ws_staticRam);
 	GPFREE(internalRam);
 	GPFREE(externalEeprom);

@@ -36,10 +36,10 @@ void	LoadPacked(int skip, int gz_size, int gz_crc);
 void	fs_add(char type,unsigned short entry,char *file,unsigned long offset);
 int		fs_loadgame(char *dir, char *name, unsigned long *CRC32, int entry, int force_type);
 void	fs_scanfile(char *dir, char *name);
-void	fs_write_ini(char *dir, char *name);
-int		fs_read_ini(char *dir, char *name);
-void	fs_scandir(char *dir, char *name);
-void	fs(char *dir, char *name, unsigned char *dest);
+void	fs_write_ini( );
+int		fs_read_ini( );
+void	fs_scandir(char *dir);
+void	fs(char *dir, unsigned char *dest);
 
 #endif
 

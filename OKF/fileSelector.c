@@ -46,7 +46,7 @@ static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEnt
 
 
 //*** Public implementations
-int FileSelector(FILESELECTOR *pSelector, char *dir, char *name, unsigned char *dest)
+int FileSelector(FILESELECTOR *pSelector, unsigned char *dest)
 {
 	int topEntry, selectedEntry;
 	char currentPath[FLD_MAXPATH + 1];
@@ -63,11 +63,11 @@ int FileSelector(FILESELECTOR *pSelector, char *dir, char *name, unsigned char *
 
 	gm_strcpy(currentPath, pSelector->currentPath);
     
+	fs(currentPath, dest);
+
 	// Prepare screen
 	topEntry = selectedEntry = 0;
 	RefreshScreen(pSelector, topEntry, selectedEntry);
-
-	fs(dir, name, dest);
 
 	  // Main loop
 	while (GpKeyGet());
@@ -179,16 +179,20 @@ int FileSelector(FILESELECTOR *pSelector, char *dir, char *name, unsigned char *
 		else if (newKeys & GPC_VK_FA)
 		{
 			// return the file or load or something :P
+			gm_strcpy(pSelector->filename, ini.game[selectedEntry].file);
+			result = 1;
+			break;
 		}
 		else if (newKeys & GPC_VK_SELECT)
 		{
 			char temp[255];
-			gm_sprintf(temp,"%s\\%s",dir,name);
+			gm_sprintf(temp,"gp:\\GPMM\\WB32\\WB32.ini");
+
 			GpFileRemove(temp);
        
-			PrintMessage("Rescanning Directory",1);
+//			PrintMessage("Rescanning Directory",0);
 
-			fs_scandir(dir,name);
+			fs_scandir(currentPath);
 		}
 
 	    while ((GpTickCountGet() - tick) < pSelector->repetitionSpeed);

@@ -16,7 +16,7 @@ extern int giSurface;
 
 uint16 FileBG[320*240];						// holds the file manager background;
 
-int DoFileSelector(char *filename, char *dir, char *name, unsigned char *dest)
+int DoFileSelector(char *filename, unsigned char *dest)
 {
 	FILESELECTOR fileSelector;
 	int result;
@@ -31,7 +31,7 @@ int DoFileSelector(char *filename, char *dir, char *name, unsigned char *dest)
 
 	SaveBackground(giSurface, (uint16 *)FileBG);
 
-	gm_strcpy(fileSelector.currentPath, "gp:\\gpmm\\wb32\\rom\\");
+	gm_strcpy(fileSelector.currentPath, "gp:\\gpmm\\wb32\\rom");
 
 	fileSelector.pTotalsFormat = "%s bytes, %s files";
 	fileSelector.pFileSizeFormat = " %s";
@@ -67,11 +67,14 @@ int DoFileSelector(char *filename, char *dir, char *name, unsigned char *dest)
 	fileSelector.selectionColor = RGB(00, 31, 00);
 	fileSelector.scrollBarColor = RGB(00, 31, 00);
 	
-	result = FileSelector(&fileSelector, dir, name, dest);
+	result = FileSelector(&fileSelector, dest);
 	
 	if (result == 0)
 		return 0;
 	
-	gm_strcpy(filename,fileSelector.filename);
+	gm_sprintf(filename,"%s\\%s", fileSelector.currentPath, fileSelector.filename);
+
+//	PrintMessage(filename, 1);
+
 	return 1;
 }
