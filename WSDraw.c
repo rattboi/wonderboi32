@@ -80,8 +80,8 @@ video_mode video_modes[6] =
 #define VERT_BUFFER_MODE 1
 #define HORZ_BUFFER_MODE 240
 
-//#define BUFFER_MODE HORZ_BUFFER_MODE
-#define BUFFER_MODE VERT_BUFFER_MODE
+#define BUFFER_MODE HORZ_BUFFER_MODE
+//#define BUFFER_MODE VERT_BUFFER_MODE
 
 #include "newgfxcore.h"
 
@@ -97,7 +97,7 @@ int  WsDrawCreate()
 	video_y = video_modes[DrawMode].video_y;
 	scroll_x = video_modes[DrawMode].scroll_x;
 
-	RefreshLine = RefreshLineOld;
+//	RefreshLine = RefreshLineOld;
 
     WsDrawClear();
     return 0;
@@ -109,12 +109,10 @@ int  WsDrawLine(int Line)
     int result;
 	char debug[100];
 
-//	RefreshLine(Line, &screenbuffer[(224+16)*Line]);
-
 #if BUFFER_MODE == HORZ_BUFFER_MODE
-	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*2*video_x)-(video_y*2)-(8*2)+(480-(Line*2))); // works for horz
+	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)-(8)+(240-(Line))); // works for horz
 #else
-	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*2*video_x)-(video_y*2)-(8*2)+(Line*2*240)); // works for vert
+	RefreshLine(Line, gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)-(8)+(Line*240)); // works for vert
 #endif
 
 /*
@@ -139,20 +137,24 @@ int  WsDrawFlip(void)
 //---------------------------------------------------------------------------
 void  SetPalette(int Index, byte PalData)
 {
+	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
 	uint16 Pal;
     uint16 PF;
 	int i,j;
 
+	int col;
+	
 	ColTbl[Index]=PalData;
     i=Index&0x3FE;
 	Pal=(ColTbl[i+1]<<8) |ColTbl[i];
 
-	PF = RGB555(((Pal>>8)&0x0f)<<1,((Pal>>4)&0x0f)<<1,(Pal&0x0f)<<1);
-
 	i=Index>>5;
 	j=(Index>>1)&0x0F;
+	
+	col = Index >> 1;
 
-	Palette[i][j]=PF;
+//    if(col<253)
+		HWPALETTE[col] = RGB555(((Pal>>8)&0x0f)<<1,((Pal>>4)&0x0f)<<1,(Pal&0x0f)<<1);
 
 	return;
 }
@@ -163,7 +165,7 @@ void  WsDrawClear(void)
 {
 	int i;
 	
-	switch(DrawMode)
+/*	switch(DrawMode)
 	{
 		case 0:
 		{
@@ -216,7 +218,14 @@ void  WsDrawClear(void)
 			break;
 		default:
 			break;
-	}	
+	}
+	*/
+	for (i=(320*240)-1;i>=0;--i)
+	{
+		*((uint8*)gtSurface[0].ptbuffer+i) = 0;
+		*((uint8*)gtSurface[1].ptbuffer+i) = 0;
+	}
+
 }
 
 //---------------------------------------------------------------------------

@@ -204,6 +204,8 @@ void Emulate()
 	FrameSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected << 1);
 //	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
+	GpGraphicModeSet(8,NULL);
+
 	WsInputInit(vert);
 //	GpSurfaceSet(&gtSurface[0]);
 	
@@ -211,6 +213,8 @@ void Emulate()
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
+
+	GpGraphicModeSet(16,NULL);
 
 //	GpSurfaceSet(&gtSurface[giSurface]);
 	
