@@ -81,8 +81,8 @@ int scroll_x = 0;
 video_mode video_modes[5] =
 {
 	horz_render_square,			48,	12,	0,
-	horz_render_widescreen,		0,	48,	4,
 	horz_render_fullscreen,		0,	12,	4,
+	horz_render_widescreen,		0,	48,	4,
 	NULL,						48,	48,	0,
 	NULL,						88,	0,	0
 };
@@ -201,7 +201,7 @@ int  WsDrawFlip(void)
 				for (j = 0; j < 8; j++)
 				{
 					*(gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(i*240)+j) = 0xFF;
-					*(gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(i*240)+j+224) = 0xFF;
+					*(gtSurface[giSurface].ptbuffer+(240*video_x)-(video_y)+(i*240)+j+224+8) = 0xFF;
 				}
 			}
 		}
