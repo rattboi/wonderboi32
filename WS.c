@@ -445,7 +445,7 @@ LogFile(LK_SPRITE, str);
 
 		case 0x60:
 			{
-				switch(V)
+				switch((V&0xE0))
 				{
 				case 0xE0:
 					RefreshLine = RefreshLine16Packed;

@@ -52,7 +52,7 @@ void  RefreshLine16Packed(int Line, void* buffer)
  	if(DSPCTL&0x01) // BG Layer on
 	{
 		OffsetX=SCR1X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf=pSBuf-OffsetX;					// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf=pSBuf-(OffsetX*240);					// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR1Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -72,23 +72,23 @@ void  RefreshLine16Packed(int Line, void* buffer)
 			uint16 *palt = Palette[(TMap&MAP_PAL)>>9];
 
 			if(TMap&MAP_HREV) {
-				*pSWrBuf++ = (j=((pbTData[3]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[3]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[2]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[2]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[1]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[1]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[0]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[0]&0xF0)>>4)) ? palt[j] : bkCol;
+				*pSWrBuf = (j=((pbTData[3]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[3]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[2]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[2]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[1]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[1]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[0]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[0]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
 			} else	{
-				*pSWrBuf++ = (j=((pbTData[0]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[0]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[1]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[1]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[2]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[2]&0x0F)))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[3]&0xF0)>>4)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((pbTData[3]&0x0F)))	? palt[j] : bkCol;
+				*pSWrBuf = (j=((pbTData[0]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[0]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[1]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[1]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[2]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[2]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[3]&0xF0)>>4))	? palt[j] : bkCol; pSWrBuf += 240;
+				*pSWrBuf = (j=((pbTData[3]&0x0F)))		? palt[j] : bkCol; pSWrBuf += 240;
 			}
 		}
 	}
@@ -120,7 +120,7 @@ void  RefreshLine16Packed(int Line, void* buffer)
 		}
 
 		OffsetX=SCR2X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf=pSBuf-OffsetX;					// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf=pSBuf-(OffsetX * 240);					// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR2Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -143,27 +143,27 @@ void  RefreshLine16Packed(int Line, void* buffer)
 			uint16 * palt = Palette[(TMap&MAP_PAL)>>9];
 
             if(TMap&MAP_HREV) {
-				if (!pW[0]&&(j=(pbTData[3]&0x0F)))	  { pZ[0]=1; pSWrBuf[0]=palt[j]; }
-				if (!pW[1]&&(j=(pbTData[3]&0xF0)>>4)) { pZ[1]=1; pSWrBuf[1]=palt[j]; }
-				if (!pW[2]&&(j=(pbTData[2]&0x0F)))	  { pZ[2]=1; pSWrBuf[2]=palt[j]; }
-				if (!pW[3]&&(j=(pbTData[2]&0xF0)>>4)) { pZ[3]=1; pSWrBuf[3]=palt[j]; }
-				if (!pW[4]&&(j=(pbTData[1]&0x0F)))	  { pZ[4]=1; pSWrBuf[4]=palt[j]; }
-				if (!pW[5]&&(j=(pbTData[1]&0xF0)>>4)) { pZ[5]=1; pSWrBuf[5]=palt[j]; }
-				if (!pW[6]&&(j=(pbTData[0]&0x0F)))	  { pZ[6]=1; pSWrBuf[6]=palt[j]; }
-				if (!pW[7]&&(j=(pbTData[0]&0xF0)>>4)) { pZ[7]=1; pSWrBuf[7]=palt[j]; }
+				if (!pW[0]&&(j=(pbTData[3]&0x0F)))	  { pZ[0]=1; pSWrBuf[0*240]=palt[j]; }
+				if (!pW[1]&&(j=(pbTData[3]&0xF0)>>4)) { pZ[1]=1; pSWrBuf[1*240]=palt[j]; }
+				if (!pW[2]&&(j=(pbTData[2]&0x0F)))	  { pZ[2]=1; pSWrBuf[2*240]=palt[j]; }
+				if (!pW[3]&&(j=(pbTData[2]&0xF0)>>4)) { pZ[3]=1; pSWrBuf[3*240]=palt[j]; }
+				if (!pW[4]&&(j=(pbTData[1]&0x0F)))	  { pZ[4]=1; pSWrBuf[4*240]=palt[j]; }
+				if (!pW[5]&&(j=(pbTData[1]&0xF0)>>4)) { pZ[5]=1; pSWrBuf[5*240]=palt[j]; }
+				if (!pW[6]&&(j=(pbTData[0]&0x0F)))	  { pZ[6]=1; pSWrBuf[6*240]=palt[j]; }
+				if (!pW[7]&&(j=(pbTData[0]&0xF0)>>4)) { pZ[7]=1; pSWrBuf[7*240]=palt[j]; }
 			} else {
-				if (!pW[0]&&(j=(pbTData[0]&0xF0)>>4)) { pZ[0]=1; pSWrBuf[0]=palt[j]; }
-				if (!pW[1]&&(j=(pbTData[0]&0x0F)))	  { pZ[1]=1; pSWrBuf[1]=palt[j]; }
-				if (!pW[2]&&(j=(pbTData[1]&0xF0)>>4)) { pZ[2]=1; pSWrBuf[2]=palt[j]; }
-				if (!pW[3]&&(j=(pbTData[1]&0x0F)))	  { pZ[3]=1; pSWrBuf[3]=palt[j]; }
-				if (!pW[4]&&(j=(pbTData[2]&0xF0)>>4)) { pZ[4]=1; pSWrBuf[4]=palt[j]; }
-				if (!pW[5]&&(j=(pbTData[2]&0x0F)))	  { pZ[5]=1; pSWrBuf[5]=palt[j]; }
-				if (!pW[6]&&(j=(pbTData[3]&0xF0)>>4)) { pZ[6]=1; pSWrBuf[6]=palt[j]; }
-				if (!pW[7]&&(j=(pbTData[3]&0x0F)))	  { pZ[7]=1; pSWrBuf[7]=palt[j]; }
+				if (!pW[0]&&(j=(pbTData[0]&0xF0)>>4)) { pZ[0]=1; pSWrBuf[0*240]=palt[j]; }
+				if (!pW[1]&&(j=(pbTData[0]&0x0F)))	  { pZ[1]=1; pSWrBuf[1*240]=palt[j]; }
+				if (!pW[2]&&(j=(pbTData[1]&0xF0)>>4)) { pZ[2]=1; pSWrBuf[2*240]=palt[j]; }
+				if (!pW[3]&&(j=(pbTData[1]&0x0F)))	  { pZ[3]=1; pSWrBuf[3*240]=palt[j]; }
+				if (!pW[4]&&(j=(pbTData[2]&0xF0)>>4)) { pZ[4]=1; pSWrBuf[4*240]=palt[j]; }
+				if (!pW[5]&&(j=(pbTData[2]&0x0F)))	  { pZ[5]=1; pSWrBuf[5*240]=palt[j]; }
+				if (!pW[6]&&(j=(pbTData[3]&0xF0)>>4)) { pZ[6]=1; pSWrBuf[6*240]=palt[j]; }
+				if (!pW[7]&&(j=(pbTData[3]&0x0F)))	  { pZ[7]=1; pSWrBuf[7*240]=palt[j]; }
 			} 
 			pW += 8;
 			pZ += 8;
-			pSWrBuf += 8;
+			pSWrBuf += (8*240);
 		}
 	}
 
@@ -189,7 +189,7 @@ void  RefreshLine16Packed(int Line, void* buffer)
 				if(Line>=j+8) continue;
 				if(224<=k) continue;
 				i=k;
-				pSWrBuf=pSBuf+i;
+				pSWrBuf=pSBuf+(i*240);
            		pbTData=IRAM+0x4000;
 				pbTData+=(TMap&SPR_TILE)<<5;
 				if(TMap&SPR_VREV) pbTData+=(7-Line+j)<<2;else pbTData+=(Line-j)<<2;
@@ -221,16 +221,17 @@ void  RefreshLine16Packed(int Line, void* buffer)
 				for(i=0;i<8;i++, pZ++, pW++)
 				{
            			if(TMap&SPR_CLIP)	// sprite window clipping on 
-           				if(! *pW)	{ pSWrBuf++; continue; }
+           				if(! *pW)	{ pSWrBuf+=240; continue; }
            			else				// sprite window clipping off
-						if(*pW)		{ pSWrBuf++; continue; }
+						if(*pW)		{ pSWrBuf+=240; continue; }
 
-					if(!index[i])	{ pSWrBuf++; continue; }
+					if(!index[i])	{ pSWrBuf+=240; continue; }
 
 					if((*pZ)&&(! (TMap&SPR_LAYR)))
-									{ pSWrBuf++; continue; }
+									{ pSWrBuf+=240; continue; }
 
-					*pSWrBuf++=Palette[((TMap&SPR_PAL)>>9)+8][index[i]];
+					*pSWrBuf	=	Palette[((TMap&SPR_PAL)>>9)+8][index[i]];
+					pSWrBuf		+=	240;
 				}
 			}
 		}  // DSPCTL&0x08 On
@@ -245,7 +246,7 @@ void  RefreshLine16Packed(int Line, void* buffer)
 				if(Line>=j+8) continue;
 				if(224<=k) continue;
 				i=k;
-				pSWrBuf=pSBuf+i;
+				pSWrBuf=pSBuf+(i*240);
            		pbTData=IRAM+0x4000;
 				pbTData+=(TMap&SPR_TILE)<<5;
 				if(TMap&SPR_VREV) pbTData+=(7-Line+j)<<2;else pbTData+=(Line-j)<<2;
@@ -258,50 +259,50 @@ void  RefreshLine16Packed(int Line, void* buffer)
 				{
 					if(TMap&SPR_HREV) 
 					{
-						if ((j=(pbTData[3]&0x0F)))	  { pSWrBuf[0]=palt[j]; }
-						if ((j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[1]=palt[j]; }
-						if ((j=(pbTData[2]&0x0F)))	  { pSWrBuf[2]=palt[j]; }
-						if ((j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[3]=palt[j]; }
-						if ((j=(pbTData[1]&0x0F)))	  { pSWrBuf[4]=palt[j]; }
-						if ((j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[5]=palt[j]; }
-						if ((j=(pbTData[0]&0x0F)))	  { pSWrBuf[6]=palt[j]; }
-						if ((j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[7]=palt[j]; }
+						if ((j=(pbTData[3]&0x0F)))	  { pSWrBuf[0*240]=palt[j]; }
+						if ((j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[1*240]=palt[j]; }
+						if ((j=(pbTData[2]&0x0F)))	  { pSWrBuf[2*240]=palt[j]; }
+						if ((j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[3*240]=palt[j]; }
+						if ((j=(pbTData[1]&0x0F)))	  { pSWrBuf[4*240]=palt[j]; }
+						if ((j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[5*240]=palt[j]; }
+						if ((j=(pbTData[0]&0x0F)))	  { pSWrBuf[6*240]=palt[j]; }
+						if ((j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[7*240]=palt[j]; }
 					}
 					else 
 					{
-						if ((j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[0]=palt[j]; }
-						if ((j=(pbTData[0]&0x0F)))	  { pSWrBuf[1]=palt[j]; }
-						if ((j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[2]=palt[j]; }
-						if ((j=(pbTData[1]&0x0F)))	  { pSWrBuf[3]=palt[j]; }
-						if ((j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[4]=palt[j]; }
-						if ((j=(pbTData[2]&0x0F)))	  { pSWrBuf[5]=palt[j]; }
-						if ((j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[6]=palt[j]; }
-						if ((j=(pbTData[3]&0x0F)))	  { pSWrBuf[7]=palt[j]; }
+						if ((j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[0*240]=palt[j]; }
+						if ((j=(pbTData[0]&0x0F)))	  { pSWrBuf[1*240]=palt[j]; }
+						if ((j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[2*240]=palt[j]; }
+						if ((j=(pbTData[1]&0x0F)))	  { pSWrBuf[3*240]=palt[j]; }
+						if ((j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[4*240]=palt[j]; }
+						if ((j=(pbTData[2]&0x0F)))	  { pSWrBuf[5*240]=palt[j]; }
+						if ((j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[6*240]=palt[j]; }
+						if ((j=(pbTData[3]&0x0F)))	  { pSWrBuf[7*240]=palt[j]; }
 					} 
 				}
 				else 
 				{
 					if(TMap&SPR_HREV) 
 					{
-						if (!pZ[0]&&(j=(pbTData[3]&0x0F)))	  { pSWrBuf[0]=palt[j]; }
-						if (!pZ[1]&&(j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[1]=palt[j]; }
-						if (!pZ[2]&&(j=(pbTData[2]&0x0F)))	  { pSWrBuf[2]=palt[j]; }
-						if (!pZ[3]&&(j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[3]=palt[j]; }
-						if (!pZ[4]&&(j=(pbTData[1]&0x0F)))	  { pSWrBuf[4]=palt[j]; }
-						if (!pZ[5]&&(j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[5]=palt[j]; }
-						if (!pZ[6]&&(j=(pbTData[0]&0x0F)))	  { pSWrBuf[6]=palt[j]; }
-						if (!pZ[7]&&(j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[7]=palt[j]; }
+						if (!pZ[0]&&(j=(pbTData[3]&0x0F)))	  { pSWrBuf[0*240]=palt[j]; }
+						if (!pZ[1]&&(j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[1*240]=palt[j]; }
+						if (!pZ[2]&&(j=(pbTData[2]&0x0F)))	  { pSWrBuf[2*240]=palt[j]; }
+						if (!pZ[3]&&(j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[3*240]=palt[j]; }
+						if (!pZ[4]&&(j=(pbTData[1]&0x0F)))	  { pSWrBuf[4*240]=palt[j]; }
+						if (!pZ[5]&&(j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[5*240]=palt[j]; }
+						if (!pZ[6]&&(j=(pbTData[0]&0x0F)))	  { pSWrBuf[6*240]=palt[j]; }
+						if (!pZ[7]&&(j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[7*240]=palt[j]; }
 					}
 					else 
 					{
-						if (!pZ[0]&&(j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[0]=palt[j]; }
-						if (!pZ[1]&&(j=(pbTData[0]&0x0F)))	  { pSWrBuf[1]=palt[j]; }
-						if (!pZ[2]&&(j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[2]=palt[j]; }
-						if (!pZ[3]&&(j=(pbTData[1]&0x0F)))	  { pSWrBuf[3]=palt[j]; }
-						if (!pZ[4]&&(j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[4]=palt[j]; }
-						if (!pZ[5]&&(j=(pbTData[2]&0x0F)))	  { pSWrBuf[5]=palt[j]; }
-						if (!pZ[6]&&(j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[6]=palt[j]; }
-						if (!pZ[7]&&(j=(pbTData[3]&0x0F)))	  { pSWrBuf[7]=palt[j]; }
+						if (!pZ[0]&&(j=(pbTData[0]&0xF0)>>4)) { pSWrBuf[0*240]=palt[j]; }
+						if (!pZ[1]&&(j=(pbTData[0]&0x0F)))	  { pSWrBuf[1*240]=palt[j]; }
+						if (!pZ[2]&&(j=(pbTData[1]&0xF0)>>4)) { pSWrBuf[2*240]=palt[j]; }
+						if (!pZ[3]&&(j=(pbTData[1]&0x0F)))	  { pSWrBuf[3*240]=palt[j]; }
+						if (!pZ[4]&&(j=(pbTData[2]&0xF0)>>4)) { pSWrBuf[4*240]=palt[j]; }
+						if (!pZ[5]&&(j=(pbTData[2]&0x0F)))	  { pSWrBuf[5*240]=palt[j]; }
+						if (!pZ[6]&&(j=(pbTData[3]&0xF0)>>4)) { pSWrBuf[6*240]=palt[j]; }
+						if (!pZ[7]&&(j=(pbTData[3]&0x0F)))	  { pSWrBuf[7*240]=palt[j]; }
 					} 
 				}
 			}
@@ -347,7 +348,7 @@ void RefreshLine16Layered(int Line, void *buffer)
  	if(DSPCTL&0x01)
 	{
 		OffsetX=SCR1X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf=pSBuf-OffsetX;					// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf=pSBuf-(OffsetX*240);					// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR1Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -367,23 +368,23 @@ void RefreshLine16Layered(int Line, void *buffer)
 
 			uint32 *pp = (uint32*) &pbTData[0];
 			if(TMap&MAP_HREV) {
-				*pSWrBuf++ = (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)) ? palt[j] : bkCol;				
+				*pSWrBuf = (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
 			} else 	{
-				*pSWrBuf++ = (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)) ? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	? palt[j] : bkCol;
-				*pSWrBuf++ = (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		? palt[j] : bkCol;
+				*pSWrBuf = (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	? palt[j] : bkCol; pSWrBuf+=240;
+				*pSWrBuf = (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		? palt[j] : bkCol; pSWrBuf+=240;
 			}
 		}
 	}
@@ -415,7 +416,7 @@ void RefreshLine16Layered(int Line, void *buffer)
 		}
 
 		OffsetX=SCR2X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf=pSBuf-OffsetX;					// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf=pSBuf-(OffsetX* 240);					// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR2Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -438,28 +439,28 @@ void RefreshLine16Layered(int Line, void *buffer)
 
 			uint32 *pp = (uint32*) &pbTData[0];
 			if (TMap&MAP_HREV) {
-				if (!pW[0]&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		{ pZ[0]=1; pSWrBuf[0]=palt[j]; }
-				if (!pW[1]&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	{ pZ[1]=1; pSWrBuf[1]=palt[j]; }
-				if (!pW[2]&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	{ pZ[2]=1; pSWrBuf[2]=palt[j]; }
-				if (!pW[3]&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))) { pZ[3]=1; pSWrBuf[3]=palt[j]; }
-				if (!pW[4]&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	{ pZ[4]=1; pSWrBuf[4]=palt[j]; }
-				if (!pW[5]&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))) { pZ[5]=1; pSWrBuf[5]=palt[j]; }
-				if (!pW[6]&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	{ pZ[6]=1; pSWrBuf[6]=palt[j]; }
-				if (!pW[7]&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))) { pZ[7]=1; pSWrBuf[7]=palt[j]; }
+				if (!pW[0]&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		{ pZ[0]=1; pSWrBuf[0*240]=palt[j]; }
+				if (!pW[1]&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	{ pZ[1]=1; pSWrBuf[1*240]=palt[j]; }
+				if (!pW[2]&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	{ pZ[2]=1; pSWrBuf[2*240]=palt[j]; }
+				if (!pW[3]&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))) { pZ[3]=1; pSWrBuf[3*240]=palt[j]; }
+				if (!pW[4]&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	{ pZ[4]=1; pSWrBuf[4*240]=palt[j]; }
+				if (!pW[5]&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))) { pZ[5]=1; pSWrBuf[5*240]=palt[j]; }
+				if (!pW[6]&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	{ pZ[6]=1; pSWrBuf[6*240]=palt[j]; }
+				if (!pW[7]&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))) { pZ[7]=1; pSWrBuf[7*240]=palt[j]; }
 			} else {
-				if (!pW[0]&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))) { pZ[0]=1; pSWrBuf[0]=palt[j]; }
-				if (!pW[1]&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	{ pZ[1]=1; pSWrBuf[1]=palt[j]; }
-				if (!pW[2]&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))) { pZ[2]=1; pSWrBuf[2]=palt[j]; }
-				if (!pW[3]&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	{ pZ[3]=1; pSWrBuf[3]=palt[j]; }
-				if (!pW[4]&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))) { pZ[4]=1; pSWrBuf[4]=palt[j]; }
-				if (!pW[5]&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	{ pZ[5]=1; pSWrBuf[5]=palt[j]; }
-				if (!pW[6]&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	{ pZ[6]=1; pSWrBuf[6]=palt[j]; }
-				if (!pW[7]&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		{ pZ[7]=1; pSWrBuf[7]=palt[j]; }
+				if (!pW[0]&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))) { pZ[0]=1; pSWrBuf[0*240]=palt[j]; }
+				if (!pW[1]&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	{ pZ[1]=1; pSWrBuf[1*240]=palt[j]; }
+				if (!pW[2]&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))) { pZ[2]=1; pSWrBuf[2*240]=palt[j]; }
+				if (!pW[3]&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	{ pZ[3]=1; pSWrBuf[3*240]=palt[j]; }
+				if (!pW[4]&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))) { pZ[4]=1; pSWrBuf[4*240]=palt[j]; }
+				if (!pW[5]&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	{ pZ[5]=1; pSWrBuf[5*240]=palt[j]; }
+				if (!pW[6]&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	{ pZ[6]=1; pSWrBuf[6*240]=palt[j]; }
+				if (!pW[7]&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		{ pZ[7]=1; pSWrBuf[7*240]=palt[j]; }
 			}
 
 			pW += 8;
 			pZ += 8;
-			pSWrBuf += 8;
+			pSWrBuf += (8 * 240);
 		}
 	}
 
@@ -484,7 +485,7 @@ void RefreshLine16Layered(int Line, void *buffer)
 				if(Line<j) continue;
 				if(Line>=j+8) continue;
 				if(224<=k) continue;
-				i=k; pSWrBuf=pSBuf+i;
+				i=k; pSWrBuf=pSBuf+(i*240);
 				pbTData=IRAM+0x4000;
 				pbTData+=(TMap&SPR_TILE)<<5;
 				if(TMap&SPR_VREV) pbTData+=(7-Line+j)<<2; else pbTData+=(Line-j)<<2;
@@ -496,87 +497,87 @@ void RefreshLine16Layered(int Line, void *buffer)
 				if(TMap&SPR_CLIP) {
 					if (TMap&SPR_LAYR){
 						if (TMap&SPR_HREV) {
-							if ((*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))		pSWrBuf[1]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))		pSWrBuf[2]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7]=palt[j];				
+							if ((*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))		pSWrBuf[1*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))		pSWrBuf[2*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*240]=palt[j];				
 						} else 	{
-							if ((*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))		pSWrBuf[5]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))		pSWrBuf[6]=palt[j];
-							if ((*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))		pSWrBuf[5*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))		pSWrBuf[6*240]=palt[j];
+							if ((*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*240]=palt[j];
 						}
 						pZ+=8;
 					} else {
 						if (TMap&SPR_HREV) {
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7]=palt[j];				
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*240]=palt[j];				
 						} else 	{
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((!*pZ++)&&(*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*240]=palt[j];
 						}
 					}
 				} else {
 					if (TMap&SPR_LAYR){
 						if (TMap&SPR_HREV) {
-							if ((!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7]=palt[j];				
+							if ((!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*240]=palt[j];				
 						} else 	{
-							if ((!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*240]=palt[j];
 						}
 						pZ+=8;
 					} else {
 						if (TMap&SPR_HREV) {
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7]=palt[j];				
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*240]=palt[j];				
 						} else 	{
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6]=palt[j];
-							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*240]=palt[j];
+							if ((!*pZ++)&&(!*pW++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*240]=palt[j];
 						}
 					}
 				}
@@ -592,7 +593,7 @@ void RefreshLine16Layered(int Line, void *buffer)
 				if(Line<j) continue;
 				if(Line>=j+8) continue;
 				if(224<=k) continue;
-				i=k; pSWrBuf=pSBuf+i;
+				i=k; pSWrBuf=pSBuf+(i*240);
 				pbTData=IRAM+0x4000;
 				pbTData+=(TMap&SPR_TILE)<<5;
 				if(TMap&SPR_VREV) pbTData+=(7-Line+j)<<2; else pbTData+=(Line-j)<<2;
@@ -603,51 +604,49 @@ void RefreshLine16Layered(int Line, void *buffer)
 				uint32 *pp = (uint32*) &pbTData[0];
 				if (TMap&SPR_LAYR) {
 					if (TMap&SPR_HREV) {
-						if (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		pSWrBuf[0]=palt[j];
-						if (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	pSWrBuf[1]=palt[j];
-						if (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	pSWrBuf[2]=palt[j];
-						if (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	pSWrBuf[3]=palt[j];
-						if (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	pSWrBuf[4]=palt[j];
-						if (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	pSWrBuf[5]=palt[j];
-						if (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	pSWrBuf[6]=palt[j];
-						if (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	pSWrBuf[7]=palt[j];				
+						if (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		pSWrBuf[0*240]=palt[j];
+						if (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	pSWrBuf[1*240]=palt[j];
+						if (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	pSWrBuf[2*240]=palt[j];
+						if (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	pSWrBuf[3*240]=palt[j];
+						if (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	pSWrBuf[4*240]=palt[j];
+						if (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	pSWrBuf[5*240]=palt[j];
+						if (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	pSWrBuf[6*240]=palt[j];
+						if (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	pSWrBuf[7*240]=palt[j];				
 					} else 	{
-						if (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	pSWrBuf[0]=palt[j];
-						if (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	pSWrBuf[1]=palt[j];
-						if (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	pSWrBuf[2]=palt[j];
-						if (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	pSWrBuf[3]=palt[j];
-						if (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	pSWrBuf[4]=palt[j];
-						if (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	pSWrBuf[5]=palt[j];
-						if (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	pSWrBuf[6]=palt[j];
-						if (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		pSWrBuf[7]=palt[j];
+						if (j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F))	pSWrBuf[0*240]=palt[j];
+						if (j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F))	pSWrBuf[1*240]=palt[j];
+						if (j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F))	pSWrBuf[2*240]=palt[j];
+						if (j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F))	pSWrBuf[3*240]=palt[j];
+						if (j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F))	pSWrBuf[4*240]=palt[j];
+						if (j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F))	pSWrBuf[5*240]=palt[j];
+						if (j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F))	pSWrBuf[6*240]=palt[j];
+						if (j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F))		pSWrBuf[7*240]=palt[j];
 					}
 					pZ+=8;
 				} else {
 					if (TMap&SPR_HREV) {
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7]=palt[j];				
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[0*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[1*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[2*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[3*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[4*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[5*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[6*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[7*240]=palt[j];				
 					} else 	{
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6]=palt[j];
-						if ((!*pZ++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F)))	pSWrBuf[0*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F)))	pSWrBuf[1*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F)))	pSWrBuf[2*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F)))	pSWrBuf[3*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F)))	pSWrBuf[4*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F)))	pSWrBuf[5*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F)))	pSWrBuf[6*240]=palt[j];
+						if ((!*pZ++)&&(j=((((j=pp[0]&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F)))		pSWrBuf[7*240]=palt[j];
 					}
 				}
 			}
 		}//(DSPCTL&0x08)
 	}
-
-
 }
 
 /*

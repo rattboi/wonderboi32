@@ -101,16 +101,26 @@ int  WsDrawCreate()
 int  WsDrawLine(int Line)
 {
     int result;
+	char debug[100];
 
-    RefreshLine(Line, &screenbuffer[(224+16)*Line]);
+//	RefreshLine(Line, &screenbuffer[(224+16)*Line]);
+	RefreshLine(Line, gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2)-(8*2)+(480-(Line*2)));
 
+/*
+	GPSPRINTF(debug, "videomode = %x", IO[0x60]);
+
+	okf.x = 12;
+	okf.y = 225;
+
+	OkfPrintSurface(debug,0);
+*/
     return 0;
 }
 
 //---------------------------------------------------------------------------
 int  WsDrawFlip(void)
 {
-	video_update((byte*)screenbuffer+(scroll_x*2)+16, gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2));
+//	video_update((byte*)screenbuffer+(scroll_x*2)+16, gtSurface[0].ptbuffer+(240*2*video_x)-(video_y*2));
 
 	return 0;
 }
@@ -182,7 +192,7 @@ void  RefreshLineOld(int Line, void* buffer)
 	}
 	for(i=0;i<224;i++)
 	{
-		*pSWrBuf16++=*pbPal;
+		*pSWrBuf16=*pbPal; pSWrBuf16 += 240;
 	}
 
 	if(!(LCDSLP&0x01)) return;
@@ -190,7 +200,7 @@ void  RefreshLineOld(int Line, void* buffer)
  	if(DSPCTL&0x01) // BG Layer on
 	{
 		OffsetX=SCR1X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf16=pSBuf-OffsetX; //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf16=pSBuf-(OffsetX * 240); //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR1Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -336,53 +346,53 @@ void  RefreshLineOld(int Line, void* buffer)
 				index[4]=j;
 			}
 
-			if((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16+=240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240;
 			}
-			if((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
-			if((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
-			if((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
-			if((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
-			if((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
-			if((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
-			if((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800))))) pSWrBuf16++;
+			if((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
 		}
 	}
@@ -428,7 +438,7 @@ void  RefreshLineOld(int Line, void* buffer)
 		}
 
 		OffsetX=SCR2X&0x07;						// X좌표 오프셋을 설정
-		pSWrBuf16=pSBuf-OffsetX; //PixelDepth;		// 서페스하″파의 기입호˚인터를 X됫후셋트
+		pSWrBuf16=pSBuf-(OffsetX * 240);		// 서페스하″파의 기입호˚인터를 X됫후셋트
 		i=Line+SCR2Y;
 		OffsetY=(i&0x07);						// Y좌표 오프셋을 설정
 
@@ -577,67 +587,67 @@ void  RefreshLineOld(int Line, void* buffer)
 				index[4]=j;
 			}
 
-			if(((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[0])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[0]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++;  pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[1])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[1]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++;  pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[2])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[2]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[3])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[3]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[4])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[4]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[5])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[5]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[6])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[6]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
-			if(((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW)) pSWrBuf16++;
+			if(((!index[7])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))||(*pW))  pSWrBuf16 += 240;
 			else
 			{
 				pbPal=&Palette[(TMap&MAP_PAL)>>9][index[7]];
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 				*pZ=1;
 			}
 			pW++;pZ++;
@@ -691,7 +701,7 @@ void  RefreshLineOld(int Line, void* buffer)
 				continue;
 
 			i=k;
-			pSWrBuf16=pSBuf+i;
+			pSWrBuf16=pSBuf+(i * 240);
 
 			if(COLCTL&0x40)		// 16 color
 			{
@@ -829,7 +839,7 @@ void  RefreshLineOld(int Line, void* buffer)
             		{
                 		if(!*pW)
                 		{
-                			pSWrBuf16++;
+                			 pSWrBuf16 += 240;
 							continue;
                 		}
             		}
@@ -837,7 +847,7 @@ void  RefreshLineOld(int Line, void* buffer)
 					{
 						if(*pW)
 						{
-							pSWrBuf16++;
+							 pSWrBuf16 += 240;
                    			continue;
 						}
             		}
@@ -845,13 +855,13 @@ void  RefreshLineOld(int Line, void* buffer)
 
 				if((!index[i])&&(!(!(COLCTL&0x40)&&(!(TMap&0x0800)))))
                 {
-                	pSWrBuf16++;
+                	 pSWrBuf16 += 240;
                     continue;
                 }
 
 				if((*pZ)&&(!(TMap&SPR_LAYR)))
                 {
-                	pSWrBuf16++;
+                	 pSWrBuf16 += 240;
                     continue;
                 }
 
@@ -862,7 +872,7 @@ void  RefreshLineOld(int Line, void* buffer)
 					pbPal=&Palette[((TMap&SPR_PAL)>>9)+8][index[i]+12];
                 }
 #endif
-				*pSWrBuf16++=*pbPal++;
+				*pSWrBuf16=*pbPal++; pSWrBuf16 += 240; 
 			}
 		}
 	}
