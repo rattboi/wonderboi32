@@ -53,7 +53,7 @@ int FileSelector(FILESELECTOR *pSelector, unsigned char *dest)
 	int tick, keyTick=0;
 	int pressedKeys, newKeys, oldKeys;
 	int result;
-
+	
 	// Init structure private members
 	pSelector->pathSepLineTop = pSelector->listTop - (pSelector->listTop - (pSelector->pathTop + OkfGetFont(pSelector->pathFont)->pOkf->maxHeight)) / 2 - 1;
 	pSelector->totalsSepLineTop = pSelector->totalsTop - (pSelector->totalsTop - (pSelector->listTop + pSelector->listSize * pSelector->selectionHeight)) / 2 - 1;
@@ -161,18 +161,20 @@ int FileSelector(FILESELECTOR *pSelector, unsigned char *dest)
 		else if (newKeys & GPC_VK_RIGHT)
 		{
 			if (ini.num_games_in_ini > pSelector->listSize)
+			{
 				if (topEntry < ini.num_games_in_ini - pSelector->listSize * 2 - 1)
 					topEntry = topEntry + pSelector->listSize;
-			else
-				topEntry = ini.num_games_in_ini - pSelector->listSize + 1;
+				else
+					topEntry = ini.num_games_in_ini - pSelector->listSize;
+			}
 
 			if (topEntry < 0)
 				topEntry = 0;
 
-			if (selectedEntry < ini.num_games_in_ini - pSelector->listSize)
+			if (selectedEntry < ini.num_games_in_ini - pSelector->listSize && (ini.num_games_in_ini > pSelector->listSize))
 				selectedEntry = selectedEntry + pSelector->listSize;
 			else
-		        selectedEntry = ini.num_games_in_ini;
+		        selectedEntry = ini.num_games_in_ini - 1;
 	    }
 
 		//- Get selected file/folder
@@ -255,7 +257,7 @@ static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEnt
 {
 	int pos, i, h, last_c, last_o;
 
-	char str[40], str1[10], str2[10], *pPos;
+	char str[100];
 
 	OkfSetToDefaults();
 
@@ -305,7 +307,7 @@ static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEnt
 		// ok: this remove () but region and version
 		str[last_o-1]='\0';
 
-		str[39]='\0'; //cut name
+		str[30]='\0'; //cut name
 
 		okf.font = pSelector->fileFont;
 		OkfPrintAt(pSelector->fileLeft,
