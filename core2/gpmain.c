@@ -31,6 +31,7 @@ char *short_program_version="WB32 v.7";
 
 extern unsigned short WBTitle[];
 extern int vert;
+extern int savestateMode;
 
 ubyte *base_rom;
 uint32 romSize;
@@ -44,6 +45,9 @@ stMenu videoconfig_menu;
 stMenu keyconfig_menu;
 stMenu horz_keys_menu;
 stMenu vert_keys_menu;
+
+void LoadState(void );
+void SaveState(void );
 
 void ShowCredits()
 {
@@ -219,7 +223,7 @@ void Emulate()
 	
 //	PROFILER_START();
 
-	while (WsRun() == 1)	{ }
+	while (WsRun() ==  0)	{ }
 
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
@@ -343,8 +347,6 @@ void GpMain(void *arg)
 	int horz_mode = 0;
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
-
-//	setCpuSpeed(166);
 
 	InitGraphics(16);							// Init Graphics and Fonts
 
@@ -508,6 +510,8 @@ void GpMain(void *arg)
 						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
 						WsLoadState(stateName);						// load the state data
 
+//						LoadState();
+
 						Emulate();										// run
 					}
 					break;
@@ -618,5 +622,66 @@ void GpMain(void *arg)
 
 
 	while(1) ;
+}
 
+void LoadState(void )
+{
+	int selection = 0;
+	gameState	*saveState;
+
+	savestateMode = 1;
+
+	saveStateToMem(saveState);
+
+	LoadStateEmulate();
+
+	if (selection == 1)
+		loadStateFromMem(saveState);
+	else
+		GPFREE(saveState);
+}
+
+void SaveState(void )
+{
+
+}
+
+int LoadStateEmulate()
+{
+	int i;
+	int StateDrawMode;
+	char stateName[30];						// holds savestate filename
+	int buttonPressed = 0;
+
+	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
+
+	StateDrawMode = GetDrawMode();
+
+	SetDrawMode(4);
+
+	StateInputInit();
+
+	GpSurfaceSet(&gtSurface[0]);
+	
+	while (1)
+	{
+		buttonPressed = WsRun();
+
+		if (buttonPressed >= 3)
+		{
+				GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, buttonPressed - 2); // savename = filename + saveslot
+				WsLoadState(stateName);						// load the state data
+		}
+
+		if (buttonPressed == 1 || buttonPressed == 2)
+			break;
+	}
+
+	GpSurfaceSet(&gtSurface[giSurface]);
+	
+	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = StateDrawMode;
+	
+	setCpuSpeed(66);
+
+	return buttonPressed;
 }

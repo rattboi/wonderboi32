@@ -65,12 +65,13 @@ int video_x = 0;
 int video_y = 0;
 int scroll_x = 0;
 
-video_mode video_modes[4] =
+video_mode video_modes[5] =
 {
 	horz_render_normal,		48,	41,	0,
 	horz_render_hstretch,	0,	41,	6,
 	horz_render_hvstretch,	0,	12,	6,
-	vert_render_normal,		88,	7,	0
+	vert_render_normal,		88,	7,	0,
+	horz_render_normal,		48,	41,	0
 };
 
 void  RefreshLine(int Line, void* lpSurface);

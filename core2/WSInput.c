@@ -39,8 +39,14 @@ extern int scroll_x;
 #define WS_KEY_START	10
 
 //---------------------------------------------------------------------------
+int (*DoKeys)(uint16 *state);
+int WsKeys(uint16 *state);
+int StateKeys(uint16 *state);
+
 int WsInputInit(int isVertical)
 {
+		DoKeys = WsKeys;
+
 		if (isVertical == 0)
 		{
 			gp_keys[KEYS_LEFT]	= horz_keys_menu.options[MENU_KEYS_LEFT].selected;
@@ -67,8 +73,56 @@ int WsInputInit(int isVertical)
 		}
 }
 
+int StateInputInit(int isVertical)
+{
+		DoKeys = StateKeys;
+}
+
 //---------------------------------------------------------------------------
-int DoKeys(uint16 *state)
+
+int StateKeys(uint16 *state)
+{
+	static uint16 selectedState 	= 0;
+	int ExKey						= 0;
+	static int LastKey				= 0;
+	
+	GpKeyGetEx(&ExKey);
+
+	if ((ExKey & GPC_VK_UP)  && !(LastKey & GPC_VK_UP)) // UP (previous state)
+	{
+		if (selectedState == 0)
+			selectedState = 9;
+
+		selectedState -=1;
+	}
+	
+	if ((ExKey & GPC_VK_DOWN)  && !(LastKey & GPC_VK_DOWN)) // DOWN (next state)
+	{
+		selectedState += 1;
+		selectedState %= 9;
+	}
+
+	*state = selectedState;
+
+	if (!(ExKey & GPC_VK_FB) && !(LastKey & GPC_VK_FB)) // B Pressed (cancel)
+	{
+		return 1;
+	}
+
+	if (!(ExKey & GPC_VK_FA) && !(LastKey & GPC_VK_FA)) // A Pressed (selected)
+	{
+		return 2;
+	}
+
+	LastKey = ExKey;
+
+	if (ExKey > 0)
+		return selectedState + 3;
+
+    return 0;
+}
+
+int WsKeys(uint16 *state)
 {
 	int i 						= 0;
 	static int selectPressed 	= 0;

@@ -1259,6 +1259,7 @@ void WsRelease(void)
 }
 
 int selectPressed = 0;
+int savestateMode = 0;
 
 int Interrupt(void)
 {
@@ -1278,20 +1279,27 @@ int Interrupt(void)
 		case 0:
 			if(RSTRL==144)
 			{
- 				selectPressed=DoKeys(&JoyState);
+// 				if (savestateMode == 0)
+				{
+					selectPressed=DoKeys(&JoyState);
  				
-				KEYCTL&=(byte) 0xF0;
-				if(KEYCTL&0x40) KEYCTL|=(byte)((JoyState>>8) &0x0F);
-				if(KEYCTL&0x20) KEYCTL|=(byte)((JoyState>>4) &0x0F);
-				if(KEYCTL&0x10) KEYCTL|=(byte)(JoyState&0x0F);
-				if((JoyState^Joyz) &Joyz)
-                {
-					if(IRQENA&KEY_IFLAG)
+					KEYCTL&=(byte) 0xF0;
+					if(KEYCTL&0x40) KEYCTL|=(byte)((JoyState>>8) &0x0F);
+					if(KEYCTL&0x20) KEYCTL|=(byte)((JoyState>>4) &0x0F);
+					if(KEYCTL&0x10) KEYCTL|=(byte)(JoyState&0x0F);
+					if((JoyState^Joyz) &Joyz)
 					{
-                		IRQACK|=KEY_IFLAG;
+						if(IRQENA&KEY_IFLAG)
+						{
+	                		IRQACK|=KEY_IFLAG;
+						}
 					}
-                }
-				Joyz=JoyState;
+					Joyz=JoyState;
+				}
+//				else
+//				{
+//					selectPressed=DoKeys(&JoyState);
+//				}
 			}
 
 			break;
@@ -1460,6 +1468,8 @@ int WsRun(void)
 {
 	static int period=32; //=IPeriod;
 	int i, j, n, m;
+	selectPressed = 0;
+
 	for(i=0;i<480;i++) //5ms
 //	for(i=0;i<1280;i++) // 1/75s
 //	for(i=0;i<1440;i++) // 15ms
@@ -1480,11 +1490,11 @@ int WsRun(void)
 			m+=IRQBSE;
 			nec_int(m<<2);
 		}
-		if (selectPressed == 1)
+
+		if (selectPressed > 0)
 		{
-			selectPressed = 0;
-			return 0;
+			return selectPressed;
 		}
 	}
-	return 1;
+	return 0;
 }
