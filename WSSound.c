@@ -490,8 +490,6 @@ void SetSoundPData(int Channel, int Index)
 
     if(snd.ch[Channel].on == 0)
     {
-    	// if(Verbose)
-    		// SoundErr("하″크하″파가 없습니다");
     	return;
     }
 
@@ -511,24 +509,7 @@ void SetSoundPData(int Channel, int Index)
 		pData=PData[Channel];
 	}
 
-/*
-	result=snd.ch[Channel]->Lock(0, size, &ptr1, &len1, &ptr2, &len2, 0);
-    if(result!=DS_OK)
-    {
-    	// SoundErr("하″크하″파를 락 할 수 없지 않습니다");
-    	return;
-    }
-*/
     GPMEMCPY(ptr1, pData, size);
-
-/*
-    result=snd.ch[Channel]->Unlock(ptr1, len1, ptr2, len2);
-    if(result!=DS_OK)
-    {
-    	// SoundErr("하″크하″파를 언로크 할 수 없지 않습니다");
-        return;
-    }
-	*/
 }
 
 //---------------------------------------------------------------------------
@@ -661,13 +642,3 @@ void FlashPCM(void)
 	PCMPos=0;
 
 }
-
-//---------------------------------------------------------------------------
-/*
-void // SoundErr(char* Msg)
-{
-	//MessageBox(NULL, Msg,"WsSound닝라", MB_ICONEXCLAMATION|MB_OK);
-}
-*/
-
-//---------------------------------------------------------------------------
