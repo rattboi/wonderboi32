@@ -12,6 +12,8 @@
 #include "../OKF/graphics16.h"
 #include "../OKF/okf.h"
 
+#include "../file_dialog.h"
+
 #include "WSDraw.h"
 #include "WS.h"
 
@@ -65,13 +67,14 @@ int video_x = 0;
 int video_y = 0;
 int scroll_x = 0;
 
-video_mode video_modes[5] =
+video_mode video_modes[6] =
 {
 	horz_render_normal,		48,	41,	0,
 	horz_render_hstretch,	0,	41,	6,
 	horz_render_hvstretch,	0,	12,	6,
 	vert_render_normal,		88,	7,	0,
-	horz_render_normal,		48,	41,	0
+	horz_render_normal,		48,	41,	0,			//for savestates
+	vert_render_normal,		88,	0,	0			//for savestates
 };
 
 void  RefreshLine(int Line, void* lpSurface);
@@ -885,6 +888,20 @@ void  WsDrawClear(void)
 		{
 			for (i = 0; i < (320*240); i++)
 				*((uint16*)gtSurface[0].ptbuffer+i) = WSCBmp_vert[i];
+		}
+			break;
+		case 4:
+		{
+			Cls(0);
+			DrawWindow(44, 37, 228, 148, 0, COLOR_RED, COLOR_BLUE); // file selector window
+			DrawWindow(5, 219,  305, 15,  0, COLOR_RED, COLOR_BLUE); // totals window
+		}
+			break;
+		case 5:
+		{
+			Cls(0);
+			DrawWindow(85, 0,  148, 228, 0, COLOR_RED, COLOR_BLUE); // file selector window
+			DrawWindow(5, 225,  305, 12,  0, COLOR_RED, COLOR_BLUE); // totals window
 		}
 			break;
 		default:

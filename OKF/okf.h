@@ -181,6 +181,7 @@ int OkfGetTextWidth(unsigned char *pStr);
 int OkfInitialize(GPDRAWSURFACE *pSurfaces, int *pCurSurface);
 int OkfLoadAndRegister(unsigned char *pFilename);
 int OkfPrint(unsigned char *pStr);
+int OkfPrintSurface(unsigned char *pStr, int surface);
 int OkfPrintAt(int x, int y, unsigned char *pStr);
 int OkfPrintChar(unsigned char ch);
 int OkfPrintCharAt(int x, int y, unsigned char ch);

@@ -90,7 +90,7 @@ void DrawMessage(char *s, int giSurface)
 
 	okf.x = GPC_LCD_WIDTH / 2;
 	okf.y = (GPC_LCD_HEIGHT - th) / 2;
-	OkfPrint(s);
+	OkfPrintSurface(s,giSurface);
 	
 	// Restore state
 	okf = oldState;	

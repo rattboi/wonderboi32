@@ -1035,10 +1035,7 @@ int WsCreate(uint8 *RomBase, uint32 romSize)
 void saveStateToMem(gameState *tempState)
 {
 	int		i;
-	uint32	ROMMapSave[0x100];
 	uint32	PageSave[16];
-
-	char	debugstring[512];
 
 	MacroStoreNecRegisterToMem(tempState,NEC_IP);
 	MacroStoreNecRegisterToMem(tempState,NEC_AW);
@@ -1081,7 +1078,6 @@ void loadStateFromMem(gameState *tempState)
 {
 	int		i;
 
-	uint32	ROMMapSave[0x100];
 	uint32	PageSave[16];
 
 	char	debugstring[512];
@@ -1111,7 +1107,6 @@ void loadStateFromMem(gameState *tempState)
 	GPMEMCPY(MonoColor,	tempState->MonoColor,	8);
 	GPMEMCPY(ColTbl,	tempState->ColTbl,		0x210);
 	GPMEMCPY(Palette,	tempState->Palette,		(16+1)*16*sizeof(uint16));
-
 	GPMEMCPY(PageSave,	tempState->Page,		16*sizeof(uint32));
 
 	for (i = 2; i < 16; i++)
@@ -1148,20 +1143,23 @@ int	WsSaveState(char *statepath)
 
 	result=GpFileCreate(newPath,ALWAYS_CREATE,&F);
 
-	if (result==SM_OK)
-	{
-		saveState = GPMALLOC(sizeof(gameState));
+	if (result != SM_OK)
+		return (-1);
 
-		if (saveState != NULL)
-		{
-			saveStateToMem(saveState);
-			GpFileWrite(F,&crc,sizeof(crc));
-			GpFileWrite(F,saveState,sizeof(gameState));
-		}
+	saveState = GPMALLOC(sizeof(gameState));
+
+	if (saveState == NULL)
+	{
 		GpFileClose(F);
+		return (-1);
 	}
 
-	return(1);
+	saveStateToMem(saveState);
+	GpFileWrite(F,&crc,sizeof(crc));
+	GpFileWrite(F,saveState,sizeof(gameState));
+	GPFREE(saveState);
+	GpFileClose(F);
+	return (1);
 }
 
 int	WsLoadState(char *statepath)
@@ -1200,6 +1198,8 @@ int	WsLoadState(char *statepath)
 	GpFileClose(F);
 
 	loadStateFromMem(saveState);
+
+	GPFREE(saveState);
 
 	// force a video mode change to make all tiles dirty
 	//	ws_gpu_clearCache();
@@ -1319,27 +1319,20 @@ int Interrupt(void)
 		case 0:
 			if(RSTRL==144)
 			{
-// 				if (savestateMode == 0)
+				selectPressed=DoKeys(&JoyState);
+ 			
+				KEYCTL&=(byte) 0xF0;
+				if(KEYCTL&0x40) KEYCTL|=(byte)((JoyState>>8) &0x0F);
+				if(KEYCTL&0x20) KEYCTL|=(byte)((JoyState>>4) &0x0F);
+				if(KEYCTL&0x10) KEYCTL|=(byte)(JoyState&0x0F);
+				if((JoyState^Joyz) &Joyz)
 				{
-					selectPressed=DoKeys(&JoyState);
- 				
-					KEYCTL&=(byte) 0xF0;
-					if(KEYCTL&0x40) KEYCTL|=(byte)((JoyState>>8) &0x0F);
-					if(KEYCTL&0x20) KEYCTL|=(byte)((JoyState>>4) &0x0F);
-					if(KEYCTL&0x10) KEYCTL|=(byte)(JoyState&0x0F);
-					if((JoyState^Joyz) &Joyz)
+					if(IRQENA&KEY_IFLAG)
 					{
-						if(IRQENA&KEY_IFLAG)
-						{
-	                		IRQACK|=KEY_IFLAG;
-						}
+	                	IRQACK|=KEY_IFLAG;
 					}
-					Joyz=JoyState;
 				}
-//				else
-//				{
-//					selectPressed=DoKeys(&JoyState);
-//				}
+				Joyz=JoyState;
 			}
 
 			break;

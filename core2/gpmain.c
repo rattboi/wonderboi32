@@ -16,6 +16,8 @@
 
 #include "../menu.h"
 #include "../setcpuspeed.h"
+#include "../file_dialog.h"
+
 
 #include "unzip.h"
 
@@ -31,7 +33,6 @@ char *short_program_version="WB32 v.7";
 
 extern unsigned short WBTitle[];
 extern int vert;
-extern int savestateMode;
 
 ubyte *base_rom;
 uint32 romSize;
@@ -46,8 +47,8 @@ stMenu keyconfig_menu;
 stMenu horz_keys_menu;
 stMenu vert_keys_menu;
 
-void LoadState(void );
-void SaveState(void );
+int LoadState(void );
+int SaveState(void );
 
 void ShowCredits()
 {
@@ -199,32 +200,15 @@ void Emulate()
 	int forcemode;
 	
 	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
-
-//	forcemode = videoconfig_menu.options[MENU_VIDEOCONFIG_FORCEMODE].selected;
-	
 	SetDrawMode(videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected);
-
 	FrameSkip = (videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected << 1);
-
-//	if (forcemode == FORCEMODE_BW)
-//			ws_gpu_forceMonoSystem();
-
-//	if (forcemode == FORCEMODE_COLOR)
-//			ws_gpu_forceColorSystem();
-
-//	if (forcemode == FORCEMODE_AUTO)
-//			ws_gpu_forceReset();
-
 //	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
 
 	WsInputInit(vert);
-
 	GpSurfaceSet(&gtSurface[0]);
 	
 //	PROFILER_START();
-
 	while (WsRun() ==  0)	{ }
-
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
 
@@ -232,8 +216,131 @@ void Emulate()
 	
 	videoconfig_menu.options[MENU_VIDEOCONFIG_FRAMESKIP].selected = FrameSkip >> 1;
 	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = GetDrawMode();
-	
 	setCpuSpeed(66);
+}
+
+
+int SaveStatesEmulate(char *savestate)
+{
+	int				i;
+	int				StateDrawMode;
+	char			stateName[30];						// holds savestate filename
+	char			printstring[30];
+	int				SaveStateSelected;
+	static uint16	selectedState 		= 0;
+	int				ExKey				= 0;
+	int				LastKey				= -1;
+	int				loadOK				= 0;
+
+	asm volatile(
+		"b afterpool\n" 
+		".pool \n" 
+		"afterpool:\n"
+	);
+
+	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
+	StateDrawMode = GetDrawMode();
+	if (StateDrawMode == 3)
+		SetDrawMode(5);
+	else
+		SetDrawMode(4);
+
+	StateInputInit();
+	GpSurfaceSet(&gtSurface[0]);
+	
+	while (1)
+	{
+		if (loadOK == 1)
+			WsRun();
+
+		GpKeyGetEx(&ExKey);
+
+		if ((ExKey & GPC_VK_UP)  && !(LastKey & GPC_VK_UP)) // UP (previous state)
+		{
+			if (selectedState == 0)
+				selectedState = 9;
+
+			selectedState -=1;
+		}
+	
+		if ((ExKey & GPC_VK_DOWN)  && !(LastKey & GPC_VK_DOWN)) // DOWN (next state)
+		{
+			selectedState += 1;
+			selectedState %= 9;
+		}
+
+		if ((ExKey & GPC_VK_FB) && !(LastKey & GPC_VK_FB)) // B Pressed (cancel)
+		{
+			SaveStateSelected = 0;
+			break;
+		}
+
+		if ((ExKey & GPC_VK_FA) && !(LastKey & GPC_VK_FA)) // A Pressed (selected)
+		{
+			GPSTRCPY(savestate, stateName);
+
+			if (loadOK != -1)
+				SaveStateSelected = 1;
+			else
+				SaveStateSelected = 2;
+
+			break;
+		}
+
+		if (ExKey != LastKey)
+		{
+			GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, selectedState + 1); // savename = filename + saveslot
+			loadOK = WsLoadState(stateName);				// load the state data
+
+			okf.x = 12;
+			okf.y = 220;
+
+			if (loadOK == -1)
+			{
+				if (GetDrawMode() == 4)
+				{
+					DrawWindow(44, 37, 228, 148, 0, COLOR_RED, COLOR_BLUE); // file selector window
+					DrawWindow(5, 219, 305, 15,  0, COLOR_RED, COLOR_BLUE); // totals window
+					okf.x = 12;
+					okf.y = 220;
+				}
+				else
+				{
+					DrawWindow(85, 0,  146, 226, 0, COLOR_RED, COLOR_BLUE); // file selector window
+					DrawWindow(5, 225, 305, 12,  0, COLOR_RED, COLOR_BLUE); // totals window
+					okf.x = 12;
+					okf.y = 225;
+				}
+
+				GPSPRINTF(printstring, "Slot %d: Empty Slot", selectedState + 1);
+			}
+			else
+			{
+				if (GetDrawMode() == 4)  // horizontal
+				{
+					DrawWindow(5, 219,  305, 15,  0, COLOR_RED, COLOR_BLUE); // totals window
+					okf.x = 12;
+					okf.y = 220;
+				}
+				else
+				{
+					DrawWindow(5, 225, 305, 12,  0, COLOR_RED, COLOR_BLUE); // totals window
+					okf.x = 12;
+					okf.y = 225;
+				}
+
+				GPSPRINTF(printstring, "Slot %d: %s.sa%d", selectedState + 1, basename, selectedState + 1);
+			}
+			OkfPrintSurface(printstring,0);
+
+		}
+		LastKey = ExKey;
+	}
+
+	SetDrawMode(StateDrawMode);
+	setCpuSpeed(66);
+
+	return SaveStateSelected;
 }
 
 int	SaveConfig(char *configPath)
@@ -502,30 +609,20 @@ void GpMain(void *arg)
 				{
 				case MENU_STATECONFIG_LOAD_STATE:
 					{
-						char stateName[30];						// holds savestate filename
-
-						if (running != 1)						// can't load state if no rom is loaded
+						if (running != 1)				// can't load state if no rom is loaded
 							break;
 
-						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
-						WsLoadState(stateName);						// load the state data
-
-//						LoadState();
-
-						Emulate();										// run
+						if (LoadState())
+							Emulate();						// run
 					}
 					break;
 				case MENU_STATECONFIG_SAVE_STATE:
 					{
-						char stateName[30];						// holds savestate filename
-
-						if (running != 1)							// can't save state if no rom is loaded
+						if (running != 1)				// can't save state if no rom is loaded
 							break;
 
-						GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, statesconfig_menu.options[MENU_STATECONFIG_SAVESLOT].selected+1); // savename = filename + saveslot
-						WsSaveState(stateName);
-						
-						Emulate();										// run
+						if (SaveState())
+							Emulate();						// run
 					}
 					break;
 				}
@@ -624,64 +721,61 @@ void GpMain(void *arg)
 	while(1) ;
 }
 
-void LoadState(void )
+
+int LoadState(void)
 {
-	int selection = 0;
+	int			selection = 0;
+	char		stateName[30];				// holds savestate filename
 	gameState	*saveState;
 
-	savestateMode = 1;
+	saveState = GPMALLOC(sizeof(gameState));
 
-	saveStateToMem(saveState);
-
-	LoadStateEmulate();
-
-	if (selection == 1)
-		loadStateFromMem(saveState);
-	else
-		GPFREE(saveState);
-}
-
-void SaveState(void )
-{
-
-}
-
-int LoadStateEmulate()
-{
-	int i;
-	int StateDrawMode;
-	char stateName[30];						// holds savestate filename
-	int buttonPressed = 0;
-
-	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
-
-	StateDrawMode = GetDrawMode();
-
-	SetDrawMode(4);
-
-	StateInputInit();
-
-	GpSurfaceSet(&gtSurface[0]);
-	
-	while (1)
+	if (saveState != NULL)
 	{
-		buttonPressed = WsRun();
-
-		if (buttonPressed >= 3)
+		saveStateToMem(saveState);
+		
+		do
 		{
-				GPSPRINTF(stateName, "gp:\\GPMM\\WB32\\SAV\\%s.sa%d", basename, buttonPressed - 2); // savename = filename + saveslot
-				WsLoadState(stateName);						// load the state data
+			selection = SaveStatesEmulate(stateName);
+
+			if (selection == 0)
+			{
+				loadStateFromMem(saveState);
+			}
+			else if (selection == 1)
+			{
+//				PrintMessage(stateName,1);
+				WsLoadState(stateName);
+			}
+		}
+		while(selection == 2);
+
+		GPFREE(saveState);
+	}
+	return (selection);
+}
+
+int SaveState(void )
+{
+	int			selection = 0;
+	char		stateName[30];				// holds savestate filename
+	gameState	*saveState;
+
+	saveState = GPMALLOC(sizeof(gameState));
+
+	if (saveState != NULL)
+	{
+		saveStateToMem(saveState);
+		selection = SaveStatesEmulate(stateName);
+
+		loadStateFromMem(saveState);
+
+		if (selection != 0)
+		{
+			WsSaveState(stateName);
 		}
 
-		if (buttonPressed == 1 || buttonPressed == 2)
-			break;
+		GPFREE(saveState);
 	}
-
-	GpSurfaceSet(&gtSurface[giSurface]);
-	
-	videoconfig_menu.options[MENU_VIDEOCONFIG_STRETCH].selected = StateDrawMode;
-	
-	setCpuSpeed(66);
-
-	return buttonPressed;
+	return (selection);
 }

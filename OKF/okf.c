@@ -96,7 +96,9 @@ static void OkfDecodeMask(OKFFONT *pFont, unsigned char *pRLEData, unsigned char
 static int OkfDoGetTextHeight(OKFFONT *pFont, unsigned char *pStr);
 static int OkfDoGetTextWidth(OKFFONT *pFont, unsigned char *pStr);
 static int OkfDoPrint(OKFFONT *pFont, unsigned char *pStr);
+static int OkfDoPrintSurface(OKFFONT *pFont, unsigned char *pStr, int surface);
 static int OkfDoPrintJustified(OKFFONT *pFont, unsigned char *pStr);
+static int OkfDoPrintJustifiedSurface(OKFFONT *pFont, unsigned char *pStr, int surface);
 static void OkfFreeFontMemory(OKFFONT *pFont);
 static void OkfGPRotateBitmap16(OKFFONT *pFont, unsigned char *pRAWData, unsigned short *pBitmap);
 static void OkfGPRotateMask(OKFFONT *pFont, unsigned char *pRAWData, unsigned char *pMask);
@@ -105,7 +107,9 @@ static void OkfPrepareCharTables(OKFFONT *pFont);
 static int OkfRender16(int dx, int dy, int width, int height, unsigned char *bitmap, int bitmapx, int bitmapy, int bitmapWidth, int bitmapHeight, unsigned short transColor);
 static int OkfRenderMask16(int dx, int dy, int width, int height, unsigned char *bitmap, int bitmapx, int bitmapy, int bitmapWidth, int bitmapHeight, unsigned char *mask);
 static int OkfRenderShadow16(int dx, int dy, int width, int height, unsigned char *mask, int maskx, int masky, int maskWidth, int maskHeight, unsigned short shadowColor);
-
+static int OkfRenderSurface16(int dx, int dy, int width, int height, unsigned char *bitmap, int bitmapx, int bitmapy, int bitmapWidth, int bitmapHeight, unsigned short transColor, int surface);
+static int OkfRenderMaskSurface16(int dx, int dy, int width, int height, unsigned char *bitmap, int bitmapx, int bitmapy, int bitmapWidth, int bitmapHeight, unsigned char *mask, int surface);
+static int OkfRenderShadowSurface16(int dx, int dy, int width, int height, unsigned char *mask, int maskx, int masky, int maskWidth, int maskHeight, unsigned short shadowColor, int surface);
 
 //*** Public implementations
 int OkfApplyEffect(int handle, OKFEFFECTTYPE type, int color, int intensity)
@@ -1630,3 +1634,519 @@ static int OkfRenderShadow16(int dx, int dy, int width, int height,
 
   return 0;
 }
+
+/*****************************************************************/
+
+int OkfPrintSurface(unsigned char *pStr, int surface)
+{
+  OKFFONT *pFont;
+
+  if (!okf.initialized)
+  {
+    okf.lastError = okfNotInitialized;
+    return -1;
+  }
+
+  // Get current font
+  pFont = OkfGetCurrentFont();
+  if (!pFont)
+  {
+    okf.lastError = okfNoCurrentFont;
+    return -1;
+  }
+
+  if (okf.justify == okfJustifyLeft)
+    return OkfDoPrintSurface(pFont, pStr, surface);
+  else
+    return OkfDoPrintJustifiedSurface(pFont, pStr, surface);
+}
+
+static int OkfDoPrintSurface(OKFFONT *pFont, unsigned char *pStr, int surface)
+{
+  OKFHEADER *pFOkf;
+  OKFCHAR *pCh;
+  int charSep, totalLineHeight, shadowXPos, shadowYPos, shadowYEndPos;
+  int startX, startY;
+  int pass, before, after, newLine;
+  unsigned char *ptr;
+  GPDRAWTAG drawTag;
+
+  // Initialize clipping in case of using standard SDK functions
+  drawTag.clip_x = okf.clip.x1;
+  drawTag.clip_y = okf.clip.y1;
+  drawTag.clip_w = okf.clip.x2 - okf.clip.x1 + 1;
+  drawTag.clip_h = okf.clip.y2 - okf.clip.y1 + 1;
+  
+  // If font has a shadow mask, the rendering will be
+  // executed in 2 passes, otherwise in 1
+  pFOkf = pFont->pOkf;
+  if (pFOkf->alphaMask && pFOkf->shadowMask && okf.useMask && okf.shadow.opacity)
+    pass = 2;
+  else
+    pass = 1;
+
+  // Other initializations to speed up things
+  charSep = pFOkf->charSeparation + okf.charSeparation;
+  totalLineHeight = pFOkf->defaultHeight + pFOkf->lineSeparation + okf.lineSeparation;
+  if (pass == 2)
+  {
+    shadowXPos = okf.shadow.x + pFOkf->shadowOX + pFOkf->shadowXPos;
+    shadowYPos = okf.shadow.y + pFOkf->shadowOY + pFOkf->shadowYPos;
+    shadowYEndPos = shadowYPos + pFOkf->defaultHeight + pFOkf->maskHeightInc;
+  }
+  
+  // Loop on different passes
+  startX = okf.x;
+  startY = okf.y;
+  for (; pass >= 1; pass--)
+  {
+    // Main loop on string
+    okf.x = startX;
+    okf.y = startY;
+    before = after = FALSE;
+    newLine = TRUE;
+    for (ptr=pStr; *ptr; ptr++)
+    {
+      // If new line, control its visibility
+      if (newLine && !after)
+        if (pass == 1)
+        {
+          // Control text vertical position
+          before = (okf.y + pFOkf->defaultHeight - 1 < okf.clip.y1);
+          if (!before)
+            after = (okf.y > okf.clip.y2);
+          else
+            after = FALSE;
+        }
+        else 
+        {
+          // Control mask vertical position
+          before = (okf.y + shadowYEndPos - 1 < okf.clip.y1);
+          if (!before)
+            after = (okf.y + shadowYPos > okf.clip.y2);
+          else
+            after = FALSE;
+        }
+
+      // If line is not visible, jump to next line
+      if (before || after)
+      {
+        for (; *ptr; ptr++)
+          if (*ptr == '\n')
+          {
+            okf.y += totalLineHeight;
+            newLine = TRUE;
+            break;
+          }
+          
+        // If it was the last line of the text, simulate the printing
+        // to have an accurate final okf.x position, even if it's not visible
+        // (Note: calculation is made from end to begin of line)
+        if (!*ptr)
+        {
+          // Only for text, not for shadow
+          if (pass == 1)
+          {
+            newLine = TRUE;
+            while ((--ptr >= pStr) && (*ptr != '\n'))
+            {
+              pCh = &pFont->extInfo[*ptr - OKF_FIRSTCHAR];
+              if (pCh->index != 0xFF)
+              {
+                if (!newLine)
+                  okf.x += pCh->rightIndent;
+                else
+                  newLine = FALSE;
+                okf.x += charSep + pCh->leftIndent + pCh->width;
+              }
+              else
+              {
+                if (newLine)
+                  newLine = FALSE;
+                okf.x += charSep + pFOkf->defaultWidth;
+              }
+            }
+          }
+          
+          // We jump outside the main loop
+          break;
+        }
+      } 
+        
+      // If line is visible, print char
+      else
+        if (*ptr == '\n')
+        {
+          okf.x = startX;
+          okf.y += totalLineHeight;
+          newLine = TRUE;
+        }
+        else
+        {
+          pCh = &pFont->extInfo[*ptr - OKF_FIRSTCHAR];
+          if (pCh->index != 0xFF)
+          {
+            if (!newLine)
+              okf.x += pCh->leftIndent;
+            else
+              newLine = FALSE;
+  
+            // Render shadow, visibility has been controled before 
+            if (pass == 2)
+                OkfRenderShadowSurface16(okf.x + shadowXPos,
+                                  okf.y + shadowYPos,
+                                  pCh->width + pFOkf->maskWidthInc,
+                                  pFOkf->defaultHeight + pFOkf->maskHeightInc,
+                                  pFont->pMask,
+                                  pCh->position + pCh->index * pFOkf->maskWidthInc, 0,
+                                  pFont->maskWidth, pFont->maskHeight,
+                                  pFOkf->shadowColor,
+								  surface);
+  
+            // Render character, if its visible
+            else if (okf.opacity > 0)
+              if (pFOkf->alphaMask && !pFOkf->shadowMask && okf.useMask)
+                OkfRenderMaskSurface16(okf.x, okf.y, pCh->width, pFOkf->defaultHeight,
+                                pFont->pBitmap, pCh->position, 0,
+                                pFont->bitmapWidth, pFont->bitmapHeight,
+                                pFont->pMask,
+								surface);
+              else
+                if ((okf.effect.type != okfNone) || (okf.opacity < 31))
+                  OkfRenderSurface16(okf.x, okf.y, pCh->width, pFOkf->defaultHeight, 
+                              pFont->pBitmap, pCh->position, 0, 
+                              pFont->bitmapWidth, pFont->bitmapHeight,
+                              pFOkf->transColor,
+							  surface);
+                else
+                  // To speed up rendering we use SDK when possible 
+                  GpTransBlt16(&drawTag, &okf.pSurfaces[surface], 
+                               okf.x, okf.y, pCh->width, pFOkf->defaultHeight, 
+                               pFont->pBitmap, pCh->position, 0, 
+                               pFont->bitmapWidth, pFont->bitmapHeight,
+                               pFOkf->transColor);
+  
+            okf.x += pCh->width + pCh->rightIndent + charSep;
+          }
+          else
+          {
+            if (newLine)
+              newLine = FALSE;
+          
+            okf.x += pFOkf->defaultWidth + charSep;
+          }
+        }
+    }
+  }
+
+  okf.lastError = okfOk;
+  return 0;
+}
+
+static int OkfDoPrintJustifiedSurface(OKFFONT *pFont, unsigned char *pStr, int surface)
+{
+  unsigned char str[OKF_MAXLINE];
+  unsigned char *pBegin, *pEnd;
+  unsigned char ch;
+  int left;
+
+  // Get each text line
+  gm_strcpy(str, pStr);
+  left = okf.x;
+  pBegin = pEnd = str;
+  do
+  {
+    if ((*pEnd == '\n') || (*pEnd == '\0'))
+    {
+      // Forces end of string
+      ch = *pEnd;
+      *pEnd = '\0';
+
+      // Calculate starting x position
+      switch (okf.justify)
+      {
+        case okfJustifyLeft:  okf.x = left; break;
+        case okfCenter:       okf.x = left - (OkfDoGetTextWidth(pFont, pBegin) / 2); break;
+        case okfJustifyRight: okf.x = left - OkfDoGetTextWidth(pFont, pBegin); break;
+      }
+
+      // Print line
+      if (OkfDoPrintSurface(pFont, pBegin, surface) == -1)
+        return -1;
+
+      // Recover end of line and jump line if needed
+      if ((*pEnd = ch) == '\n')
+        okf.y += pFont->pOkf->defaultHeight + pFont->pOkf->lineSeparation + okf.lineSeparation;
+
+      // Next line
+      pBegin = pEnd + 1;
+    }
+  } while (*(pEnd++) != '\0');
+
+  return 0;
+}
+
+static int OkfRenderSurface16(int dx, int dy, int width, int height,
+                       unsigned char *bitmap, int bitmapx, int bitmapy,
+                       int bitmapWidth, int bitmapHeight, unsigned short transColor,
+					   int surface)
+{
+  int x, y, i, j;
+  unsigned short *bmp;
+  unsigned short color, bgColor;
+  int red, green, blue;
+
+  // Clip bitmap
+  //- If completly out of limits, return
+  if ((dx > okf.clip.x2) || (dy > okf.clip.y2))
+    return 0;
+  if ((dx + width - 1 < okf.clip.x1) || (dy + height - 1 < okf.clip.y1))
+    return 0;
+
+  //- Clip X and Width
+  if (dx < okf.clip.x1)
+  {
+    width -= okf.clip.x1 - dx;
+    bitmapx += okf.clip.x1 - dx;
+    dx = okf.clip.x1;
+  }
+  if (dx + width - 1 > okf.clip.x2)
+    width = okf.clip.x2 - dx + 1;
+
+  //- Clip Y and Height
+  if (dy < okf.clip.y1)
+  {
+    height -= okf.clip.y1 - dy;
+    bitmapy += okf.clip.y1 - dy;
+    dy = okf.clip.y1;
+  }
+  if (dy + height - 1 > okf.clip.y2)
+    height = okf.clip.y2 - dy + 1;
+
+  // Blit bitmap
+  bmp = (unsigned short *) bitmap;
+  for (y=bitmapHeight - (bitmapy + height), j=0; y < bitmapHeight - bitmapy; y++, j++)
+    for (x=bitmapx, i=0; x < bitmapx + width; x++, i++)
+    {
+      color = bmp[y + x * bitmapHeight];
+
+      if (color != transColor) {
+
+        // Separate color components
+        red   = GetRGBRed(color);
+        green = GetRGBGreen(color);
+        blue  = GetRGBBlue(color);
+
+        // Modify color
+        switch (okf.effect.type)
+        {
+          case okfOverlay:
+            OkfOverlayColor(red, green, blue, okf.effect.color, okf.effect.intensity);
+            break;
+          case okfAddColor:
+            OkfAddColor(red, green, blue, okf.effect.color);
+            OkfAdjustColorComponents(red, green, blue);
+            break;
+          case okfSubtractColor:
+            OkfSubtractColor(red, green, blue, okf.effect.color);
+            OkfAdjustColorComponents(red, green, blue);
+            break;
+        }
+
+        // Modify opacity, if required
+        if (okf.opacity < 31)
+        {
+          // Merge color with background
+          bgColor = GetPixel(&okf.pSurfaces[surface], dx + i, dy + height - j - 1);
+          OkfUnderlayColor(red, green, blue, bgColor, okf.opacity);
+        }
+
+        // Draw píxel
+        PutPixel(&okf.pSurfaces[surface], dx + i, dy + height - j - 1, RGB(red, green, blue));
+      }
+    }
+
+  return 0;
+}
+
+static int OkfRenderMaskSurface16(int dx, int dy, int width, int height,
+                           unsigned char *bitmap, int bitmapx,
+                           int bitmapy, int bitmapWidth, int bitmapHeight,
+                           unsigned char *mask, 
+						   int surface)
+{
+  int x, y, i, j;
+  unsigned short *bmp;
+  unsigned short color, bgColor;
+  unsigned char opacity;
+  int red, green, blue;
+  
+  // Clip bitmap
+  //- If completly out of limits, return
+  if ((dx > okf.clip.x2) || (dy > okf.clip.y2))
+    return 0;
+  if ((dx + width - 1 < okf.clip.x1) || (dy + height - 1 < okf.clip.y1))
+    return 0;
+
+  //- Clip X and Width
+  if (dx < okf.clip.x1)
+  {
+    width -= okf.clip.x1 - dx;
+    bitmapx += okf.clip.x1 - dx;
+    dx = okf.clip.x1;
+  }
+  if (dx + width - 1 > okf.clip.x2)
+    width = okf.clip.x2 - dx + 1;
+
+  //- Clip Y and Height
+  if (dy < okf.clip.y1)
+  {
+    height -= okf.clip.y1 - dy;
+    bitmapy += okf.clip.y1 - dy;
+    dy = okf.clip.y1;
+  }
+  if (dy + height - 1 > okf.clip.y2)
+    height = okf.clip.y2 - dy + 1;
+
+  // Blit bitmap
+  bmp = (unsigned short *) bitmap;
+  for (y=bitmapHeight - (bitmapy + height), j=0; y < bitmapHeight - bitmapy; y++, j++)
+    for (x=bitmapx, i=0; x < bitmapx + width; x++, i++)
+    {
+      opacity = mask[y + x * bitmapHeight];
+
+      if (opacity > 0)
+      {
+        // Modify opacity, if required
+        if (okf.opacity < 31)
+          opacity = (opacity * okf.opacity) / 31;
+
+        if (opacity > 0)
+        {
+          color = bmp[y + x * bitmapHeight];
+
+          // Separate color components
+          red   = GetRGBRed(color);
+          green = GetRGBGreen(color);
+          blue  = GetRGBBlue(color);
+
+          // Modify color
+          switch (okf.effect.type)
+          {
+            case okfOverlay:
+              OkfOverlayColor(red, green, blue, okf.effect.color, okf.effect.intensity);
+              break;
+            case okfAddColor:
+              OkfAddColor(red, green, blue, okf.effect.color);
+              OkfAdjustColorComponents(red, green, blue);
+              break;
+            case okfSubtractColor:
+              OkfSubtractColor(red, green, blue, okf.effect.color);
+              OkfAdjustColorComponents(red, green, blue);
+              break;
+          }
+
+          // Merge color with background
+          bgColor = GetPixel(&okf.pSurfaces[surface], dx + i, dy + height - j - 1);
+          OkfUnderlayColor(red, green, blue, bgColor, opacity);
+
+          // Draw píxel
+          PutPixel(&okf.pSurfaces[surface], dx + i, dy + height - j - 1, RGB(red, green, blue));
+        }
+      }
+    }
+
+  return 0;
+}
+
+static int OkfRenderShadowSurface16(int dx, int dy, int width, int height,
+                             unsigned char *mask, int maskx, int masky,
+                             int maskWidth, int maskHeight,
+                             unsigned short shadowColor, int surface)
+{
+  int x, y, i, j;
+  unsigned short bgColor;
+  unsigned char opacity;
+  int red, green, blue;
+  int shadowRed, shadowGreen, shadowBlue;
+  
+  // Clip mask
+  //- If completly out of limits, return
+  if ((dx > okf.clip.x2) || (dy > okf.clip.y2))
+    return 0;
+  if ((dx + width - 1 < okf.clip.x1) || (dy + height - 1 < okf.clip.y1))
+    return 0;
+
+  //- Clip X and Width
+  if (dx < okf.clip.x1)
+  {
+    width -= okf.clip.x1 - dx;
+    maskx += okf.clip.x1 - dx;
+    dx = okf.clip.x1;
+  }
+  if (dx + width - 1 > okf.clip.x2)
+    width = okf.clip.x2 - dx + 1;
+
+  //- Clip Y and Height
+  if (dy < okf.clip.y1)
+  {
+    height -= okf.clip.y1 - dy;
+    masky += okf.clip.y1 - dy;
+    dy = okf.clip.y1;
+  }
+  if (dy + height - 1 > okf.clip.y2)
+    height = okf.clip.y2 - dy + 1;
+
+  // Here the only color to manage it's the font shadow color
+  shadowRed   = GetRGBRed(shadowColor);
+  shadowGreen = GetRGBGreen(shadowColor);
+  shadowBlue  = GetRGBBlue(shadowColor);
+
+  //- Modify color
+  switch (okf.shadow.effect.type)
+  {
+    case okfOverlay:
+      OkfOverlayColor(shadowRed, shadowGreen, shadowBlue,
+                      okf.shadow.effect.color, okf.shadow.effect.intensity);
+      break;
+    case okfAddColor:
+      OkfAddColor(shadowRed, shadowGreen, shadowBlue, okf.shadow.effect.color);
+      OkfAdjustColorComponents(shadowRed, shadowGreen, shadowBlue);
+      break;
+    case okfSubtractColor:
+      OkfSubtractColor(shadowRed, shadowGreen, shadowBlue, okf.shadow.effect.color);
+      OkfAdjustColorComponents(shadowRed, shadowGreen, shadowBlue);
+      break;
+  }
+
+  // Blit mask
+  for (y=maskHeight - (masky + height), j=0; y < maskHeight - masky; y++, j++)
+    for (x=maskx, i=0; x < maskx + width; x++, i++)
+    {
+      opacity = mask[y + x * maskHeight];
+
+      if (opacity > 0)
+      {
+        // Modify opacity, if required
+        if (okf.shadow.opacity < 31)
+          opacity = (opacity * okf.shadow.opacity) / 31;
+
+        if (opacity > 0)
+        {
+          // Merge color with background
+          bgColor = GetPixel(&okf.pSurfaces[surface], dx + i, dy + height - j - 1);
+
+          // We want to preserve the shadow color so we Overlay manually
+          red   = (shadowRed   * opacity) / 31 + (GetRGBRed(bgColor)   * (31 - opacity)) / 31;
+          green = (shadowGreen * opacity) / 31 + (GetRGBGreen(bgColor) * (31 - opacity)) / 31;
+          blue  = (shadowBlue  * opacity) / 31 + (GetRGBBlue(bgColor)  * (31 - opacity)) / 31;
+
+          // Draw píxel
+          PutPixel(&okf.pSurfaces[surface], dx + i, dy + height - j - 1, RGB(red, green, blue));
+        }
+      }
+    }
+
+  return 0;
+}
+
