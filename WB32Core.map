@@ -1,0 +1,1838 @@
+Archive member included because of file (symbol)
+
+c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpgraphic.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib/gp32_gpsdk_crt0.o (GpSurfaceSet)
+c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpg_basic.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpgraphic.o) (_GpClipCheck)
+c:/devkitARM/gamepark_sdk/lib\libgpgraphic16.a(gpgraphic16.o)
+                              OKF/fileSelector.o (GpBitBlt16)
+c:/devkitARM/gamepark_sdk/lib\libgpgraphic16.a(gpg_basic16.s.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpgraphic16.a(gpgraphic16.o) (_GpClipCheck16)
+c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem.o)
+                              gpstart.o (gm_heap_init)
+c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem_asm.o)
+                              gpstart.o (gm_memset)
+c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpkernel.o)
+                              gpstart.o (GpKernelStart)
+c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpkernel.o) (_gp_cur_thread)
+c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_user.o)
+                              Profiler.o (GpTimerKill)
+c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+                              gpmain.o (GpKeyGet)
+c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(asm_gpstdlib.o)
+                              OKF/global.o (GpGraphicModeSet)
+c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+                              gpmain.o (GpFatInit)
+c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_io.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o) (smpFlashEraseBlock)
+c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_lpt.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o) (smlGetNewSpecifiedBlock)
+c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_buf.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o) (smbBufPoolInit)
+c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o) (smfsUserInit)
+c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o) (GpProcSound)
+c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpsound.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o) (_GpPcmMixingStereo16)
+c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+                              gpstart.o (GpFontInit)
+c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont_asm.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o) (GpFontOut)
+c:/devkitARM/gamepark_sdk/lib\libgpfont16.a(gpfont16.o)
+                              gpstart.o (GpFontInit16)
+c:/devkitARM/gamepark_sdk/lib\libgpfont16.a(gpfont_asm16.s.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpfont16.a(gpfont16.o) (GpFontOut16)
+./zlib\libz.a(crc32.o)        zlib/unzip.o (crc32)
+./zlib\libz.a(inflate.o)      zlib/unzip.o (inflateEnd)
+./zlib\libz.a(infblock.o)     ./zlib\libz.a(inflate.o) (inflate_blocks_reset)
+./zlib\libz.a(inftrees.o)     ./zlib\libz.a(infblock.o) (inflate_trees_bits)
+./zlib\libz.a(infcodes.o)     ./zlib\libz.a(infblock.o) (inflate_codes_new)
+./zlib\libz.a(infutil.o)      ./zlib\libz.a(infblock.o) (inflate_mask)
+./zlib\libz.a(inffast.o)      ./zlib\libz.a(infcodes.o) (inflate_fast)
+./zlib\libz.a(adler32.o)      ./zlib\libz.a(inflate.o) (adler32)
+./zlib\libz.a(zutil.o)        ./zlib\libz.a(inflate.o) (zcalloc)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memcpy.o)
+                              WS.o (memcpy)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memset.o)
+                              nec/nec.o (memset)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(rand.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o) (srand)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strchr.o)
+                              OKF/folder.o (strchr)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strcmp.o)
+                              OKF/folder.o (strcmp)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlen.o)
+                              zlib/unzip.o (strlen)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlwr.o)
+                              OKF/folder.o (strlwr)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vsprintf.o)
+                              c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem.o) (vsprintf)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(ctype_.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlwr.o) (_ctype_)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(impure.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(rand.o) (_impure_ptr)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vsprintf.o) (_vfprintf_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcrtomb.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (_wcrtomb_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcsrtombs.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (_wcsrtombs_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wctomb_r.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcrtomb.o) (_wctomb_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wsetup.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (__swsetup)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (_dtoa_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fflush.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (fflush)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(findfp.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (__sinit)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(freer.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wsetup.o) (_free_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fvwrite.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (__sfvwrite)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fwalk.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fflush.o) (_fwalk)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wctomb_r.o) (__lc_ctype)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(makebuf.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wsetup.o) (__smakebuf)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(malloc.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (free)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mallocr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(freer.o) (__malloc_current_mallinfo)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memchr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (memchr)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memmove.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fvwrite.o) (memmove)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mlock.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(freer.o) (__malloc_lock)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mprec.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o) (__mprec_bigtens)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reallocr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fvwrite.o) (_realloc_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(s_isinf.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (isinf)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(s_isnan.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o) (isnan)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(sbrkr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(freer.o) (_sbrk_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(findfp.o) (__sread)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(sbrkr.o) (_sbrk)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(writer.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o) (_write_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(callocr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mprec.o) (_calloc_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(closer.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o) (_close_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(errno.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o) (__errno)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fstatr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(makebuf.o) (_fstat_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(lseekr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o) (_lseek_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(malloc_vars.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o) (fake_heap_start)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(readr.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o) (_read_r)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reent.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(sbrkr.o) (errno)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o)
+                              nec/nec.o (__udivsi3)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_divsi3.o)
+                              WSSound.o (__divsi3)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_umodsi3.o)
+                              nec/nec.o (__umodsi3)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_modsi3.o)
+                              nec/nec.o (__modsi3)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_dvmd_tls.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o) (__div0)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_addsubdf3.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o) (__subdf3)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_muldivdf3.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o) (__muldf3)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_cmpdf2.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o) (__gtdf2)
+c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_fixdfsi.o)
+                              c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o) (__fixdfsi)
+
+Allocating common symbols
+Common symbol       size              file
+
+Palette             0x220             WSDraw.o
+Scr1TMap            0x4               WSDraw.o
+SM_CLE_EN           0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+sIEep               0x8               WS.o
+sm_busy_gp32        0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+SprTTMap            0x4               WSDraw.o
+vert                0x4               WS.o
+_sndmixer           0x50              c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+_timepassed         0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+MainVol             0x4               WSSound.o
+base_rom            0x4               gpmain.o
+MyGameNo            0x4               filecache.o
+SprTMap             0x200             WSDraw.o
+errno               0x4               c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reent.o)
+screenbuffer        0x10e00           WSDraw.o
+__gpver_for_fw      0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+_relative_path      0x100             c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+Scr2TMap            0x4               WSDraw.o
+ROMBanks            0x4               WS.o
+g_list_file         0x27100           filecache.o
+SwpCurPeriod        0x4               WSSound.o
+SRAM                0x10000           WS.o
+_snd_srcexist       0x4               c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+nec_ICount          0x4               nec/nec.o
+IO                  0x100             WS.o
+sm_read_gp32        0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+RAMEnable           0x4               WS.o
+videoconfig_menu    0x1a88            gpmain.o
+SM_CHIP_EN          0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+DoKeys              0x4               WS.o
+long_name           0xf6              filecache.o
+HEAPEND             0x4               gpstart.o
+_pcm_workidx        0x4               c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+SM_ALE_EN           0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+keyconfig_menu      0x1a88            gpmain.o
+WsromHeader         0x4               WS.o
+FileBG              0x25800           selector.o
+_gp_pend_rw_idx     0x20              c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+__gpver_for_hw      0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+net_tk_yield        0x4               c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_user.o)
+_before_out_keydata
+                    0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+lpDSB               0x18              WSSound.o
+GpSurfaceFlip       0x4               c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpgraphic.o)
+halfval             0x4               file_dialog.o
+gtSurface           0x38              OKF/global.o
+_gp_thread_list     0x1a0             c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+SM_CHIP_DIS         0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+basename            0x100             gpmain.o
+RandData            0x40000           WSSound.o
+statesconfig_menu   0x1a88            gpmain.o
+g(float, int, long,...)
+                    0x4               filecache.o
+ws_file             0x100             gpmain.o
+CartKind            0x4               WS.o
+MyGame              0x4               filecache.o
+RAMSize             0x4               WS.o
+MonoColor           0x8               WS.o
+SM_WP_DIS           0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+ROMMap              0x400             WS.o
+SwpStep             0x4               WSSound.o
+sm_write_gp32       0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+_pt_font_kor        0x4               c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+MyGameSize          0x4               filecache.o
+_gpKEYCHANGED       0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+_gpKEYPOLLING       0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+_reg_io_key_a       0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+_sndmixedbuf        0x8               c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+Page                0x40              WS.o
+_gm_sub_list        0x4               c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem.o)
+gp_mem_func         0x20              c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+PDataP              0x9f0             WSSound.o
+SprETMap            0x4               WSDraw.o
+_final_path         0x100             c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+_gm_man_list        0x4               c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem.o)
+err                 0x1               filecache.o
+okf                 0x50              OKF/okf.o
+szRomName           0xff              filecache.o
+gp_str_func         0x30              c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+_hautomaton_state   0x4               c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+HEAPSTART           0x4               gpstart.o
+SM_WP_EN            0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+PcmCount            0x4               WSSound.o
+main_menu           0x1a88            gpmain.o
+sCEep               0x8               WS.o
+IRAM                0x10000           WS.o
+g_string            0x100             file_dialog.o
+seg_prefix          0x1               nec/nec.o
+_reg_io_key_b       0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+SM_ALE_DIS          0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+_ham_comb_buf       0x4               c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+PDataN              0x80000           WSSound.o
+gProgTimer          0x40              c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+_pt_font_eng        0x4               c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+ChPerInit           0x4               WSSound.o
+g_path_curr         0x100             filecache.o
+SwpTime             0x4               WSSound.o
+IEep                0x800             WS.o
+_ham_ret_buf        0x8               c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+_gp_pend_list       0x80              c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+str                 0x80              WS.o
+_smc_func_ptr       0x34              c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+sm_read_dis_gp32    0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+horz_keys_menu      0x1a88            gpmain.o
+ColTbl              0x210             WSDraw.o
+sm_read_en_gp32     0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+vert_keys_menu      0x1a88            gpmain.o
+video_update        0x4               WSDraw.o
+SM_CLE_DIS          0x4               c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+WaveMap             0x4               WS.o
+romSize             0x4               gpmain.o
+_ham_ksuni_buf      0x4               c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+_gp_t_lock_thread   0x10              c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+ws_keys             0xb               WSInput.o
+MemDummy            0x10000           WS.o
+RomCRC              0x2               WS.o
+giSurface           0x4               OKF/global.o
+SaveName            0x200             WS.o
+PData               0x1000            WSSound.o
+GpSurfaceSet        0x4               c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpgraphic.o)
+ini                 0x445c8           filecache.o
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+ram              0x0c000000         0x00800000
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+
+.text           0x0c000000    0xc08a4
+                0x0c000000                __text_start = .
+ *(EXCLUDE_FILE(*text.iwram*) .text)
+ .text          0x0c000000      0x260 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib/gp32_gpsdk_crt0.o
+                0x0c000000                _start
+                0x0c000164                _fw_init_for_dbg
+ .text          0x0c000260       0xf4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ .text          0x0c000354    0x70800 wscbmp.o
+                0x0c000354                WSCBmp_horz
+                0x0c04b354                WBTitle
+                0x0c025b54                WSCBmp_vert
+ .text          0x0c070b54      0xa9c horz_render_normal.o
+                0x0c070b54                horz_render_normal
+ .text          0x0c0715f0      0x39c vert_render_normal.o
+                0x0c0715f0                vert_render_normal
+ .text          0x0c07198c      0xd78 horz_render_hstretch.o
+                0x0c07198c                horz_render_hstretch
+ .text          0x0c072704      0xd88 horz_render_hvstretch.o
+                0x0c072704                horz_render_hvstretch
+ .text          0x0c07348c       0x34 cpuspeed.o
+                0x0c07348c                cpu_speed
+                0x0c0734ac                mmu_change
+ .text          0x0c0734c0      0x28c gpstart.o
+                0x0c0734c0                InitializeFont
+                0x0c073700                GpPredefinedStackGet
+                0x0c073540                main
+ .text          0x0c07374c     0x16ec gpmain.o
+                0x0c0737d0                LoadRom
+                0x0c0744f0                SaveState
+                0x0c073ef0                SaveConfig
+                0x0c073ac0                CPU_alignment_and_cache
+                0x0c074164                LoadConfig
+                0x0c073ad8                Emulate
+                0x0c074400                GetBaseName
+                0x0c07456c                GpMain
+                0x0c073b98                SaveStatesEmulate
+                0x0c074464                LoadState
+                0x0c07374c                ShowCredits
+ .text          0x0c074e38     0x203c WS.o
+                0x0c076dc8                WsRun
+                0x0c075eec                WsRomGetHeader
+                0x0c075198                WriteIO
+                0x0c0766f4                WsSaveState
+                0x0c075a60                WsReset
+                0x0c074ea0                ComEEP
+                0x0c0750cc                ReadMem
+                0x0c0767e4                WsLoadState
+                0x0c076498                loadStateFromMem
+                0x0c074e38                ErrorMsg
+                0x0c076920                WsLoadRam
+                0x0c076294                saveStateToMem
+                0x0c0750f4                WriteMem
+                0x0c075f3c                WsCreate
+                0x0c0769e4                WsRelease
+                0x0c0768ac                WsSaveRam
+                0x0c076a14                Interrupt
+ .text          0x0c076e74     0x2234 WSDraw.o
+                0x0c076e74                RefreshLine
+                0x0c078aa8                WsDrawFlip
+                0x0c078b88                WsDrawClear
+                0x0c078ed0                SetDrawMode
+                0x0c078b14                SetPalette
+                0x0c079098                GetDrawMode
+                0x0c078a80                WsDrawLine
+                0x0c078d04                WsDrawCreate
+ .text          0x0c0790a8      0x5dc WSInput.o
+                0x0c079194                StateKeys
+                0x0c07917c                StateInputInit
+                0x0c079198                WsKeys
+                0x0c0790a8                WsInputInit
+ .text          0x0c079684      0x5c0 WSSound.o
+                0x0c079a24                WsSoundInt
+                0x0c079a00                SetSoundPBuf
+                0x0c0799f0                SetSoundFreq
+                0x0c0799f8                SetSoundPan
+                0x0c0799b8                WsSoundRelease
+                0x0c0799fc                SetSoundPData
+                0x0c0799dc                WsSoundPlay
+                0x0c07977c                WsSoundCreate
+                0x0c079b5c                SetPCM
+                0x0c079a04                RstSound
+                0x0c0799ec                WsSoundClear
+                0x0c079acc                FlashPCM
+                0x0c079684                Mrand
+                0x0c0799f4                SetSoundVol
+                0x0c0799e4                WsSoundStop
+ .text          0x0c079c44    0x11670 nec/nec.o
+                0x0c07aab8                nec_exit
+                0x0c07ac24                nec_int
+                0x0c07a99c                nec_reset
+                0x0c08aefc                nec_get_reg
+                0x0c08b244                nec_execute
+                0x0c08b0c4                nec_set_reg
+ .text          0x0c08b2b4      0x224 OKF/global.o
+                0x0c08b494                WaitKey
+                0x0c08b334                ReleaseScreen
+                0x0c08b2b4                InitGraphics
+                0x0c08b388                SaveScreen
+                0x0c08b3e0                Thousands
+                0x0c08b468                Wait
+                0x0c08b340                SaveBackScreen
+ .text          0x0c08b4d8      0x100 OKF/clock.o
+                0x0c08b4d8                SetClockSpeed
+ .text          0x0c08b5d8      0x2ac OKF/graphics16.o
+                0x0c08b5d8                BitBlt8To16
+                0x0c08b758                OverlayColor16
+ .text          0x0c08b884     0x5218 OKF/okf.o
+                0x0c08bc60                OkfGetHandle
+                0x0c08c2b8                OkfRelease
+                0x0c090740                OkfPrintSurface
+                0x0c08deb4                OkfPrint
+                0x0c08e2c0                OkfPrintCharAt
+                0x0c08e7d8                OkfRegister
+                0x0c08e2f8                OkfGetTextWidth
+                0x0c08c010                OkfClone
+                0x0c08bd5c                OkfInitialize
+                0x0c08c3c0                OkfTerminate
+                0x0c08e260                OkfPrintAt
+                0x0c08bbec                OkfGetEmbeddedFontHandle
+                0x0c08e208                OkfPrintLong
+                0x0c08e278                OkfPrintLongAt
+                0x0c08bcb4                OkfSetToDefaults
+                0x0c08e440                OkfGetTextHeight
+                0x0c08eaa8                OkfLoadAndRegister
+                0x0c08dc48                OkfSplitLines
+                0x0c08b884                OkfApplyEffect
+                0x0c08e238                OkfPrintChar
+ .text          0x0c090a9c      0x778 OKF/list.o
+                0x0c0910d8                ListRemoveItemByObject
+                0x0c090a9c                ListAddItem
+                0x0c090f4c                ListRemoveItemByHandle
+                0x0c090d14                ListGetItemByObject
+                0x0c090ecc                ListRemoveItem
+                0x0c090bfc                ListGetIndex
+                0x0c090c80                ListGetItemByHandle
+                0x0c090e54                ListGetRelativePosition
+                0x0c090dec                ListGetRelativeItem
+                0x0c090cc8                ListGetItemByIndex
+                0x0c090d44                ListGetObjectByHandle
+                0x0c090d94                ListGetObjectByIndex
+                0x0c090b54                ListCreate
+                0x0c091188                ListSort
+                0x0c091010                ListRemoveItemByIndex
+                0x0c090c20                ListGetIndexByHandle
+                0x0c090b90                ListDestroy
+ .text          0x0c091214      0x8e0 OKF/folder.o
+                0x0c091214                FolderDrop
+                0x0c091320                FolderGet
+ .text          0x0c091af4      0x930 OKF/fileSelector.o
+                0x0c091af4                FileSelectorInit
+                0x0c0920c4                FileSelector
+ .text          0x0c092424     0x1958 zlib/unzip.o
+                0x0c093398                unzReadCurrentFile
+                0x0c093174                unzLocateFile
+                0x0c092ba8                unzGoToFirstFile
+                0x0c093778                unzOpenCurrentFile
+                0x0c092558                unzGetGlobalInfo
+                0x0c093604                unzGetLocalExtrafield
+                0x0c093080                unzGetCurrentFileInfo
+                0x0c0930c4                unzGoToNextFile
+                0x0c0936b0                unzCloseCurrentFile
+                0x0c0935d4                unzeof
+                0x0c093cd8                unzGetGlobalComment
+                0x0c0935b0                unztell
+                0x0c0924c8                unzStringFileNameCompare
+                0x0c093c48                unzClose
+                0x0c092c14                unzOpen
+ .text          0x0c093d7c      0x73c file_dialog.o
+                0x0c093e74                DrawWindow
+                0x0c094408                PrintError
+                0x0c094184                DrawError
+                0x0c093e34                SaveBackground
+                0x0c093dec                Cls
+                0x0c093d7c                WindowInit
+                0x0c093fa8                DrawMessage
+                0x0c094358                PrintMessage
+ .text          0x0c0944b8      0x1a0 setcpuspeed.o
+                0x0c0944b8                setCpuSpeed
+ .text          0x0c094658     0x1b88 menu.o
+                0x0c094b28                fill_main_menu
+                0x0c094ccc                fill_statesconfig_menu
+                0x0c095968                fill_vert_keys_menu
+                0x0c0950ec                fill_horz_keys_menu
+                0x0c094814                run_menu
+                0x0c094658                draw_menu
+                0x0c0949c0                precalc_menu
+                0x0c094e20                fill_videoconfig_menu
+                0x0c09503c                fill_keyconfig_menu
+ .text          0x0c0961e0      0x1b8 misc_str_func.o
+                0x0c09628c                yo_strlwr
+                0x0c0962c8                yo_strupr
+                0x0c096304                yo_strncmp
+                0x0c0961e0                yo_atoi
+                0x0c096228                yo_strrchr
+ .text          0x0c096398      0x190 selector.o
+                0x0c096398                DoFileSelector
+ .text          0x0c096528      0xf44 filecache.o
+                0x0c0966c0                fs_add
+                0x0c0971f0                fs_scandir
+                0x0c096750                fs_loadgame
+                0x0c09745c                fs
+                0x0c096528                DAT_LookFor
+                0x0c097114                fs_read_ini
+                0x0c096b18                fs_scanfile
+                0x0c096eb4                fs_write_ini
+                0x0c096560                LoadPacked
+ .text          0x0c09746c      0x228 Profiler.o
+                0x0c0974d8                PROFILER_STOP
+                0x0c097610                PROFILER_DUMP
+                0x0c097544                PROFILER_START
+                0x0c09746c                ProfilerISR3
+                0x0c09749c                ProfilerISR2
+                0x0c0974fc                ProfilerISR
+ .text          0x0c097694     0x1284 c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpgraphic.o)
+                0x0c098818                GpLcdFadeNormalize
+                0x0c0986d0                GpRegPalGet
+                0x0c09822c                GpRectDraw
+                0x0c097694                _clip_region_set
+                0x0c098718                GpLcdFade
+                0x0c0984d0                GpPaletteDelete
+                0x0c098520                GpPaletteEntryChange
+                0x0c0980cc                GpRectFill
+                0x0c0985e0                GpPaletteEntryChangeEx
+                0x0c097ec8                GpTransUDBlt
+                0x0c098500                GpPaletteRealize
+                0x0c097dac                GpTransLRBlt
+                0x0c097c8c                GpTransBlt
+                0x0c097ab4                GpBitUDBlt
+                0x0c0987c4                GpLcdNoFade
+                0x0c0981f0                GpEllipseDraw
+                0x0c098310                GpPaletteCreate
+                0x0c09843c                GpPaletteSelect
+                0x0c098858                GpLcdChanFade
+                0x0c0986f4                GpLogPalGet
+                0x0c0979ac                GpBitLRBlt
+                0x0c097894                GpBitBlt
+                0x0c098174                GpMemSurfaceGet
+                0x0c098398                GpPaletteCreateEx
+                0x0c097734                _clip_region_simple
+ .text          0x0c098918     0x6240 c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpg_basic.o)
+                0x0c099618                BgMakerLRBlt
+                0x0c09a1dc                BgMakerUDBlt
+                0x0c09e698                GpLineDraw
+                0x0c09aca4                BgMakerTransBlt
+                0x0c09e87c                BgMakerEllipse
+                0x0c098a5c                BgMakerBitBlt
+                0x0c098918                _GpClipCheck
+                0x0c09e574                BgMakerFillColor
+                0x0c09c0a8                BgMakerTransLRBlt
+                0x0c09eb00                GpPointSet
+                0x0c09d4b8                BgMakerTransUDBlt
+ .text          0x0c09eb58      0xbf4 c:/devkitARM/gamepark_sdk/lib\libgpgraphic16.a(gpgraphic16.o)
+                0x0c09f65c                GpEllipseDraw16
+                0x0c09ef90                GpBitUDBlt16
+                0x0c09f160                GpTransBlt16
+                0x0c09ed58                GpBitBlt16
+                0x0c09f3b4                GpTransUDBlt16
+                0x0c09ebf8                _clip_region_simple16
+                0x0c09f660                GpRectDraw16
+                0x0c09f28c                GpTransLRBlt16
+                0x0c09ee7c                GpBitLRBlt16
+                0x0c09f748                GpLineDraw16
+                0x0c09eb58                _clip_region_set16
+                0x0c09f5a8                GpRectFill16
+                0x0c09f744                GpPointSet16
+ .text          0x0c09f74c     0x178c c:/devkitARM/gamepark_sdk/lib\libgpgraphic16.a(gpg_basic16.s.o)
+                0x0c0a00c8                BgMakerTransBlt16
+                0x0c09fb68                BgMakerLRBlt16
+                0x0c0a0dd8                BgMakerFillColor16
+                0x0c0a0a6c                BgMakerTransUDBlt16
+                0x0c09fe4c                BgMakerUDBlt16
+                0x0c09f88c                BgMakerBitBlt16
+                0x0c0a0598                BgMakerTransLRBlt16
+                0x0c09f74c                _GpClipCheck16
+ .text          0x0c0a0ed8      0xa94 c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem.o)
+                0x0c0a1120                gm_malloc
+                0x0c0a18d8                gm_uppercase
+                0x0c0a1458                gm_sub_calloc
+                0x0c0a1174                gm_sub_malloc
+                0x0c0a17b0                gm_availablesize
+                0x0c0a1348                gm_sub_malloc_ex
+                0x0c0a1924                gm_compare
+                0x0c0a15b4                gm_free
+                0x0c0a0ed8                _gm_heap_init_oper
+                0x0c0a1674                gm_free_ex
+                0x0c0a0f08                gm_heap_init
+                0x0c0a188c                gm_lowercase
+                0x0c0a0f4c                get_gm_alloc
+                0x0c0a14e8                _gm_free_oper
+                0x0c0a11e0                gm_zi_malloc
+                0x0c0a13e0                gm_calloc
+                0x0c0a0fcc                gm_sub_null_func
+                0x0c0a1244                gm_zi_sub_malloc
+                0x0c0a174c                gm_sub_free_ex
+                0x0c0a12c8                gm_malloc_ex
+                0x0c0a0fd4                gm_make_mem_part
+                0x0c0a1808                gm_sub_availablesize
+                0x0c0a1620                gm_sub_free
+                0x0c0a186c                gm_sprintf
+ .text          0x0c0a196c      0x2b0 c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem_asm.o)
+                0x0c0a1bb4                gm_lstrlen
+                0x0c0a1bd4                gm_trim_right
+                0x0c0a1b5c                gm_strncat
+                0x0c0a196c                gm_memset
+                0x0c0a1b20                gm_strcat
+                0x0c0a1ad4                gm_strncpy
+                0x0c0a1ab0                gm_strcpy
+                0x0c0a1a10                gm_memcpy
+ .text          0x0c0a1c1c      0x47c c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpkernel.o)
+                0x0c0a2010                GpProcTmr4
+                0x0c0a1f00                _gp_os_sched_lock
+                0x0c0a2018                GpProcTmr5
+                0x0c0a1f94                _os_stack_copy
+                0x0c0a1cd4                GpKernelOptSet
+                0x0c0a1f30                GpKernelUnlock
+                0x0c0a2000                GpProcTmr2
+                0x0c0a1f00                GpKernelLock
+                0x0c0a1f30                _gp_os_sched_unlock
+                0x0c0a1f00                _GpIsrSpKeyB
+                0x0c0a2008                GpProcTmr3
+                0x0c0a1e5c                GpTaskSW
+                0x0c0a1d08                GpThreadSleep
+                0x0c0a1e9c                _GpIsrSound
+                0x0c0a1c48                GpKernelStart
+                0x0c0a1f68                GpThreadHandleGet
+                0x0c0a1d68                _GPOSTickISR
+                0x0c0a1f00                _GpIsrSpKeyA
+ .text          0x0c0a2098      0x87c c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+                0x0c0a20f4                _gp_thread_create
+                0x0c0a2404                _gp_os_res_lock
+                0x0c0a2574                _gp_os_res_unlock
+                0x0c0a2098                _os_init_thread_stack
+                0x0c0a21d4                GpKernelInitialize
+                0x0c0a2378                _gp_os_schedule
+                0x0c0a20f0                _os_idle_thread
+                0x0c0a2880                GpThreadOptSet
+                0x0c0a2650                _gp_os_tick_sched
+                0x0c0a27ac                _gp_os_opt_assign
+                0x0c0a20ec                _os_exit
+ .text          0x0c0a2914      0x5c0 c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_user.o)
+                0x0c0a2d1c                _is_gpnet_available
+                0x0c0a2914                GpTimerPause
+                0x0c0a2978                GpTimerResume
+                0x0c0a2df8                GpNetThreadDelete
+                0x0c0a2ae0                GpTimerSet
+                0x0c0a2d58                GpNetThreadAct
+                0x0c0a2c90                GpTimerOptSet
+                0x0c0a2e80                GpProcTCPIP
+                0x0c0a2a04                GpTimerKill
+ .text          0x0c0a2ed4      0x248 c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+                0x0c0a30b8                __decode_user_info
+                0x0c0a2f9c                GpKeyPollingTimeSet
+                0x0c0a2fbc                _system_timer_init
+                0x0c0a2ed4                GpKeyGet
+                0x0c0a3070                GpUSBLineCheck
+                0x0c0a2f18                GpKeyChanged
+                0x0c0a2f28                GpKeyGetEx
+                0x0c0a2f7c                GpKeyInit
+                0x0c0a3058                _gp_sdk_init
+ .text          0x0c0a311c      0x4ec c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(asm_gpstdlib.o)
+                0x0c0a3278                GpLcdDisable
+                0x0c0a32e8                _gp_timer0_int
+                0x0c0a353c                _gp_e2prom_write
+                0x0c0a3488                swi_pal_addr_get
+                0x0c0a3504                swi_iis_operate
+                0x0c0a34b4                swi_smc_in
+                0x0c0a34f4                swi_timer_operate
+                0x0c0a354c                _gp_dev_id_get
+                0x0c0a3148                ARMEnableInterrupt
+                0x0c0a31b4                GpPClkGet
+                0x0c0a35d0                swi_chan_pal_fade
+                0x0c0a34d0                swi_usb_line_reset
+                0x0c0a3520                _gp_smc_id_get
+                0x0c0a3470                swi_install_irq
+                0x0c0a33a8                GpAppPathGet
+                0x0c0a31c8                GpLcdInfoGet
+                0x0c0a31a0                GpHClkGet
+                0x0c0a3260                GpLcdEnable
+                0x0c0a318c                GpMClkGet
+                0x0c0a352c                _gp_e2prom_read
+                0x0c0a33c8                GpUserInfoGet
+                0x0c0a32a8                GpLcdLock
+                0x0c0a3160                ACHI_P_DIVIDE
+                0x0c0a3328                GpNetTpsSet
+                0x0c0a3250                GpLcdSurfaceGet
+                0x0c0a3558                GpControlVolume
+                0x0c0a33fc                GpAppExecute
+                0x0c0a3414                _VirtualKeyMap
+                0x0c0a3290                GpLcdStatusGet
+                0x0c0a33b8                GpArgSet
+                0x0c0a32c8                GpLcdUnlock
+                0x0c0a31e0                GpGraphicModeSet
+                0x0c0a34e0                GpClockSpeedChange
+                0x0c0a34a0                swi_io_oper_set
+                0x0c0a311c                GpTickCountGet
+                0x0c0a338c                swi_set_sndbuffer
+                0x0c0a3380                swi_port_config_reset
+                0x0c0a3568                swi_pal_oper
+                0x0c0a3398                GpAppPathSet
+                0x0c0a347c                swi_uninstall_irq
+                0x0c0a32d8                GpFlipModeSet
+                0x0c0a3130                ARMDisableInterrupt
+                0x0c0a3408                GpAppExit
+                0x0c0a34c0                swi_usb_sof_get
+                0x0c0a3514                swi_mmu_change
+ .text          0x0c0a3608     0x97ac c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+                0x0c0a3ef4                smWriteFile
+                0x0c0a648c                smRegisterCallBack
+                0x0c0a6100                smRenameFile
+                0x0c0abce0                sm_InnerNoFATUpdate
+                0x0c0a4b54                smRemoveDir
+                0x0c0ac08c                GpFileOpen
+                0x0c0ac7ac                GpVolumeInfo
+                0x0c0a3608                smInit
+                0x0c0ac3e0                GpFileExtend
+                0x0c0a64c0                smUnregisterCallBack
+                0x0c0abd28                sm_InnerFATUpdate
+                0x0c0abd54                _make_final_path
+                0x0c0acaec                GpRcoverFAT
+                0x0c0a4830                smFileExtend
+                0x0c0aaf34                smcReadCluster
+                0x0c0a4498                smCloseFile
+                0x0c0ac9d8                GpRelativePathSet
+                0x0c0a5010                smReadDir
+                0x0c0a4d34                smGetListNumDir
+                0x0c0a517c                smReadDirEx
+                0x0c0a58fc                smFormatVol
+                0x0c0ac19c                GpFileWrite
+                0x0c0ac698                GpDirEnumList
+                0x0c0ac5a0                GpDirRemove
+                0x0c0ac524                GpDirCreate
+                0x0c0abff8                GpFileCreate
+                0x0c0a5dd4                smMountVol
+                0x0c0ac730                GpFileAttr
+                0x0c0a4734                smGetSizeFile
+                0x0c0acab0                GpFatInitialized
+                0x0c0a63b8                smNoFATUpdate
+                0x0c0a6420                smFATUpdate
+                0x0c0a3690                smCreateFile
+                0x0c0aae84                smcAllocCluster
+                0x0c0ac2f0                GpFileRemove
+                0x0c0a5e24                smUnmountVol
+                0x0c0aca70                GpRelativePathGet
+                0x0c0a3bfc                smReadFile
+                0x0c0a53f0                smReadStat
+                0x0c0a55dc                smWriteStat
+                0x0c0ac884                GpFormat
+                0x0c0abec8                GpFatInit
+                0x0c0ac61c                GpDirEnumNum
+                0x0c0a4934                smCreateDir
+                0x0c0a5e7c                smMoveFile
+                0x0c0a4128                smSeekFile
+                0x0c0a39c4                smOpenFile
+                0x0c0a6624                SMCBCardInserted
+                0x0c0a6650                SMCBCardEjected
+                0x0c0ab19c                smcWriteCluster
+                0x0c0ac44c                GpFileMove
+                0x0c0ac364                GpFileGetSize
+                0x0c0ac910                GpNoFATUpdate
+                0x0c0a57a8                smGetVolInfo
+                0x0c0ac28c                GpFileClose
+                0x0c0acacc                GpSMCDetected
+                0x0c0ac120                GpFileRead
+                0x0c0ac210                GpFileSeek
+                0x0c0a4684                smRemoveFile
+                0x0c0a64f8                smGetVersionInfo
+                0x0c0ac4b8                GpFileRename
+                0x0c0ac974                GpFATUpdate
+ .text          0x0c0acdb4     0x1410 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_io.o)
+                0x0c0ad1e4                smpFlashReadPage
+                0x0c0adc64                SMPCBCardInserted
+                0x0c0ad8b0                smpFlashEraseBlock
+                0x0c0ace34                smpFlashReadSector
+                0x0c0acdb4                smpFlashWriteSector
+                0x0c0adc84                SMPCBCardEjected
+                0x0c0ad42c                smpFlashReadPage2
+                0x0c0ada94                smpFlashReadID
+                0x0c0ad664                smpFlashReadSpare
+                0x0c0aceb8                smpFlashReadSectorSpare
+                0x0c0adc08                smpCheckDevice
+                0x0c0acf48                smpFlashWritePage
+                0x0c0adcb4                sm_IOInitDefaultValue
+ .text          0x0c0ae1c4     0x3158 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_lpt.o)
+                0x0c0ae87c                smlReadPhysBlock
+                0x0c0ae400                smlWriteBlock
+                0x0c0af164                smlIsSpaceAvailable
+                0x0c0af26c                smlIsPhysSectorErased
+                0x0c0ae1c4                smlGetNewSpecifiedBlock
+                0x0c0af344                smlTouchBlock
+                0x0c0b12e8                GpBadblockCheck
+                0x0c0ae7fc                smlReadBlock
+                0x0c0b12d0                GpGetPbaFromLba
+                0x0c0af4d8                SMLCBCardEjected
+                0x0c0ae324                smlDiscardPhysBlock
+                0x0c0aeb2c                smlFormatVol
+                0x0c0ae8fc                smlEraseBlock
+                0x0c0af4cc                SMLCBCardInserted
+                0x0c0ae9d4                smlReadSector
+                0x0c0b01cc                sm_ECCCorrect
+                0x0c0af4f8                sm_LPTInitDefaultValue
+                0x0c0b10ec                GpDeleteWrongBlock
+                0x0c0af480                smlOptimizeVol
+                0x0c0aeab4                smlGetDeviceInfo
+                0x0c0b0eb0                GpDualMappingChk
+ .text          0x0c0b131c       0x8c c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_buf.o)
+                0x0c0b1360                smbAllocBuf
+                0x0c0b131c                smbBufPoolInit
+                0x0c0b1388                smbFreeBuf
+ .text          0x0c0b13a8      0x190 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+                0x0c0b1504                sm_strcpy
+                0x0c0b1408                sm_memcmp
+                0x0c0b13dc                smfsWaitUSec
+                0x0c0b13a8                smfsUserInit
+                0x0c0b14b8                sm_strcmp
+                0x0c0b13b0                smfsGetTime
+                0x0c0b1464                sm_memcpy
+                0x0c0b1490                sm_memset
+                0x0c0b151c                sm_strlen
+ .text          0x0c0b1538      0x7a8 c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+                0x0c0b1cc4                GpMidiPlay
+                0x0c0b1944                _fill_src8_buf
+                0x0c0b1cd8                GpMidiStatusGet
+                0x0c0b15c4                GpSoundThreadAct
+                0x0c0b1950                _fill_src16_buf
+                0x0c0b1960                GpPcmStop
+                0x0c0b175c                GpPcmInit
+                0x0c0b1cd4                GpMidiReplay
+                0x0c0b1660                GpPcmPlay
+                0x0c0b1cc8                GpMidiListPlay
+                0x0c0b1cd0                GpMidiPause
+                0x0c0b1a90                GpPcmOnlyKill
+                0x0c0b1538                GpPcmEnvGet
+                0x0c0b1ad8                GpProcSound
+                0x0c0b1a44                GpPcmLock
+                0x0c0b1ccc                GpMidiStop
+                0x0c0b19cc                GpPcmRemove
+                0x0c0b1580                GpSoundThreadInit
+ .text          0x0c0b1ce0      0x860 c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpsound.o)
+                0x0c0b1ce0                _GpPcmMixingStereo16
+                0x0c0b2324                _GpPcmMixingMono8
+                0x0c0b210c                _GpPcmMixingStereo8
+                0x0c0b1ef4                _GpPcmMixingMono16
+ .text          0x0c0b2540     0x286c c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+                0x0c0b28dc                GpTextLenGet
+                0x0c0b2c88                _processKorChar
+                0x0c0b38cc                GpHAutomatonDelete
+                0x0c0b4274                _hautomaton_last1
+                0x0c0b2f68                GpTextDraw
+                0x0c0b2624                GpFontResSet
+                0x0c0b2bfc                _processEngChar
+                0x0c0b49d4                _comb_first2last
+                0x0c0b4b90                _bin_src_at_hcode_ex
+                0x0c0b4738                _h_proc_last_mid
+                0x0c0b2ec0                realloc_array
+                0x0c0b3468                GpHAutomatonInput
+                0x0c0b455c                _h_proc_last_first
+                0x0c0b3cec                _hautomaton_mid0
+                0x0c0b3c34                _hautomaton_first0
+                0x0c0b2650                GpEngFontResGet
+                0x0c0b2afc                _getFontDrawPos
+                0x0c0b2540                GpFontInit
+                0x0c0b35f8                _h_separate_mid
+                0x0c0b345c                GpHAutomatonBuffered
+                0x0c0b33d4                GpHAutomatonInit
+                0x0c0b2a68                GpTextNOut
+                0x0c0b2640                GpKorFontResGet
+                0x0c0b27d4                GpCharOut
+                0x0c0b4b04                _bin_src_at_hcode
+                0x0c0b269c                GpTextWidthGet
+                0x0c0b4c78                _h_mix_mid_mid
+                0x0c0b292c                GpTextOut
+                0x0c0b2660                GpSysFontGet
+                0x0c0b2750                GpTextHeightGet
+                0x0c0b377c                _h_separate_last
+                0x0c0b340c                _h_copy_return
+                0x0c0b3e54                _hautomaton_mid1
+                0x0c0b4000                _hautomaton_last0
+ .text          0x0c0b4dac       0xf4 c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont_asm.o)
+                0x0c0b4dac                GpFontOut
+ .text          0x0c0b4ea0      0x894 c:/devkitARM/gamepark_sdk/lib\libgpfont16.a(gpfont16.o)
+                0x0c0b4f84                GpSysFontGet16
+                0x0c0b53e0                GpTextNOut16
+                0x0c0b54fc                _processKorChar16
+                0x0c0b4ea0                GpFontInit16
+                0x0c0b4fc0                _getFontDrawPos16
+                0x0c0b5470                _processEngChar16
+                0x0c0b51c4                GpTextOut16
+                0x0c0b50b8                GpCharOut16
+ .text          0x0c0b5734       0xf4 c:/devkitARM/gamepark_sdk/lib\libgpfont16.a(gpfont_asm16.s.o)
+                0x0c0b5734                GpFontOut16
+ .text          0x0c0b5828      0x12c ./zlib\libz.a(crc32.o)
+                0x0c0b5834                crc32
+                0x0c0b5828                get_crc_table
+ .text          0x0c0b5954      0x9a4 ./zlib\libz.a(inflate.o)
+                0x0c0b5c28                inflate
+                0x0c0b62cc                inflateSyncPoint
+                0x0c0b5c18                inflateInit_
+                0x0c0b5954                inflateReset
+                0x0c0b618c                inflateSync
+                0x0c0b60e8                inflateSetDictionary
+                0x0c0b59b0                inflateEnd
+                0x0c0b5a20                inflateInit2_
+ .text          0x0c0b62f8      0xf30 ./zlib\libz.a(infblock.o)
+                0x0c0b7104                inflate_blocks_free
+                0x0c0b64a0                inflate_blocks
+                0x0c0b62f8                inflate_blocks_reset
+                0x0c0b7214                inflate_blocks_sync_point
+                0x0c0b71e4                inflate_set_dictionary
+                0x0c0b63a8                inflate_blocks_new
+ .text          0x0c0b7228      0x820 ./zlib\libz.a(inftrees.o)
+                0x0c0b7a04                inflate_trees_fixed
+                0x0c0b7768                inflate_trees_bits
+                0x0c0b7840                inflate_trees_dynamic
+ .text          0x0c0b7a48      0x88c ./zlib\libz.a(infcodes.o)
+                0x0c0b7a48                inflate_codes_new
+                0x0c0b7aa0                inflate_codes
+                0x0c0b82b0                inflate_codes_free
+ .text          0x0c0b82d4      0x178 ./zlib\libz.a(infutil.o)
+                0x0c0b82d4                inflate_flush
+ .text          0x0c0b844c      0x440 ./zlib\libz.a(inffast.o)
+                0x0c0b844c                inflate_fast
+ .text          0x0c0b888c      0x178 ./zlib\libz.a(adler32.o)
+                0x0c0b888c                adler32
+ .text          0x0c0b8a04       0x40 ./zlib\libz.a(zutil.o)
+                0x0c0b8a04                zlibVersion
+                0x0c0b8a2c                zcfree
+                0x0c0b8a10                zError
+                0x0c0b8a24                zcalloc
+ .text          0x0c0b8a44       0x90 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memcpy.o)
+                0x0c0b8a44                memcpy
+ .text          0x0c0b8ad4       0x78 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memset.o)
+                0x0c0b8ad4                memset
+ .text          0x0c0b8b4c       0x74 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(rand.o)
+                0x0c0b8b68                rand
+                0x0c0b8b4c                srand
+ .text          0x0c0b8bc0       0xcc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strchr.o)
+                0x0c0b8bc0                strchr
+ .text          0x0c0b8c8c       0xa4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strcmp.o)
+                0x0c0b8c8c                strcmp
+ .text          0x0c0b8d30       0x60 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlen.o)
+                0x0c0b8d30                strlen
+ .text          0x0c0b8d90       0x3c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlwr.o)
+                0x0c0b8d90                strlwr
+ .text          0x0c0b8dcc       0xbc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vsprintf.o)
+                0x0c0b8dcc                vsprintf
+                0x0c0b8e34                _vsprintf_r
+ .text          0x0c0b8e88     0x1c80 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o)
+                0x0c0b8ed0                _vfprintf_r
+                0x0c0baab0                vfprintf
+ .text          0x0c0bab08       0x7c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcrtomb.o)
+                0x0c0bab08                _wcrtomb_r
+                0x0c0bab58                wcrtomb
+ .text          0x0c0bab84      0x16c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcsrtombs.o)
+                0x0c0bab84                _wcsrtombs_r
+                0x0c0bacac                wcsrtombs
+ .text          0x0c0bacf0      0x3e8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wctomb_r.o)
+                0x0c0bacf0                _wctomb_r
+ .text          0x0c0bb0d8      0x108 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wsetup.o)
+                0x0c0bb0d8                __swsetup
+ .text          0x0c0bb1e0     0x1570 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o)
+                0x0c0bb3d0                _dtoa_r
+ .text          0x0c0bc750       0xe0 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fflush.o)
+                0x0c0bc750                fflush
+ .text          0x0c0bc830      0x230 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(findfp.o)
+                0x0c0bc8ec                __sinit
+                0x0c0bc88c                __sfmoreglue
+                0x0c0bca50                _cleanup
+                0x0c0bca44                _cleanup_r
+                0x0c0bc968                __sfp
+ .text          0x0c0bca60      0x338 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(freer.o)
+                0x0c0bcb64                _free_r
+                0x0c0bca60                _malloc_trim_r
+ .text          0x0c0bcd98      0x3b8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fvwrite.o)
+                0x0c0bcd98                __sfvwrite
+ .text          0x0c0bd150       0xdc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fwalk.o)
+                0x0c0bd150                _fwalk
+ .text          0x0c0bd22c       0xac c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+                0x0c0bd22c                _setlocale_r
+                0x0c0bd290                __locale_charset
+                0x0c0bd2a0                _localeconv_r
+                0x0c0bd2ac                setlocale
+                0x0c0bd2c8                localeconv
+ .text          0x0c0bd2d8      0x158 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(makebuf.o)
+                0x0c0bd2d8                __smakebuf
+ .text          0x0c0bd430       0x28 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(malloc.o)
+                0x0c0bd430                malloc
+                0x0c0bd444                free
+ .text          0x0c0bd458      0x6a0 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mallocr.o)
+                0x0c0bd458                _malloc_r
+ .text          0x0c0bdaf8       0xd8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memchr.o)
+                0x0c0bdaf8                memchr
+ .text          0x0c0bdbd0       0xd4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memmove.o)
+                0x0c0bdbd0                memmove
+ .text          0x0c0bdca4        0x8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mlock.o)
+                0x0c0bdca8                __malloc_unlock
+                0x0c0bdca4                __malloc_lock
+ .text          0x0c0bdcac      0xc20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mprec.o)
+                0x0c0be864                _mprec_log10
+                0x0c0bdf04                _hi0bits
+                0x0c0bdcac                _Balloc
+                0x0c0be6c0                _d2b
+                0x0c0be01c                _multiply
+                0x0c0be7e4                _ratio
+                0x0c0bde2c                _s2b
+                0x0c0bdff4                _i2b
+                0x0c0bdf60                _lo0bits
+                0x0c0be41c                __mcmp
+                0x0c0be20c                _pow5mult
+                0x0c0be5a4                _ulp
+                0x0c0be60c                _b2d
+                0x0c0bdd5c                _multadd
+                0x0c0be470                __mdiff
+                0x0c0be320                _lshift
+                0x0c0bdd40                _Bfree
+ .text          0x0c0be8cc      0x498 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reallocr.o)
+                0x0c0be8cc                _realloc_r
+ .text          0x0c0bed64       0x3c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(s_isinf.o)
+                0x0c0bed64                isinf
+ .text          0x0c0beda0       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(s_isnan.o)
+                0x0c0beda0                isnan
+ .text          0x0c0bedc0       0x40 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(sbrkr.o)
+                0x0c0bedc0                _sbrk_r
+ .text          0x0c0bee00      0x11c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o)
+                0x0c0beeb8                __sseek
+                0x0c0bee00                __sread
+                0x0c0bef08                __sclose
+                0x0c0bee4c                __swrite
+ .text          0x0c0bef1c      0x844 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o)
+                0x0c0bf558                _getpid
+                0x0c0bf054                initialise_monitor_handles
+                0x0c0bf710                isatty
+                0x0c0bf5e8                _fstat
+                0x0c0bf488                _open
+                0x0c0bf560                _sbrk
+                0x0c0bf688                _raise
+                0x0c0bf6d4                _times
+                0x0c0bf620                _stat
+                0x0c0bf2f8                _lseek
+                0x0c0bf678                _link
+                0x0c0bf310                _swiwrite
+                0x0c0bf740                _rename
+                0x0c0bf218                _swilseek
+                0x0c0bf4a8                _swiclose
+                0x0c0bf3d4                _swiopen
+                0x0c0bf680                _unlink
+                0x0c0bf35c                _write
+                0x0c0bf530                _kill
+                0x0c0bf68c                _gettimeofday
+                0x0c0bf1a8                _read
+                0x0c0bf510                _exit
+                0x0c0bf718                _system
+                0x0c0bf15c                _swiread
+                0x0c0bf4f8                _close
+ .text          0x0c0bf760       0x48 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(writer.o)
+                0x0c0bf760                _write_r
+ .text          0x0c0bf7a8       0x98 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(callocr.o)
+                0x0c0bf7a8                _calloc_r
+ .text          0x0c0bf840       0x40 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(closer.o)
+                0x0c0bf840                _close_r
+ .text          0x0c0bf880       0x10 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(errno.o)
+                0x0c0bf880                __errno
+ .text          0x0c0bf890       0x44 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fstatr.o)
+                0x0c0bf890                _fstat_r
+ .text          0x0c0bf8d4       0x48 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(lseekr.o)
+                0x0c0bf8d4                _lseek_r
+ .text          0x0c0bf91c       0x48 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(readr.o)
+                0x0c0bf91c                _read_r
+ .text          0x0c0bf964      0x1ac c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reent.o)
+                0x0c0bf964                cleanup_glue
+                0x0c0bf99c                _reclaim_reent
+                0x0c0bfa9c                _wrapup_reent
+ .text          0x0c0bfb10       0xf8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o)
+                0x0c0bfb10                __udivsi3
+ .text          0x0c0bfc08      0x128 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_divsi3.o)
+                0x0c0bfc08                __divsi3
+ .text          0x0c0bfd30       0xcc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_umodsi3.o)
+                0x0c0bfd30                __umodsi3
+ .text          0x0c0bfdfc       0xe4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_modsi3.o)
+                0x0c0bfdfc                __modsi3
+ .text          0x0c0bfee0        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_dvmd_tls.o)
+                0x0c0bfee0                __div0
+ .text          0x0c0bfee4      0x388 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_addsubdf3.o)
+                0x0c0c01f4                __floatsidf
+                0x0c0c0220                __extendsfdf2
+                0x0c0bfee8                __adddf3
+                0x0c0c01cc                __floatunsidf
+                0x0c0bfee4                __subdf3
+ .text          0x0c0c026c      0x4c4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_muldivdf3.o)
+                0x0c0c04c4                __divdf3
+                0x0c0c026c                __muldf3
+ .text          0x0c0c0730       0xa4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_cmpdf2.o)
+                0x0c0c0740                __cmpdf2
+                0x0c0c0740                __eqdf2
+                0x0c0c0730                __gtdf2
+                0x0c0c0738                __ltdf2
+                0x0c0c0738                __ledf2
+                0x0c0c0740                __nedf2
+                0x0c0c0730                __gedf2
+ .text          0x0c0c07d4       0x80 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_fixdfsi.o)
+                0x0c0c07d4                __fixdfsi
+ .text          0x0c0c0854       0x50 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+ *(.text.*)
+ *(.stub)
+ *(.gnu.warning)
+ *(.gnu.linkonce.t*)
+ *(.glue_7)
+ *(.glue_7t)
+                0x0c0c08a4                . = ALIGN (0x4)
+                0x0c0c08a4                __text_end = .
+
+.init           0x0c0c08a4       0x1c
+ *(.init)
+ .init          0x0c0c08a4        0xc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crti.o
+                0x0c0c08a4                _init
+ .init          0x0c0c08b0        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ .init          0x0c0c08b4        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+ .init          0x0c0c08b8        0x8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtn.o
+
+.jcr            0x0c0c08c0        0x4
+ *(.jcr)
+ .jcr           0x0c0c08c0        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+
+.fini           0x0c0c08c4       0x18
+ *(.fini)
+ .fini          0x0c0c08c4        0xc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crti.o
+                0x0c0c08c4                _fini
+ .fini          0x0c0c08d0        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ .fini          0x0c0c08d4        0x8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtn.o
+
+.rodata         0x0c0c08dc     0x7748
+ *(.rodata)
+ .rodata        0x0c0c08dc     0x2840 gpstart.o
+                0x0c0c08dc                fontresEng
+                0x0c0c10dc                fontresKor
+ .rodata        0x0c0c311c      0x1c8 WS.o
+ .rodata        0x0c0c32e4      0x144 WSSound.o
+                0x0c0c32f4                TblChVol
+                0x0c0c32e4                TblMainVol
+ .rodata        0x0c0c3428        0x8 nec/nec.o
+ .rodata        0x0c0c3430       0x2c zlib/unzip.o
+                0x0c0c3430                unz_copyright
+ .rodata        0x0c0c345c        0xc c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+ .rodata        0x0c0c3468       0x54 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+ .rodata        0x0c0c34bc      0x1d0 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_lpt.o)
+ .rodata        0x0c0c368c     0x13e2 c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+                0x0c0c372c                MidTb02
+                0x0c0c3718                MidTb01
+                0x0c0c49b2                HCodeTableEx
+                0x0c0c3756                HCodeTable
+                0x0c0c36ec                FirstTb01
+                0x0c0c3740                LastTb
+                0x0c0c3702                FirstTb02
+                0x0c0c368c                JasoTable
+ *fill*         0x0c0c4a6e        0x2 ff
+ .rodata        0x0c0c4a70      0x400 ./zlib\libz.a(crc32.o)
+ .rodata        0x0c0c4e70        0x4 ./zlib\libz.a(inflate.o)
+ .rodata        0x0c0c4e74       0x4c ./zlib\libz.a(infblock.o)
+ .rodata        0x0c0c4ec0      0x218 ./zlib\libz.a(inftrees.o)
+                0x0c0c4ec0                inflate_copyright
+ .rodata        0x0c0c50d8      0x101 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(ctype_.o)
+                0x0c0c50d8                _ctype_
+ .rodata        0x0c0c51d9       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o)
+ *fill*         0x0c0c51f9        0x3 ff
+ .rodata        0x0c0c51fc       0x30 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+ .rodata        0x0c0c522c      0x124 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mprec.o)
+                0x0c0c522c                __mprec_tinytens
+                0x0c0c527c                __mprec_tens
+                0x0c0c5254                __mprec_bigtens
+ *all.rodata*(*)
+ *(.roda)
+ *(.rodata.*)
+ .rodata.str1.4
+                0x0c0c5350      0x2a2 gpmain.o
+                                0x2a4 (size before relaxing)
+ *fill*         0x0c0c55f2        0x2 ff
+ .rodata.str1.4
+                0x0c0c55f4       0x8d WS.o
+                                 0x94 (size before relaxing)
+ *fill*         0x0c0c5681        0x3 ff
+ .rodata.str1.4
+                0x0c0c5684        0xf OKF/folder.o
+                                 0x10 (size before relaxing)
+ *fill*         0x0c0c5693        0x1 ff
+ .rodata.str1.4
+                0x0c0c5694       0x57 OKF/fileSelector.o
+                                 0x68 (size before relaxing)
+ *fill*         0x0c0c56eb        0x1 ff
+ .rodata.str1.4
+                0x0c0c56ec        0x6 zlib/unzip.o
+                                  0x8 (size before relaxing)
+ *fill*         0x0c0c56f2        0x2 ff
+ .rodata.str1.4
+                0x0c0c56f4      0x21e menu.o
+                                0x228 (size before relaxing)
+ *fill*         0x0c0c5912        0x2 ff
+ .rodata.str1.4
+                0x0c0c5914       0x3e selector.o
+                                 0x40 (size before relaxing)
+ *fill*         0x0c0c5952        0x2 ff
+ .rodata.str1.4
+                0x0c0c5954     0x23aa filecache.o
+                               0x23d8 (size before relaxing)
+ *fill*         0x0c0c7cfe        0x2 ff
+ .rodata.str1.4
+                0x0c0c7d00       0x15 Profiler.o
+                                 0x18 (size before relaxing)
+ *fill*         0x0c0c7d15        0x3 ff
+ .rodata.str1.4
+                0x0c0c7d18       0x6f ./zlib\libz.a(inflate.o)
+                                 0x70 (size before relaxing)
+ *fill*         0x0c0c7d87        0x1 ff
+ .rodata.str1.4
+                0x0c0c7d88       0x71 ./zlib\libz.a(infblock.o)
+                                 0x74 (size before relaxing)
+ *fill*         0x0c0c7df9        0x3 ff
+ .rodata.str1.4
+                0x0c0c7dfc       0xed ./zlib\libz.a(inftrees.o)
+                                 0xf0 (size before relaxing)
+ *fill*         0x0c0c7ee9        0x3 ff
+ .rodata.str1.4
+                0x0c0c7eec       0x34 ./zlib\libz.a(infcodes.o)
+ .rodata.str1.4
+                0x0c0c7f20       0x6f ./zlib\libz.a(zutil.o)
+                                 0x8c (size before relaxing)
+ *fill*         0x0c0c7f8f        0x1 ff
+ .rodata.str1.4
+                0x0c0c7f90        0x2 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(impure.o)
+                                  0x4 (size before relaxing)
+ *fill*         0x0c0c7f92        0x2 ff
+ .rodata.str1.4
+                0x0c0c7f94       0x54 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o)
+                                 0x5c (size before relaxing)
+ .rodata.str1.4
+                0x0c0c7fe8       0x1e c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wctomb_r.o)
+                                 0x20 (size before relaxing)
+ *fill*         0x0c0c8006        0x2 ff
+ .rodata.str1.4
+                0x0c0c8008        0x9 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o)
+                                 0x14 (size before relaxing)
+ *fill*         0x0c0c8011        0x3 ff
+ .rodata.str1.4
+                0x0c0c8014        0xb c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+                                 0x18 (size before relaxing)
+ *fill*         0x0c0c801f        0x1 ff
+ .rodata.str1.4
+                0x0c0c8020        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o)
+ *(.gnu.linkonce.r*)
+                0x0c0c8024                . = ALIGN (0x4)
+
+.ctors          0x0c0c8024        0x8
+ *crtbegin.o(.ctors)
+ .ctors         0x0c0c8024        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ *(EXCLUDE_FILE(*crtend.o) .ctors)
+ *(SORT(.ctors.*))
+ *(.ctors)
+ .ctors         0x0c0c8028        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+                0x0c0c802c                . = ALIGN (0x4)
+
+.dtors          0x0c0c802c        0x8
+ *crtbegin.o(.dtors)
+ .dtors         0x0c0c802c        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ *(EXCLUDE_FILE(*crtend.o) .dtors)
+ *(SORT(.dtors.*))
+ *(.dtors)
+ .dtors         0x0c0c8030        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+                0x0c0c8034                . = ALIGN (0x4)
+
+.eh_frame       0x0c0c8034        0x4
+ *(.eh_frame)
+ .eh_frame      0x0c0c8034        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+                0x0c0c8038                . = ALIGN (0x4)
+
+.gcc_except_table
+                0x0c0c8038        0x0
+ *(.gcc_except_table)
+                0x0c0c8038                . = ALIGN (0x4)
+                0x0c0c8038                __ro_end = .
+
+.data           0x0c0c8038     0xaa64
+                0x0c0c8038                __data_start = <code 336> (.)
+ *(.data)
+ .data          0x0c0c8038        0x8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+                0x0c0c8038                __dso_handle
+ .data          0x0c0c8040     0x3998 gpmain.o
+                0x0c0c8044                long_program_version
+                0x0c0c8048                verdana8b_pm_okf
+                0x0c0c8040                short_program_version
+ .data          0x0c0cb9d8      0x230 WS.o
+                0x0c0cb9d8                WriteMemFnTable
+                0x0c0cbbe8                SoundOn
+                0x0c0cbbe4                FrameSkip
+                0x0c0cba18                DefColor
+                0x0c0cba28                IPeriod
+                0x0c0cba2c                TblSkip
+ .data          0x0c0cbc08       0x64 WSDraw.o
+                0x0c0cbc08                video_modes
+                0x0c0cbc68                DrawMode
+ .data          0x0c0cbc6c       0x4c WSSound.o
+                0x0c0cbc9c                ChCurVol
+                0x0c0cbc6c                ChCurPan
+                0x0c0cbc84                ChCurPer
+ .data          0x0c0cbcb8      0x700 nec/nec.o
+                0x0c0cbcb8                nec_instruction
+ .data          0x0c0cc3b8       0x18 setcpuspeed.o
+                0x0c0cc3b8                cpuSpeeds
+ .data          0x0c0cc3d0     0x4d20 filecache.o
+                0x0c0cc3d0                MyDat
+ .data          0x0c0d10f0       0x14 c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+                0x0c0d1100                _gp_os_status
+                0x0c0d10f8                _gp_ret_from_rt
+                0x0c0d10f0                _gp_cur_thread
+                0x0c0d10fc                _gp_t_count
+                0x0c0d10f4                _gp_highest_thread
+ .data          0x0c0d1104        0xc c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+                0x0c0d1108                gpnet_MSPT
+                0x0c0d110c                gpnet_cur_ms
+                0x0c0d1104                gpnet_cticks
+ .data          0x0c0d1110       0x18 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+                0x0c0d1110                acSMFSVersion
+                0x0c0d1124                _b_fat_inited
+ .data          0x0c0d1128       0x22 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_io.o)
+                0x0c0d1128                g_mCode
+                0x0c0d112a                g_dCode
+ *fill*         0x0c0d114a        0x2 ff
+ .data          0x0c0d114c        0x8 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_lpt.o)
+ .data          0x0c0d1154       0x18 c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+                0x0c0d1158                _pcm_fill_src
+                0x0c0d1154                _pcm_mixing_func
+                0x0c0d115c                _gppcm_env
+ .data          0x0c0d116c       0x14 c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+                0x0c0d116c                _h_fsm_tbl
+ .data          0x0c0d1180     0x1108 ./zlib\libz.a(inftrees.o)
+ .data          0x0c0d2288       0x44 ./zlib\libz.a(infutil.o)
+                0x0c0d2288                inflate_mask
+ .data          0x0c0d22cc       0x28 ./zlib\libz.a(zutil.o)
+                0x0c0d22cc                z_errmsg
+ .data          0x0c0d22f4        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(ctype_.o)
+                0x0c0d22f4                __ctype_ptr
+ .data          0x0c0d22f8      0x380 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(impure.o)
+                0x0c0d22f8                _impure_ptr
+ .data          0x0c0d2678       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+                0x0c0d2684                __mb_cur_max
+                0x0c0d2678                __lc_ctype
+ .data          0x0c0d268c      0x410 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mallocr.o)
+                0x0c0d268c                __malloc_sbrk_base
+                0x0c0d2694                __malloc_av_
+                0x0c0d2690                __malloc_trim_threshold
+ *(.data.*)
+ *(.gnu.linkonce.d*)
+                0x0c0d2a9c                . = ALIGN (0x4)
+                0x0c0d2a9c                __data_end = .
+
+.bss            0x0c0d2a9c   0x1a9818
+                0x0c0d2a9c                __bss_start = <code 336> (.)
+ *(.dynbss)
+ *(.gnu.linkonce.b*)
+ *(COMMON)
+ COMMON         0x0c0d2a9c        0x8 gpstart.o
+                                  0x0 (size before relaxing)
+                0x0c0d2a9c                HEAPEND
+                0x0c0d2aa0                HEAPSTART
+ COMMON         0x0c0d2aa4     0xa138 gpmain.o
+                                  0x0 (size before relaxing)
+                0x0c0d2aa4                base_rom
+                0x0c0d2aa8                videoconfig_menu
+                0x0c0d4530                keyconfig_menu
+                0x0c0d5fb8                basename
+                0x0c0d60b8                statesconfig_menu
+                0x0c0d7b40                ws_file
+                0x0c0d7c40                main_menu
+                0x0c0d96c8                horz_keys_menu
+                0x0c0db150                vert_keys_menu
+                0x0c0dcbd8                romSize
+ COMMON         0x0c0dcbdc    0x30ffa WS.o
+                                  0x0 (size before relaxing)
+                0x0c0dcbdc                sIEep
+                0x0c0dcbe4                vert
+                0x0c0dcbe8                ROMBanks
+                0x0c0dcbec                SRAM
+                0x0c0ecbec                IO
+                0x0c0eccec                RAMEnable
+                0x0c0eccf0                DoKeys
+                0x0c0eccf4                WsromHeader
+                0x0c0eccf8                CartKind
+                0x0c0eccfc                RAMSize
+                0x0c0ecd00                MonoColor
+                0x0c0ecd08                ROMMap
+                0x0c0ed108                Page
+                0x0c0ed148                sCEep
+                0x0c0ed150                IRAM
+                0x0c0fd150                IEep
+                0x0c0fd950                str
+                0x0c0fd9d0                WaveMap
+                0x0c0fd9d4                MemDummy
+                0x0c10d9d4                RomCRC
+                0x0c10d9d6                SaveName
+ *fill*         0x0c10dbd6        0x2 00
+ COMMON         0x0c10dbd8    0x11444 WSDraw.o
+                                  0x0 (size before relaxing)
+                0x0c10dbd8                Palette
+                0x0c10ddf8                Scr1TMap
+                0x0c10ddfc                SprTTMap
+                0x0c10de00                SprTMap
+                0x0c10e000                screenbuffer
+                0x0c11ee00                Scr2TMap
+                0x0c11ee04                SprETMap
+                0x0c11ee08                ColTbl
+                0x0c11f018                video_update
+ COMMON         0x0c11f01c        0xb WSInput.o
+                                  0x0 (size before relaxing)
+                0x0c11f01c                ws_keys
+ *fill*         0x0c11f027        0x1 00
+ COMMON         0x0c11f028    0xc1a20 WSSound.o
+                                  0x0 (size before relaxing)
+                0x0c11f028                MainVol
+                0x0c11f02c                SwpCurPeriod
+                0x0c11f030                lpDSB
+                0x0c11f048                RandData
+                0x0c15f048                SwpStep
+                0x0c15f04c                PDataP
+                0x0c15fa3c                PcmCount
+                0x0c15fa40                PDataN
+                0x0c1dfa40                ChPerInit
+                0x0c1dfa44                SwpTime
+                0x0c1dfa48                PData
+ COMMON         0x0c1e0a48        0x5 nec/nec.o
+                                  0x0 (size before relaxing)
+                0x0c1e0a48                nec_ICount
+                0x0c1e0a4c                seg_prefix
+ *fill*         0x0c1e0a4d        0x3 00
+ COMMON         0x0c1e0a50       0x3c OKF/global.o
+                                  0x0 (size before relaxing)
+                0x0c1e0a50                gtSurface
+                0x0c1e0a88                giSurface
+ COMMON         0x0c1e0a8c       0x50 OKF/okf.o
+                                  0x0 (size before relaxing)
+                0x0c1e0a8c                okf
+ COMMON         0x0c1e0adc      0x104 file_dialog.o
+                                  0x0 (size before relaxing)
+                0x0c1e0adc                halfval
+                0x0c1e0ae0                g_string
+ COMMON         0x0c1e0be0    0x25800 selector.o
+                                  0x0 (size before relaxing)
+                0x0c1e0be0                FileBG
+ COMMON         0x0c2063e0    0x6b9d0 filecache.o
+                                  0x0 (size before relaxing)
+                0x0c2063e0                MyGameNo
+                0x0c2063e4                g_list_file
+                0x0c22d4e4                long_name
+                0x0c22d5dc                g(float, int, long,...)
+                0x0c22d5e0                MyGame
+                0x0c22d5e4                MyGameSize
+                0x0c22d5e8                err
+                0x0c22d5e9                szRomName
+                0x0c22d6e8                g_path_curr
+                0x0c22d7e8                ini
+ COMMON         0x0c271db0        0x8 c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a(gpgraphic.o)
+                                  0x0 (size before relaxing)
+                0x0c271db0                GpSurfaceFlip
+                0x0c271db4                GpSurfaceSet
+ COMMON         0x0c271db8        0x8 c:/devkitARM/gamepark_sdk/lib\libgpmem.a(gpmem.o)
+                                  0x0 (size before relaxing)
+                0x0c271db8                _gm_sub_list
+                0x0c271dbc                _gm_man_list
+ COMMON         0x0c271dc0      0x290 c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_core.o)
+                                  0x0 (size before relaxing)
+                0x0c271dc0                _gp_pend_rw_idx
+                0x0c271de0                _gp_thread_list
+                0x0c271f80                gProgTimer
+                0x0c271fc0                _gp_pend_list
+                0x0c272040                _gp_t_lock_thread
+ COMMON         0x0c272050        0x4 c:/devkitARM/gamepark_sdk/lib\libgpos.a(gpos_user.o)
+                                  0x0 (size before relaxing)
+                0x0c272050                net_tk_yield
+ *fill*         0x0c272054        0xc 00
+ COMMON         0x0c272060       0x74 c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a(gpstdlib.o)
+                                  0x0 (size before relaxing)
+                0x0c272060                _timepassed
+                0x0c272064                __gpver_for_fw
+                0x0c272068                __gpver_for_hw
+                0x0c27206c                _before_out_keydata
+                0x0c272070                _gpKEYCHANGED
+                0x0c272074                _gpKEYPOLLING
+                0x0c272078                _reg_io_key_a
+                0x0c272080                gp_mem_func
+                0x0c2720a0                gp_str_func
+                0x0c2720d0                _reg_io_key_b
+ *fill*         0x0c2720d4        0xc 00
+ COMMON         0x0c2720e0      0x234 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+                                  0x0 (size before relaxing)
+                0x0c2720e0                _relative_path
+                0x0c2721e0                _final_path
+                0x0c2722e0                _smc_func_ptr
+ COMMON         0x0c272314       0x34 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_conf.o)
+                                  0x0 (size before relaxing)
+                0x0c272314                SM_CLE_EN
+                0x0c272318                sm_busy_gp32
+                0x0c27231c                sm_read_gp32
+                0x0c272320                SM_CHIP_EN
+                0x0c272324                SM_ALE_EN
+                0x0c272328                SM_CHIP_DIS
+                0x0c27232c                SM_WP_DIS
+                0x0c272330                sm_write_gp32
+                0x0c272334                SM_WP_EN
+                0x0c272338                SM_ALE_DIS
+                0x0c27233c                sm_read_dis_gp32
+                0x0c272340                sm_read_en_gp32
+                0x0c272344                SM_CLE_DIS
+ *fill*         0x0c272348        0x8 00
+ COMMON         0x0c272350       0x60 c:/devkitARM/gamepark_sdk/lib\libgpsound.a(gpmm_reload.o)
+                                  0x0 (size before relaxing)
+                0x0c272350                _sndmixer
+                0x0c2723a0                _snd_srcexist
+                0x0c2723a4                _pcm_workidx
+                0x0c2723a8                _sndmixedbuf
+ COMMON         0x0c2723b0       0x1c c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+                                  0x0 (size before relaxing)
+                0x0c2723b0                _pt_font_kor
+                0x0c2723b4                _hautomaton_state
+                0x0c2723b8                _ham_comb_buf
+                0x0c2723bc                _pt_font_eng
+                0x0c2723c0                _ham_ret_buf
+                0x0c2723c8                _ham_ksuni_buf
+ COMMON         0x0c2723cc        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reent.o)
+                                  0x0 (size before relaxing)
+                0x0c2723cc                errno
+                0x0c2723d0                . = ALIGN (0x4)
+ .bss           0x0c2723d0       0x1c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ .bss           0x0c2723ec        0x2 gpmain.o
+ *fill*         0x0c2723ee        0x2 00
+ .bss           0x0c2723f0       0x18 WS.o
+                0x0c2723f0                savestateMode
+                0x0c2723f4                selectPressed
+                0x0c2723f8                JoyState
+                0x0c2723fc                SkipCnt
+ .bss           0x0c272408       0x14 WSDraw.o
+                0x0c272408                scroll_x
+                0x0c272418                BGndTPal
+                0x0c272410                video_x
+                0x0c272414                WndTPal
+                0x0c27240c                video_y
+ .bss           0x0c27241c       0x2c WSInput.o
+                0x0c27241c                gp_keys
+ .bss           0x0c272448       0x1c WSSound.o
+                0x0c272454                lpDS
+                0x0c272450                CntSwp
+                0x0c272448                TickZ
+                0x0c27244c                PcmWrPos
+ .bss           0x0c272464      0x560 nec/nec.o
+ .bss           0x0c2729c4        0x8 filecache.o
+                0x0c2729c4                g_cnt_file
+ .bss           0x0c2729cc       0x1c Profiler.o
+                0x0c2729d0                g_uiLR
+                0x0c2729e4                g_pSamples
+                0x0c2729d4                g_uiPC
+                0x0c2729e0                g_uiTicks
+                0x0c2729cc                g_uiGPISR
+                0x0c2729dc                g_uiNextSample
+                0x0c2729d8                g_bProfilerRunning
+ .bss           0x0c2729e8      0x13c c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_fat.o)
+ .bss           0x0c272b24       0x14 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_io.o)
+ .bss           0x0c272b38       0x18 c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_lpt.o)
+ .bss           0x0c272b50      0x61c c:/devkitARM/gamepark_sdk/lib\libgpstdio.a(smf_buf.o)
+ .bss           0x0c27316c       0x24 c:/devkitARM/gamepark_sdk/lib\libgpfont.a(gpfont.o)
+ .bss           0x0c273190       0x24 c:/devkitARM/gamepark_sdk/lib\libgpfont16.a(gpfont16.o)
+ .bss           0x0c2731b4     0x1000 ./zlib\libz.a(crc32.o)
+ .bss           0x0c2741b4     0x1000 ./zlib\libz.a(inflate.o)
+ .bss           0x0c2751b4     0x1000 ./zlib\libz.a(infblock.o)
+ .bss           0x0c2761b4     0x1000 ./zlib\libz.a(inftrees.o)
+ .bss           0x0c2771b4     0x1000 ./zlib\libz.a(infcodes.o)
+ .bss           0x0c2781b4     0x1000 ./zlib\libz.a(infutil.o)
+ .bss           0x0c2791b4     0x1000 ./zlib\libz.a(inffast.o)
+ .bss           0x0c27a1b4     0x1000 ./zlib\libz.a(adler32.o)
+ .bss           0x0c27b1b4     0x1000 ./zlib\libz.a(zutil.o)
+ .bss           0x0c27c1b4        0x4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(findfp.o)
+ .bss           0x0c27c1b8        0xc c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+                0x0c27c1c0                __nlocale_changed
+                0x0c27c1bc                __mlocale_changed
+                0x0c27c1b8                _PathLocale
+ .bss           0x0c27c1c4       0x34 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mallocr.o)
+                0x0c27c1f4                __malloc_top_pad
+                0x0c27c1f0                __malloc_max_sbrked_mem
+                0x0c27c1c4                __malloc_current_mallinfo
+                0x0c27c1ec                __malloc_max_total_mem
+ .bss           0x0c27c1f8       0xb4 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o)
+ .bss           0x0c27c2ac        0x8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(malloc_vars.o)
+                0x0c27c2ac                fake_heap_start
+                0x0c27c2b0                fake_heap_end
+                0x0c27c2b4                __bss_end = .
+                0x0c27c2b4                __eheap_start = .
+                0x0c27c2b4                _end = .
+                0x0c27c2b4                __end__ = .
+                0x0c27c2b4                PROVIDE (end, _end)
+                0x0c27c2b4                __eheap_end = .
+
+.stab
+ *(.stab)
+
+.stabstr
+ *(.stabstr)
+
+.stab.excl
+ *(.stab.excl)
+
+.stab.exclstr
+ *(.stab.exclstr)
+
+.stab.index
+ *(.stab.index)
+
+.stab.indexstr
+ *(.stab.indexstr)
+
+.comment        0x00000000      0x5fa
+ *(.comment)
+ .comment       0x00000000       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+ .comment       0x00000012       0x12 gpstart.o
+ .comment       0x00000024       0x12 gpmain.o
+ .comment       0x00000036       0x12 WS.o
+ .comment       0x00000048       0x12 WSDraw.o
+ .comment       0x0000005a       0x12 WSInput.o
+ .comment       0x0000006c       0x12 WSSound.o
+ .comment       0x0000007e       0x12 nec/nec.o
+ .comment       0x00000090       0x12 OKF/global.o
+ .comment       0x000000a2       0x12 OKF/clock.o
+ .comment       0x000000b4       0x12 OKF/graphics16.o
+ .comment       0x000000c6       0x12 OKF/okf.o
+ .comment       0x000000d8       0x12 OKF/list.o
+ .comment       0x000000ea       0x12 OKF/folder.o
+ .comment       0x000000fc       0x12 OKF/fileSelector.o
+ .comment       0x0000010e       0x12 zlib/unzip.o
+ .comment       0x00000120       0x12 file_dialog.o
+ .comment       0x00000132       0x12 setcpuspeed.o
+ .comment       0x00000144       0x12 menu.o
+ .comment       0x00000156       0x12 misc_str_func.o
+ .comment       0x00000168       0x12 selector.o
+ .comment       0x0000017a       0x12 filecache.o
+ .comment       0x0000018c       0x12 Profiler.o
+ .comment       0x0000019e       0x22 ./zlib\libz.a(crc32.o)
+ .comment       0x000001c0       0x22 ./zlib\libz.a(inflate.o)
+ .comment       0x000001e2       0x22 ./zlib\libz.a(infblock.o)
+ .comment       0x00000204       0x22 ./zlib\libz.a(inftrees.o)
+ .comment       0x00000226       0x22 ./zlib\libz.a(infcodes.o)
+ .comment       0x00000248       0x22 ./zlib\libz.a(infutil.o)
+ .comment       0x0000026a       0x22 ./zlib\libz.a(inffast.o)
+ .comment       0x0000028c       0x22 ./zlib\libz.a(adler32.o)
+ .comment       0x000002ae       0x22 ./zlib\libz.a(zutil.o)
+ .comment       0x000002d0       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memcpy.o)
+ .comment       0x000002e2       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memset.o)
+ .comment       0x000002f4       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(rand.o)
+ .comment       0x00000306       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strchr.o)
+ .comment       0x00000318       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strcmp.o)
+ .comment       0x0000032a       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlen.o)
+ .comment       0x0000033c       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(strlwr.o)
+ .comment       0x0000034e       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vsprintf.o)
+ .comment       0x00000360       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(ctype_.o)
+ .comment       0x00000372       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(impure.o)
+ .comment       0x00000384       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(vfprintf.o)
+ .comment       0x00000396       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcrtomb.o)
+ .comment       0x000003a8       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wcsrtombs.o)
+ .comment       0x000003ba       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wctomb_r.o)
+ .comment       0x000003cc       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(wsetup.o)
+ .comment       0x000003de       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(dtoa.o)
+ .comment       0x000003f0       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fflush.o)
+ .comment       0x00000402       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(findfp.o)
+ .comment       0x00000414       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(freer.o)
+ .comment       0x00000426       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fvwrite.o)
+ .comment       0x00000438       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fwalk.o)
+ .comment       0x0000044a       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(locale.o)
+ .comment       0x0000045c       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(makebuf.o)
+ .comment       0x0000046e       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(malloc.o)
+ .comment       0x00000480       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mallocr.o)
+ .comment       0x00000492       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memchr.o)
+ .comment       0x000004a4       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(memmove.o)
+ .comment       0x000004b6       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mlock.o)
+ .comment       0x000004c8       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(mprec.o)
+ .comment       0x000004da       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reallocr.o)
+ .comment       0x000004ec       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(s_isinf.o)
+ .comment       0x000004fe       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(s_isnan.o)
+ .comment       0x00000510       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(sbrkr.o)
+ .comment       0x00000522       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(stdio.o)
+ .comment       0x00000534       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(syscalls.o)
+ .comment       0x00000546       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(writer.o)
+ .comment       0x00000558       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(callocr.o)
+ .comment       0x0000056a       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(closer.o)
+ .comment       0x0000057c       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(errno.o)
+ .comment       0x0000058e       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(fstatr.o)
+ .comment       0x000005a0       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(lseekr.o)
+ .comment       0x000005b2       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(malloc_vars.o)
+ .comment       0x000005c4       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(readr.o)
+ .comment       0x000005d6       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a(reent.o)
+ .comment       0x000005e8       0x12 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+
+.debug
+ *(.debug)
+
+.line
+ *(.line)
+
+.debug_srcinfo
+ *(.debug_srcinfo)
+
+.debug_sfnames
+ *(.debug_sfnames)
+
+.debug_aranges  0x00000000      0x120
+ *(.debug_aranges)
+ .debug_aranges
+                0x00000000       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o)
+ .debug_aranges
+                0x00000020       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_divsi3.o)
+ .debug_aranges
+                0x00000040       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_umodsi3.o)
+ .debug_aranges
+                0x00000060       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_modsi3.o)
+ .debug_aranges
+                0x00000080       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_dvmd_tls.o)
+ .debug_aranges
+                0x000000a0       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_addsubdf3.o)
+ .debug_aranges
+                0x000000c0       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_muldivdf3.o)
+ .debug_aranges
+                0x000000e0       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_cmpdf2.o)
+ .debug_aranges
+                0x00000100       0x20 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_fixdfsi.o)
+
+.debug_pubnames
+ *(.debug_pubnames)
+
+.debug_info     0x00000000      0x4c4
+ *(.debug_info)
+ .debug_info    0x00000000       0x88 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o)
+ .debug_info    0x00000088       0x88 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_divsi3.o)
+ .debug_info    0x00000110       0x88 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_umodsi3.o)
+ .debug_info    0x00000198       0x88 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_modsi3.o)
+ .debug_info    0x00000220       0x88 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_dvmd_tls.o)
+ .debug_info    0x000002a8       0x87 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_addsubdf3.o)
+ .debug_info    0x0000032f       0x87 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_muldivdf3.o)
+ .debug_info    0x000003b6       0x87 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_cmpdf2.o)
+ .debug_info    0x0000043d       0x87 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_fixdfsi.o)
+
+.debug_abbrev   0x00000000       0xb4
+ *(.debug_abbrev)
+ .debug_abbrev  0x00000000       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o)
+ .debug_abbrev  0x00000014       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_divsi3.o)
+ .debug_abbrev  0x00000028       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_umodsi3.o)
+ .debug_abbrev  0x0000003c       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_modsi3.o)
+ .debug_abbrev  0x00000050       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_dvmd_tls.o)
+ .debug_abbrev  0x00000064       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_addsubdf3.o)
+ .debug_abbrev  0x00000078       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_muldivdf3.o)
+ .debug_abbrev  0x0000008c       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_cmpdf2.o)
+ .debug_abbrev  0x000000a0       0x14 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_fixdfsi.o)
+
+.debug_line     0x00000000      0x723
+ *(.debug_line)
+ .debug_line    0x00000000       0x80 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_udivsi3.o)
+ .debug_line    0x00000080       0x8c c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_divsi3.o)
+ .debug_line    0x0000010c       0x72 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_umodsi3.o)
+ .debug_line    0x0000017e       0x78 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_modsi3.o)
+ .debug_line    0x000001f6       0x5d c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_dvmd_tls.o)
+ .debug_line    0x00000253      0x19a c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_addsubdf3.o)
+ .debug_line    0x000003ed      0x203 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_muldivdf3.o)
+ .debug_line    0x000005f0       0xb8 c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_cmpdf2.o)
+ .debug_line    0x000006a8       0x7b c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a(_fixdfsi.o)
+
+.debug_frame
+ *(.debug_frame)
+
+.debug_str
+ *(.debug_str)
+
+.debug_loc
+ *(.debug_loc)
+
+.debug_macinfo
+ *(.debug_macinfo)
+
+.debug_weaknames
+ *(.debug_weaknames)
+
+.debug_funcnames
+ *(.debug_funcnames)
+
+.debug_typenames
+ *(.debug_typenames)
+
+.debug_varnames
+ *(.debug_varnames)
+
+.stack          0x00080000        0x0
+                0x00080000                _stack = .
+ *(.stack)
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib/gp32_gpsdk_crt0.o
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crti.o
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtbegin.o
+LOAD wscbmp.o
+LOAD horz_render_normal.o
+LOAD vert_render_normal.o
+LOAD horz_render_hstretch.o
+LOAD horz_render_hvstretch.o
+LOAD cpuspeed.o
+LOAD gpstart.o
+LOAD gpmain.o
+LOAD WS.o
+LOAD WSDraw.o
+LOAD WSInput.o
+LOAD WSSound.o
+LOAD nec/nec.o
+LOAD OKF/global.o
+LOAD OKF/clock.o
+LOAD OKF/graphics16.o
+LOAD OKF/okf.o
+LOAD OKF/list.o
+LOAD OKF/folder.o
+LOAD OKF/fileSelector.o
+LOAD zlib/unzip.o
+LOAD file_dialog.o
+LOAD setcpuspeed.o
+LOAD menu.o
+LOAD misc_str_func.o
+LOAD selector.o
+LOAD filecache.o
+LOAD Profiler.o
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpgraphic.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpgraphic16.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpmem.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpos.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpstdlib.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpstdio.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpsound.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpg_ex01.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpfont.a
+LOAD c:/devkitARM/gamepark_sdk/lib\libgpfont16.a
+LOAD ./zlib\libz.a
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libm.a
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/../../../../arm-elf/lib\libc.a
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1\libgcc.a
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtend.o
+LOAD c:/devkitARM/bin/../lib/gcc/arm-elf/3.4.1/crtn.o
+OUTPUT(WB32Core.elf elf32-littlearm)
