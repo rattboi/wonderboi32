@@ -97,7 +97,7 @@ char *Thousands(char *number)
     number[p + d] = number[p--];
     if (++i % 3 == 0)
     {
-      number[p + d] = '.';
+      number[p + d] = ','; // Sorry, I'm American :P
       d--;
     }
   }
