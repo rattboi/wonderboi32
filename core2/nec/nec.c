@@ -128,7 +128,7 @@ void nec_exit (void)
 
 
 
-void nec_int(DWORD wektor)
+void nec_int(int wektor)
 {
   
 	DWORD dest_seg, dest_off;
