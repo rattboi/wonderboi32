@@ -5,9 +5,9 @@
 # Version 2.0
 
 # File Name
-TARGET		=	WB32Core
+TARGET		=	WB32
 # Full Application Name
-APPNAME		=	WonderBoi32 (new core)
+APPNAME		=	WonderBoi32
 # Author
 AUTHOR		=	Rattboi
 # FXE Tool (b2fxe or b2fxec)
@@ -27,12 +27,12 @@ LD			=	arm-elf-gcc
 AS			=	arm-elf-as
 OBJCOPY			=	arm-elf-objcopy
  
-.SFILES			=	wscbmp.s \
-					horz_render_normal.s \
+.SFILES			=	horz_render_normal.s \
 					vert_render_normal.s \
 					horz_render_hstretch.s \
 					horz_render_hvstretch.s \
-					cpuspeed.s
+					cpuspeed.s \
+					wscbmp.s
  
 .CFILES			=	gpstart.c \
 					gpmain.c \
@@ -59,7 +59,7 @@ OBJCOPY			=	arm-elf-objcopy
 .CXXFILES			=	Profiler.cpp
 
 OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o) $(.CXXFILES:.cpp=.o)
- 
+
 CFLAGS			=	-marm \
 				-march=armv4t \
 		       		-mapcs \
@@ -73,29 +73,29 @@ CFLAGS			=	-marm \
 		       		-Wno-multichar \
 				-I$(GPSDK)/include \
 				-I. \
-                                -I./zlib \
-                                -I./nec \
-                                -I./gplibs
+				-I./zlib \
+				-I./nec \
+				-I./gplibs
 
-CXXFLAGS			=	$(CFLAGS)
+CXXFLAGS 		= $(CFLAGS)
 
-LIBDIRS           =       -L$(GPSDK)/lib -L./gplibs -L./zlib
-GP_LIBS        	=       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
+				LIBDIRS			=	-L$(GPSDK)/lib -L./gplibs -L./zlib
+GP_LIBS         =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont -lgpfont16
 LIBS			=	-lz -lm -lc
  
-LDFLAGS		=	$(LDSPECS) \
+LDFLAGS			=	$(LDSPECS) \
 				-Wl,-Map,$(MAPFILE) \
 				$(LIBDIRS) \
 				$(GP_LIBS) \
 				$(LIBS)
  
-LDSPECS		=	-specs=gp32_gpsdk.specs
+LDSPECS			=	-specs=gp32_gpsdk.specs
  
 LINK			=	$(LD) -o $(GP_OBJS) $@ $^ $(LDFLAGS) 
  
 # Outputs
 ELF			=	$(TARGET).elf
-MAPFILE		=	$(TARGET).map
+MAPFILE			=	$(TARGET).map
 BIN			=	$(TARGET).bin
 GXB			=	$(TARGET).gxb
 FXE			=	$(TARGET).fxe
