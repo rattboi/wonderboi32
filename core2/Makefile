@@ -5,9 +5,9 @@
 # Version 2.0
 
 # File Name
-TARGET		=	WB32
+TARGET		=	WB32Core
 # Full Application Name
-APPNAME		=	WonderBoi32
+APPNAME		=	WonderBoi32 (new core)
 # Author
 AUTHOR		=	Rattboi
 # FXE Tool (b2fxe or b2fxec)
@@ -27,7 +27,7 @@ LD			=	arm-elf-gcc
 AS			=	arm-elf-as
 OBJCOPY			=	arm-elf-objcopy
  
-.SFILES			=	
+.SFILES			=	../wscbmp.s
  
 .CFILES			=	gpstart.c \
 					gpmain.c \
@@ -35,7 +35,14 @@ OBJCOPY			=	arm-elf-objcopy
 					WSDraw.c \
 					WSInput.c \
 					WSSound.c \
-                                        nec/nec.c
+                    nec/nec.c \
+					../OKF/global.c \
+					../OKF/clock.c \
+					../OKF/graphics16.c \
+					../OKF/okf.c \
+					../OKF/list.c \
+					../OKF/folder.c \
+					../file_dialog.c
 
 
 OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o)

@@ -241,16 +241,16 @@ void  WriteMem(unsigned int A, byte V)
 
 //typedef void  (*WriteMemFn) (unsigned int A, byte V);
 
-static void  WriteRom(unsigned A, byte V)
+static void WriteRom(unsigned A, byte V)
 {
 //	if(Verbose)
 //	ErrorMsg("ROM닢리어 기입 위반");
 }
 
-static void  WriteIRam(unsigned A, byte V)
+static void WriteIRam(unsigned A, byte V)
 {
 	IRAM[A&0xFFFF]=V;
-	if((A&0xFE00) ==0xFE00)
+	if((A&0xFE00)==0xFE00)
 	{
     	SetPalette(A&0x1FF, V);
 	}
@@ -926,8 +926,11 @@ void WsReset (void)
 int WsCreate(char *CartName)
 {
 	int Checksum, i, j;
-	F_HANDLE *F;
+	F_HANDLE file;
+	ulong	sizeread;
     byte b, buf[10];
+
+	char debugstring[512];
 
 	for(i=0;i<0x400;i++)
 	{
@@ -939,27 +942,37 @@ int WsCreate(char *CartName)
 	GPMEMSET(MemDummy, 0xFF, sizeof(MemDummy));
 	GPMEMSET(IO, 0, sizeof(IO));
 
-//	if((F=fopen(CartName,"rb")) ==NULL)
-//	{
-//		// MessageBox(NULL,"파일이 발견되지 않습니다","에러", MB_ICONEXCLAMATION | MB_OK);
-//		return -1;
-//	}
-//    fseek(F,-10, 2);
-//    if(fread(buf, 1,10, F)!=10)
-//	{
-//		// MessageBox(NULL,"파일을 읽을 수 없습니다","에러", MB_ICONEXCLAMATION | MB_OK);
-//		return -1;
-//	}
+	GPSTRCPY(debugstring,CartName);
+	PrintMessage(debugstring,1);
+
+	if(GpFileOpen(CartName, OPEN_R, &file)!=SM_OK)
+	{
+		// MessageBox(NULL,"파일이 발견되지 않습니다","에러", MB_ICONEXCLAMATION | MB_OK);
+		return -1;
+	}
+
+	GpFileSeek (file, FROM_END, -10, NULL);
+
+	GpFileRead(file, (void *)buf, 10, &sizeread);
+
+	GPSPRINTF(debugstring,"buffer read = %d", sizeread);
+	PrintMessage(debugstring,1);
+
+	if(sizeread!=10)
+	{
+		// MessageBox(NULL,"파일을 읽을 수 없습니다","에러", MB_ICONEXCLAMATION | MB_OK);
+		return -1;
+	}
 
 	CartKind=0;
 
 	b=buf[4];
 	ROMBanks=0;
-	for(i=0;!ROMBanks && ROMBanksTable[i]. Value;i++)
+	for(i=0;!ROMBanks && ROMBanksTable[i].Value;i++)
 	{
-		if(b==ROMBanksTable[i]. Code)
+		if(b==ROMBanksTable[i].Code)
 		{
-			ROMBanks=ROMBanksTable[i]. Value;
+			ROMBanks=ROMBanksTable[i].Value;
 		}
 	}
 	if(ROMBanks==0)
@@ -968,32 +981,41 @@ int WsCreate(char *CartName)
 		return -1;
 	}
 
+	GPSPRINTF(debugstring,"ROMBanks = %d", ROMBanks);
+	PrintMessage(debugstring,1);
+
 	b=buf[5];
 	RAMBanks=0;
 	RAMSize=0;
-	for(i=0;!RAMBanks && RAMBanksTable[i]. Value;i++)
+	for(i=0;!RAMBanks && RAMBanksTable[i].Value;i++)
 	{
-		if(b==RAMBanksTable[i]. Code)
+		if(b==RAMBanksTable[i].Code)
 		{
-			RAMBanks=RAMBanksTable[i]. Value;
+			RAMBanks=RAMBanksTable[i].Value;
 		}
 	}
 
-	for(i=0;!RAMSize && RAMSizeTable[i]. Value;i++)
+	for(i=0;!RAMSize && RAMSizeTable[i].Value;i++)
 	{
-		if(b==RAMSizeTable[i]. Code)
+		if(b==RAMSizeTable[i].Code)
 		{
-			RAMSize=RAMSizeTable[i]. Value;
+			RAMSize=RAMSizeTable[i].Value;
 		}
 	}
+
+	GPSPRINTF(debugstring,"RAMBanks =  %d", RAMBanks);
+	PrintMessage(debugstring,1);
 
 	for(i=0;!(CartKind&CK_EEP) && RAMKindTable[i]. Value;i++)
 	{
-		if(b==RAMKindTable[i]. Code)
+		if(b==RAMKindTable[i].Code)
 		{
-			CartKind=RAMKindTable[i]. Value;
+			CartKind=RAMKindTable[i].Value;
 		}
 	}
+
+	GPSPRINTF(debugstring,"CartKind = %d", CartKind);
+	PrintMessage(debugstring,1);
 
     if((buf[0]==0x01)&&(buf[2]==0x16)) //STAR HEARTS ∼별과 다이치의 사자∼
     {
@@ -1010,10 +1032,12 @@ int WsCreate(char *CartName)
 
 	for(i=ROMBanks-1;i>=0;i--)
 	{
-//    	fseek(F, (ROMBanks-i) *-0x10000, 2);
-		if((ROMMap[0x100-ROMBanks+i]=(byte*) malloc(0x10000))!=NULL)
+		GpFileSeek (file, FROM_END, (ROMBanks-i)* -0x10000, NULL);
+
+		if((ROMMap[0x100-ROMBanks+i]=(byte*) GPMALLOC(0x10000))!=NULL)
 		{
-			if(fread(ROMMap[0x100-ROMBanks+i], 1,0x10000, F)==0x10000)
+			GpFileRead(file, (void *)ROMMap[0x100-ROMBanks+i], 0x10000, &sizeread);
+			if(sizeread==0x10000)
 			{
 				for(j=0;j<0x10000;j++)
 				{
@@ -1048,7 +1072,7 @@ int WsCreate(char *CartName)
 	{
 		for(i=0;i<RAMBanks;i++)
 		{
-			if((RAMMap[i]=(byte*)malloc(0x10000))!=NULL)
+			if((RAMMap[i]=(byte*)GPMALLOC(0x10000))!=NULL)
 			{
 				GPMEMSET(RAMMap[i],0x00,0x10000);
 			}
@@ -1101,8 +1125,14 @@ int WsCreate(char *CartName)
 		SaveName[0]='\0';
 	}
 
+	GPSPRINTF(debugstring,"before WsReset()");
+	PrintMessage(debugstring,1);
+
 	WsReset ();
-//    MainForm->SetScale(MainForm->Scale, buf[6]&1);
+
+	GPSPRINTF(debugstring,"after WsReset()");
+	PrintMessage(debugstring,1);
+
 	return 0;
 }
 
@@ -1112,33 +1142,32 @@ void WsRelease(void)
 	int i;
 
 //    WsSoundStop(4);
-	if(SaveName[0]!='\0')
-	{
-		/*
-		if((F=fopen(SaveName,"wb"))!=NULL)
-		{
+//	if(SaveName[0]!='\0')
+//	{
+//
+//		if((F=fopen(SaveName,"wb"))!=NULL)
+//		{
 			for(i=0;i<RAMBanks;i++)
 			{
-				if(RAMSize<0x10000)
-				{
-            		if(fwrite(RAMMap[i],1,RAMSize,F)!=(size_t)RAMSize)
-            		{
-						break;
-            		}
-				}
-				else
-				{
-            		if(fwrite(RAMMap[i],1,0x10000,F)!=0x10000)
-            		{
-						break;
-            		}
-				}
+//				if(RAMSize<0x10000)
+//				{
+//          		if(fwrite(RAMMap[i],1,RAMSize,F)!=(size_t)RAMSize)
+//          		{
+//						break;
+//            		}
+//				}
+//				else
+//				{
+//            		if(fwrite(RAMMap[i],1,0x10000,F)!=0x10000)
+//            		{
+//						break;
+//            		}
+//				}
 				GPFREE(RAMMap[i]);
 			}
-            fclose(F);
-		}
-		*/
-	}
+//            fclose(F);
+//		}
+//	}
 
 	for(i=0xFF;i>=0;i--)
 	{
