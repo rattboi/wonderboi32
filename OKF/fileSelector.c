@@ -257,7 +257,7 @@ static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEnt
 {
 	int pos, i, h, last_c, last_o;
 
-	char str[100];
+	char str[100],str1[20],str2[20];
 
 	OkfSetToDefaults();
 
@@ -329,6 +329,18 @@ static void RefreshScreen(FILESELECTOR *pSelector, int topEntry, int selectedEnt
 		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft - 2, pos    , 6,  6, pSelector->scrollBarColor);
 		GpRectFill16(NULL, &okf.pSurfaces[*okf.pCurSurface], pSelector->scrollBarLeft - 1, pos - 1, 4,  8, pSelector->scrollBarColor);
 	}
+
+	// Show the filesize (actual game)
+	
+//	gm_sprintf(str, "File Size = %d", ini.game[selectedEntry].filesize);
+//	okf.font = pSelector->fileFont;
+//	OkfPrintAt(10,220,str);
+
+    gm_sprintf(str1, "%ld", ini.num_games_in_ini - 2);			//number of files
+	gm_sprintf(str2, "%ld", ini.game[selectedEntry].filesize); 	//selected file size
+	gm_sprintf(str, pSelector->pTotalsFormat, Thousands(str1), Thousands(str2)); 	 
+    okf.font = pSelector->totalsFont;
+    OkfPrintAt(pSelector->totalsLeft, pSelector->totalsTop, str);
 
 	// Shows the result
 	GpSurfaceFlip(&okf.pSurfaces[*okf.pCurSurface]);
