@@ -62,7 +62,15 @@ void Cls(int giSurface)
 */
 }
 
+void SaveBackground(int giSurface, uint16* buffer)
+{
+	int i;
+	
+	for (i = 0; i < (320*240); i++)
+		*((uint16*)buffer+i) = *((uint16*)gtSurface[giSurface].ptbuffer+i);
+}
 
+		
 void DrawMessage(char *s, int giSurface)
 {
 	OKFENGINE oldState;

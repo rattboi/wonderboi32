@@ -6,6 +6,7 @@
 void WindowInit();
 void DrawWindow(int x, int y, int lx, int ly, int giSurface, uint16 color, uint16 col2);
 void Cls(int giSurface);
+void SaveBackground(int giSurface, uint16* buffer);
 void DrawMessage(char *s, int nflip);
 void PrintMessage(char* string, int wait);
 void DrawError(char *s, int nflip);
