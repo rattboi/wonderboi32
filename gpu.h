@@ -42,6 +42,7 @@ void ws_gpu_set_colour_scheme(int scheme);
 void ws_gpu_changeVideoMode(uint8 value);
 void ws_gpu_forceColorSystem(void);
 void ws_gpu_forceMonoSystem(void);
+void ws_gpu_forceReset(void);
 void ws_gpu_clearCache(void);
 
 #endif
