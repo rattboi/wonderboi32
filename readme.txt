@@ -1,9 +1,9 @@
 ***NOTE**** Make sure to read the instructions, or you will be thoroughly confused
 
-WonderBoi32 beta v.064
+WonderBoi32 beta v.7 (ADIC RELEASE)
 By Rattboi
 
-Based off of OSwan 0.7 + other fixes
+Based off of WSCamp + OSwan 0.7 + other fixes
 
 Uses misc. code from Don Miguel, Aj0, ZardozJones, YoyoFr, and CHN
 Also, major thanks to DJWillis for his help getting GCC 3.4.0 to work
@@ -13,27 +13,26 @@ Instructions-------------------
 
 Put the fxe/gxe in any folder you want
 
-Put all roms in the folder GP:\GPMM\WB32\
-Savestates go to GP:\GPMM\WB32\SAV
+Put all roms in the folder GP:\GPMM\WB32\ROM (no S at the end)
+Savestates go to GP:\GPMM\WB32\SAV					(WARNING!!! DON"T USE OLD SAVESTATES! INCOMPATIBLE NOW!) *sorry*
 Config files go to GP:\GPMM\WB32\CFG
+
+All folders are created if they don't exist
 
 ROMS---------------------------
 
 put the roms on GP:\GPMM\WB32,
 
-B/W roms as .WSM or .WS (anything not .WSC)
-
-Color roms as .WSC
-
 In-game Keys---------------------------
 
-Select 			- Return to menu
-Select + L 		- Move screen left
-Select + R		- Move screen right
+Select 				- Return to menu
+Select + L 			- Move screen left		(when in stretch mode)
+Select + R			- Move screen right		(when in stretch mode)
+Select + Left/Right - Change Frameskip
 Select + Start		- Reboot
 Select + Up/Down	- Change video mode
 
-Others 			- WS keys
+Others 				- WS keys
 
 Menu Keys-----------------------------
 A goes into menus and selects options
@@ -42,6 +41,17 @@ Multi-select options like CPU and Save Slot only get changed by left/right
 
 History:
 
+02/Jan/2005 - Eighth release, lots of new stuff (ADIC RELEASE)
+		Moved main emu core to WSCamp core
+		- Much better compatibility
+		- Much better code base
+		New GUI code (based off Yoyofr's snes9x code)
+		New BG by Antiriad! (AWESOME!)
+		Eeprom/SRAM saves are better now
+		GoodWSX name support! (based off Rlyeh's fGB code)
+		Nice font engine (thanks to Oankali's OKFlib)
+		Changed lots of small stuff
+		
 05/Jul/2004 - Seventh release, more new stuff
 		Cpu speed selector
 		Video mode selector
@@ -86,5 +96,7 @@ TODO:
 	Screen captures
 
 Special Thanks & Greets to #gp32dev @ efnet
+Thanks to Spiv, Squidge, Rlyeh, diabol, mithris, Inopia, Hooka, Woogal, RobBrown....
+and anyone else I forgot
 
 EXPECT A NEW VERSION SOON!

@@ -40,6 +40,7 @@ int TblSkip[11][10]={
 
 int vert;
 uint16 RomCRC;
+extern uint8 *base_rom;
 
 void ErrorMsg(char *Msg)
 {
@@ -64,16 +65,16 @@ struct WORD2CPTR
 	char *Cptr;
 };
 
-byte *Page[16];				//리트″아트″Respond 공간 0 x10000 단위
-byte IRAM[0x10000];			// 내장 RAM 공간의 64kB
-byte MemDummy[0x10000];		// 더미 공간의 64kB
-byte IO[0x100];			// IO포토 에리어
+uint8 *Page[16];				//리트″아트″Respond 공간 0 x10000 단위
+uint8 IRAM[0x10000];			// 내장 RAM 공간의 64kB
+uint8 MemDummy[0x10000];		// 더미 공간의 64kB
+uint8 IO[0x100];
 WsRomHeader *WsromHeader;
 
 #define CK_EEP 0x00000001
 int CartKind;
 
-byte *ROMMap[0x100];		// table of ROM banks
+uint8 *ROMMap[0x100];		// table of ROM banks
 int ROMBanks;				// # of banks of ROM (up to 256)
 const static struct BYTE2INT ROMBanksTable[] = {
 	{0x01, 8},				// [header 3] identifies the size of the ROM (# of banks)
@@ -87,7 +88,7 @@ const static struct BYTE2INT ROMBanksTable[] = {
 	{NULL, NULL}
 };
 
-byte SRAM[0x10000];		// Holds map of all SAVE RAM banks (only one entry ever)
+uint8 SRAM[0x10000];		// Holds map of all SAVE RAM banks (only one entry ever)
 int RAMSize;				// Size of Save Ram
 int RAMEnable;
 
@@ -119,9 +120,9 @@ int IPeriod=32;				// HBlank/8 주기 [클락](256/8)
 
 char SaveName[512];			// 테″레크트리+파일명+". sav"
 
-byte DefColor[]={	0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x88,
+uint8 DefColor[]={	0xFF, 0xEE, 0xDD, 0xCC, 0xBB, 0xAA, 0x99, 0x88,
 					0x77, 0x66, 0x55, 0x44, 0x33, 0x22, 0x11, 0x00};
-byte MonoColor[8];
+uint8 MonoColor[8];
 
 uint16 JoyState = 0x0000;		// Joystick state: B.A.START.OPTION.X4.X3.X2.X1.Y4.Y3.Y2.Y1
 
@@ -138,7 +139,7 @@ struct EEPROM
 struct EEPROM sIEep;
 struct EEPROM sCEep;
 
-byte IEep[0x800];
+uint8 IEep[0x800];
 
 void ComEEP(struct EEPROM *Eep, byte *Cmd, byte *Data)
 {
@@ -946,6 +947,7 @@ int WsCreate(uint8 *RomBase, uint32 romSize)
 
 	char debugstring[512];
 
+
 	for(i=0;i<0x100;i++)
 	{
 		ROMMap[i]=MemDummy;
@@ -1032,6 +1034,12 @@ int WsCreate(uint8 *RomBase, uint32 romSize)
 
 void saveStateToMem(gameState *tempState)
 {
+	int		i;
+	uint32	ROMMapSave[0x100];
+	uint32	PageSave[16];
+
+	char	debugstring[512];
+
 	MacroStoreNecRegisterToMem(tempState,NEC_IP);
 	MacroStoreNecRegisterToMem(tempState,NEC_AW);
 	MacroStoreNecRegisterToMem(tempState,NEC_BW);
@@ -1056,7 +1064,12 @@ void saveStateToMem(gameState *tempState)
 	GPMEMCPY(tempState->IORam,		IO,			0x00100);
 	GPMEMCPY(tempState->MonoColor,	MonoColor,	8);
 	GPMEMCPY(tempState->ColTbl,		ColTbl,		0x210);
-	GPMEMCPY(tempState->Palette,	Palette,	(16+1)*16*4);
+	GPMEMCPY(tempState->Palette,	Palette,	(16+1)*16*sizeof(uint16));
+
+	for (i = 0; i < 16; i++)
+		PageSave[i] = (uint32)(Page[i] - base_rom);
+
+	GPMEMCPY(tempState->Page,		PageSave,	16*sizeof(uint32));
 
 	tempState->RSTRL = RSTRL;
 }
@@ -1066,6 +1079,13 @@ void saveStateToMem(gameState *tempState)
 
 void loadStateFromMem(gameState *tempState)
 {
+	int		i;
+
+	uint32	ROMMapSave[0x100];
+	uint32	PageSave[16];
+
+	char	debugstring[512];
+
 	MacroLoadNecRegisterFromMem(tempState,NEC_IP);
 	MacroLoadNecRegisterFromMem(tempState,NEC_AW);
 	MacroLoadNecRegisterFromMem(tempState,NEC_BW);
@@ -1090,7 +1110,27 @@ void loadStateFromMem(gameState *tempState)
 	GPMEMCPY(IO,		tempState->IORam,		0x00100);
 	GPMEMCPY(MonoColor,	tempState->MonoColor,	8);
 	GPMEMCPY(ColTbl,	tempState->ColTbl,		0x210);
-	GPMEMCPY(Palette,	tempState->Palette,		(16+1)*16*4);
+	GPMEMCPY(Palette,	tempState->Palette,		(16+1)*16*sizeof(uint16));
+
+	GPMEMCPY(PageSave,	tempState->Page,		16*sizeof(uint32));
+
+	for (i = 2; i < 16; i++)
+		Page[i] = (uint8*)(base_rom + PageSave[i]);
+
+    Page[0x0]=IRAM;
+
+	if(CartKind&CK_EEP)
+	{
+    	Page[0x1]=MemDummy;
+		sCEep.pData=SRAM;
+		sCEep.WrEnable=0;
+	}
+	else
+	{
+    	Page[0x1]=SRAM;
+		sCEep.pData=NULL;
+		sCEep.WrEnable=0;
+	}
 
 	RSTRL = tempState->RSTRL;
 }

@@ -14,11 +14,11 @@ typedef signed char offset;
 // 데이터 인터페이스 정의
 //---------------------------------------------------------------------------
 extern void *Debug;
-extern byte *Page[0x10];		//리드 address 공간 0 x10000 단위
-extern byte *ROMMap[0x100];		//C-ROM 뱅크 번호에 대한 C-ROM의 포인터(1024까지 서포트)
-extern byte *RAMMap[0x100];		//C-RAM 뱅크 번호에 대한 C-RAM의 포인터(1024까지 서포트)
-extern byte IRAM[0x10000];		//내장 IO공간의 64kB
-extern byte IO[0x100];		//IO포토 에리어
+extern ubyte *Page[0x10];		//리드 address 공간 0 x10000 단위
+extern ubyte *ROMMap[0x100];		//C-ROM 뱅크 번호에 대한 C-ROM의 포인터(1024까지 서포트)
+extern ubyte *RAMMap[0x100];		//C-RAM 뱅크 번호에 대한 C-RAM의 포인터(1024까지 서포트)
+extern ubyte IRAM[0x10000];		//내장 IO공간의 64kB
+extern ubyte IO[0x100];		//IO포토 에리어
 
 typedef void  (*WriteMemFn) (unsigned int A, byte V);
 extern WriteMemFn WriteMemFnTable[0x10];

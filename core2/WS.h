@@ -43,9 +43,10 @@ typedef struct gameState_tag
 	uint32	NEC_PENDING;
 	uint32	NEC_NMI_STATE;
 	uint32	NEC_IRQ_STATE;
-	byte 	IRAM[0x10000];			//internal ram 	(64k)
-	byte	SRAM[0x10000];			//save ram		(64k) could be smaller, just use 64k
-	byte	IORam[0x100];				//port IO ram	(256 bytes)
+	uint32	Page[16];
+	uint8 	IRAM[0x10000];			//internal ram 	(64k)
+	uint8	SRAM[0x10000];			//save ram		(64k) could be smaller, just use 64k
+	uint8	IORam[0x100];				//port IO ram	(256 bytes)
 	uint8	MonoColor[8];
 	uint8 	ColTbl[0x210];
 	uint8	Palette[16+1][16][4];
