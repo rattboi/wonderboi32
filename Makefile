@@ -59,10 +59,9 @@ OBJCOPY			=	arm-elf-objcopy
 
 OBJS			=	$(.SFILES:.s=.o) $(.CFILES:.c=.o) $(.CXXFILES:.cpp=.o)
 
-CFLAGS			=	-marm \
-				-march=armv4t \
+BASEFLAGS			=	-marm \
+					-march=armv4t \
 		       		-mapcs \
-		       		-O3 \
 	       			-fomit-frame-pointer \
 	       			-finline-functions \
 		       		-fshort-enums \
@@ -70,13 +69,14 @@ CFLAGS			=	-marm \
 	       			-mstructure-size-boundary=8 \
 		       		-mno-thumb-interwork \
 		       		-Wno-multichar \
-				-I$(GPSDK)/include \
-				-I. \
-				-I./zlib \
-				-I./nec \
-				-I./gplibs
+					-I$(GPSDK)/include \
+					-I. \
+					-I./zlib \
+					-I./nec \
+					-I./gplibs
 
-CXXFLAGS 		= $(CFLAGS)
+CFLAGS			= $(BASEFLAGS) -O3
+CXXFLAGS 		= $(BASEFLAGS)
 
 				LIBDIRS			=	-L$(GPSDK)/lib -L./gplibs -L./zlib
 GP_LIBS         =       -lgpgraphic -lgpgraphic16 -lgpmem -lgpos -lgpstdlib -lgpstdio -lgpsound -lgpg_ex01 -lgpfont
@@ -94,7 +94,7 @@ LINK			=	$(LD) -o $(GP_OBJS) $@ $^ $(LDFLAGS)
  
 # Outputs
 ELF			=	$(TARGET).elf
-MAPFILE			=	$(TARGET).map
+MAPFILE		=	$(TARGET).map
 BIN			=	$(TARGET).bin
 GXB			=	$(TARGET).gxb
 FXE			=	$(TARGET).fxe

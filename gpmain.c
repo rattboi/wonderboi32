@@ -34,6 +34,10 @@ char *short_program_version="WB32 v.7";
 extern unsigned short WBTitle[];
 extern int vert;
 
+extern int BGLayer;
+extern int FGLayer;
+extern int SpLayer;
+
 ubyte *base_rom;
 uint32 romSize;
 char ws_file[256];
@@ -42,6 +46,7 @@ char SaveName[256];
 
 stMenu main_menu;
 stMenu config_menu;
+stMenu debug_menu;
 stMenu horz_keys_menu;
 stMenu vert_keys_menu;
 
@@ -194,19 +199,17 @@ void CPU_alignment_and_cache() {
 
 void Emulate()
 {
-	int i;
-	int forcemode;
-	
 	setCpuSpeed(cpuSpeeds[main_menu.options[MENU_MAIN_CPUSPEED].selected]);
-
 	InitGraphics(8);
 
 	SetDrawMode(config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected);
-	FrameSkip = (config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected);
-//	ws_gpu_set_colour_scheme(videoconfig_menu.options[MENU_VIDEOCONFIG_PALETTE].selected);
+	FrameSkip	=	(config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected);
+	BGLayer		=	(debug_menu.options[MENU_DEBUG_BGLAYER].selected);
+	FGLayer		=	(debug_menu.options[MENU_DEBUG_FGLAYER].selected);
+	SpLayer		=	(debug_menu.options[MENU_DEBUG_SPRITELAYER].selected);
 
-	WsInputInit(vert);
-	
+	WsInputInit(vert && (GetDrawMode() == 3));
+
 //	PROFILER_START();
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
@@ -214,8 +217,8 @@ void Emulate()
 
 	config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = FrameSkip;
 	config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = GetDrawMode();
-	setCpuSpeed(66);
 
+	setCpuSpeed(66);
 	InitGraphics(16);
 }
 
@@ -326,7 +329,7 @@ int SaveStatesEmulate(char *savestate)
 
 				GPSPRINTF(printstring, "Slot %d: %s.sa%d", selectedState + 1, basename, selectedState + 1);
 				WsClearGpuCache();
-				RebuildPalette();
+//				RebuildPalette();
 			}
 //			OkfPrintSurface(printstring,giSurface);
 		}
@@ -465,6 +468,7 @@ void GpMain(void *arg)
 
 	fill_main_menu(&main_menu);					// Init the menus
 	fill_config_menu(&config_menu);  
+	fill_debug_menu(&debug_menu);
 	fill_horz_keys_menu(&horz_keys_menu);
 	fill_vert_keys_menu(&vert_keys_menu);
 
@@ -510,8 +514,8 @@ void GpMain(void *arg)
 				
 				if (vert == 1)
 				{
-					if (config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected != 3)
-						horz_mode = config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected;
+					//if (config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected != 3)
+					horz_mode = config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected;
 
 					config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = 3;
 				}
@@ -609,6 +613,11 @@ void GpMain(void *arg)
 
 					switch(result)
 					{
+					case MENU_CONFIG_DEBUG:
+						{
+							run_menu(&debug_menu);
+						}
+						break;
 					case MENU_CONFIG_KEYS_HORZ:
 						{
 							run_menu(&horz_keys_menu);

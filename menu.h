@@ -35,6 +35,7 @@ int run_menu(stMenu *menu);
 void precalc_menu (stMenu *menu,int y_spacing,int x_spacing);
 void fill_main_menu (stMenu *menu);
 void fill_config_menu(stMenu *menu);
+void fill_debug_menu (stMenu *menu);
 void fill_horz_keys_menu (stMenu *menu);
 void fill_vert_keys_menu (stMenu *menu);
 
@@ -58,7 +59,13 @@ void fill_vert_keys_menu (stMenu *menu);
 #define MENU_CONFIG_KEYS_VERT		4
 #define MENU_CONFIG_KEYS_DEF_HORZ	5
 #define MENU_CONFIG_KEYS_DEF_VERT	6
-#define MENU_CONFIG_RETURN			7
+#define MENU_CONFIG_DEBUG			7
+#define MENU_CONFIG_RETURN			8
+
+#define MENU_DEBUG_BGLAYER		0
+#define MENU_DEBUG_FGLAYER		1
+#define MENU_DEBUG_SPRITELAYER	2
+#define MENU_DEBUG_RETURN		3
 
 #define MENU_KEYS_UP		0
 #define MENU_KEYS_LEFT		1

@@ -11,6 +11,7 @@ void DrawMessage(char *s, int nflip);
 void PrintMessage(char* string, int wait);
 void DrawError(char *s, int nflip);
 void PrintError(char* string, int wait);
+void DebugMessage(char* string);
 
 #define COLOR_WHITE			0xffff
 #define COLOR_GRAY			((15<<11)|(15<<6)|(15<<1)|1)

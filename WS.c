@@ -24,19 +24,6 @@
 int SoundOn[7]={1,1,1,1,1,1,1};
 int FrameSkip=4;
 int SkipCnt=0;
-int TblSkip[11][10]={
-    {1,1,1,1,1,1,1,1,1,1},
-    {0,1,1,1,1,1,1,1,1,1},
-    {0,1,1,1,1,0,1,1,1,1},
-    {0,1,1,0,1,1,1,0,1,1},
-    {0,1,1,0,1,1,0,1,1,0},
-    {0,1,0,1,0,1,0,1,0,1},
-    {0,1,0,0,1,0,1,0,1,0},
-    {1,0,0,1,0,0,1,0,0,0},
-    {0,0,0,0,1,0,0,0,0,1},
-    {0,0,0,0,1,0,0,0,0,0},
-    {0,0,0,0,1,0,0,0,0,0},
-};
 
 int vert;
 uint16 RomCRC;
@@ -240,7 +227,7 @@ void ComEEP(struct EEPROM *Eep, byte *Cmd, byte *Data)
 	}
 }
 
-byte  ReadMem(unsigned int A)
+inline byte  ReadMem(unsigned int A)
 {
 	return Page[((A)>>16) &0xF][(A) &0xFFFF];
 }
@@ -468,26 +455,30 @@ LogFile(LK_SPRITE, str);
 
 		case 0x60:
 			{
-				WsClearGpuCache();
-				switch((V&0xE0))
+				int mode = 0;
+
+				if ((vert == 1) && (GetDrawMode() == 3))
+					mode = 2;
+
+				switch(V&0xE0)
 				{
-/*				case 0xE0:
-					RefreshLine = renderLine[0];
+				case 0xE0:
+					RefreshLine = renderLine[0+mode];
 					break;
 				case 0xC0:
-					RefreshLine = renderLine[0];
+					RefreshLine = renderLine[0+mode];
 					break;
 				case 0x60:
-					RefreshLine = renderLine[0];
+					RefreshLine = renderLine[0+mode];
 					break;
 				case 0x40:
-					RefreshLine = renderLine[0];
+					RefreshLine = renderLine[0+mode];
 					break;
-*/
 				default:
-					RefreshLine = renderLine[1];
+					RefreshLine = renderLine[1+mode];
 					break;
 				}
+				WsClearGpuCache();
 			}
 			break;
 
@@ -997,7 +988,6 @@ int WsCreate(uint8 *RomBase, uint32 romSize)
 	for(i=0;i<0x100;i++)
 	{
 		ROMMap[i]=MemDummy;
-//		RAMMap[i]=MemDummy;
 	}
 
 	GPMEMSET(IRAM, 0, sizeof(IRAM));

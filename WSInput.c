@@ -48,7 +48,7 @@ int WsInputInit(int isVertical)
 {
 		DoKeys = WsKeys;
 
-		if (isVertical == 0)
+		if (isVertical == 0) // horizontal
 		{
 			gp_keys[KEYS_LEFT]	= horz_keys_menu.options[MENU_KEYS_LEFT].selected;
 			gp_keys[KEYS_RIGHT]	= horz_keys_menu.options[MENU_KEYS_RIGHT].selected;
@@ -60,7 +60,7 @@ int WsInputInit(int isVertical)
 			gp_keys[KEYS_R]		= horz_keys_menu.options[MENU_KEYS_R].selected;
 			gp_keys[KEYS_START]	= horz_keys_menu.options[MENU_KEYS_START].selected;
 		}
-		else // horizontal
+		else // vertical
 		{
 			gp_keys[KEYS_LEFT]	= vert_keys_menu.options[MENU_KEYS_LEFT].selected;
 			gp_keys[KEYS_RIGHT]	= vert_keys_menu.options[MENU_KEYS_RIGHT].selected;
@@ -106,7 +106,7 @@ int WsKeys(uint16 *state)
 		{
 			if (DrawMode != 0 && DrawMode != 3)
 			{
-				scroll_x = ((scroll_x < 10) ? scroll_x + 2 : 10);
+				scroll_x = ((scroll_x < 10) ? scroll_x + 1 : 10);
 			}
 			selectPressed = 1;
 		}
@@ -115,7 +115,7 @@ int WsKeys(uint16 *state)
 		{
 			if (DrawMode != 0 && DrawMode != 3)
 			{
-				scroll_x = ((scroll_x > 0) ? scroll_x - 2 : 0);
+				scroll_x = ((scroll_x > 0) ? scroll_x - 1  : 0);
 			}
 			selectPressed = 1;
 		}
@@ -131,7 +131,7 @@ int WsKeys(uint16 *state)
 			DrawMode += 1;
 			DrawMode %= 4;
 			SetDrawMode(DrawMode);
-			WsInputInit(DrawMode == 3);
+			WsInputInit((vert == 1) && (DrawMode == 3));
 			selectPressed = 1;
 		}
 
@@ -142,7 +142,7 @@ int WsKeys(uint16 *state)
 
 			DrawMode -=1;		
 			SetDrawMode(DrawMode);
-			WsInputInit(DrawMode == 3);
+			WsInputInit((vert == 1) && (DrawMode == 3));
 			selectPressed = 1;
 		}
 
@@ -170,8 +170,6 @@ int WsKeys(uint16 *state)
 			if (gammaC < 1.0f)
 				gammaC = 1.0f;
 
-			RebuildPalette();
-
 			selectPressed = 1;
 		}
 				
@@ -182,13 +180,16 @@ int WsKeys(uint16 *state)
 			if (gammaC > 3.0f)
 				gammaC = 3.0f;
 
-			RebuildPalette();
-
 			selectPressed = 1;
 		}
 
-		if (!(ExKey & GPC_VK_START) && (LastKey & GPC_VK_START)) // select + start (stopped pressing)
+		if (ExKey & GPC_VK_START) // select + start
 		{
+			while (ExKey & (GPC_VK_SELECT | GPC_VK_START))
+			{
+				GpKeyGetEx(&ExKey);
+			}
+
 			GpAppExit();									// reboot GP32
 		}
 	}

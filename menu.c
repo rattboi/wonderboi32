@@ -185,7 +185,7 @@ void fill_main_menu (stMenu *menu) {
 		GPSTRCPY (menu->options[MENU_MAIN_WS_RESET].name,"Reset Game (Saves SRAM)");
 		GPSTRCPY (menu->options[MENU_MAIN_LOAD_STATE].name, "Load State");
 		GPSTRCPY (menu->options[MENU_MAIN_SAVE_STATE].name, "Save State");
-		GPSTRCPY (menu->options[MENU_MAIN_CONFIG].name, "Config");
+		GPSTRCPY (menu->options[MENU_MAIN_CONFIG].name, "Configuration");
 		GPSTRCPY (menu->options[MENU_MAIN_SAVE_DEF_CFG].name, "Save Default Config");
 		GPSTRCPY (menu->options[MENU_MAIN_SAVE_GME_CFG].name, "Save Game Config");
 		GPSTRCPY (menu->options[MENU_MAIN_REBOOT].name,"Reboot GP32");
@@ -199,7 +199,7 @@ void fill_config_menu (stMenu *menu) {
 
 		GPMEMSET(menu,0,sizeof(stMenu));
 
-		GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].name,"Frameskip");
+		GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].name,"Fskip");
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[0].name,"0");
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[1].name,"1");
 			GPSTRCPY (menu->options[MENU_CONFIG_VIDEO_FRAMESKIP].sub_options[2].name,"2");
@@ -230,7 +230,37 @@ void fill_config_menu (stMenu *menu) {
 		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_VERT].name,"Configure Vert Keys");
 		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_DEF_HORZ].name,"Load Default Horz Keys");
 		GPSTRCPY (menu->options[MENU_CONFIG_KEYS_DEF_VERT].name,"Load Default Vert Keys");
+		GPSTRCPY (menu->options[MENU_CONFIG_DEBUG].name,"Debug Settings");
 		GPSTRCPY (menu->options[MENU_CONFIG_RETURN].name,"Return To Main Menu");
+
+		menu->num = 9;
+
+		precalc_menu(menu,2,10);
+}
+
+void fill_debug_menu (stMenu *menu) {
+
+		GPMEMSET(menu,0,sizeof(stMenu));
+
+		GPSTRCPY (menu->options[MENU_DEBUG_BGLAYER].name,"BG Layer");
+			GPSTRCPY (menu->options[MENU_DEBUG_BGLAYER].sub_options[0].name,"Off");
+			GPSTRCPY (menu->options[MENU_DEBUG_BGLAYER].sub_options[1].name,"On");
+			menu->options[MENU_DEBUG_BGLAYER].num=2;
+			menu->options[MENU_DEBUG_BGLAYER].selected = 1;
+
+		GPSTRCPY (menu->options[MENU_DEBUG_FGLAYER].name,"FG Layer");
+			GPSTRCPY (menu->options[MENU_DEBUG_FGLAYER].sub_options[0].name,"Off");
+			GPSTRCPY (menu->options[MENU_DEBUG_FGLAYER].sub_options[1].name,"On");
+			menu->options[MENU_DEBUG_FGLAYER].num=2;
+			menu->options[MENU_DEBUG_FGLAYER].selected = 1;
+
+		GPSTRCPY (menu->options[MENU_DEBUG_SPRITELAYER].name,"Sprites");
+			GPSTRCPY (menu->options[MENU_DEBUG_SPRITELAYER].sub_options[0].name,"Off");
+			GPSTRCPY (menu->options[MENU_DEBUG_SPRITELAYER].sub_options[1].name,"On");
+			menu->options[MENU_DEBUG_SPRITELAYER].num=2;
+			menu->options[MENU_DEBUG_SPRITELAYER].selected = 1;
+
+		GPSTRCPY (menu->options[MENU_DEBUG_RETURN].name,"Return To Main Menu");
 
 		menu->num = 8;
 

@@ -12,321 +12,6 @@
 
 void  REFRESHLINECOLOR(int Line, void* buffer);
 void  REFRESHLINEMONO(int Line, void* buffer);
-void  RefreshLineOld(int Line, void* buffer);
-
-void (*renderLine[]) (int Line, void *buffer) = {
-	REFRESHLINECOLOR,
-	REFRESHLINEMONO,
-	RefreshLineOld
-};
-
-uint8 *ws_tileCache_getTileRow(uint32 TMap, uint32 line, uint32 sprite)
-{
-	int forline;
-	int vFlip;
-	int hFlip;
-	int bank;
-	int tileIndex;
-	
-	if (sprite == 0)
-	{
-		tileIndex	= TMap&MAP_TILE;
-		vFlip		= TMap&MAP_VREV;
-		hFlip		= TMap&MAP_HREV;
-		bank		= TMap&MAP_BANK;
-	}
-	else
-	{
-		tileIndex	= TMap&SPR_TILE;
-		vFlip		= TMap&SPR_VREV;
-		hFlip		= TMap&SPR_HREV;
-		bank		= 0;
-	}
-
-	if (!(COLCTL & 0x80))
-		bank = 0;
-
-	if (bank)
-		tileIndex+=512;
-
-	switch(COLCTL & 0xE0)
-	{
-	case 0xE0:		// 16 color packed (so easy!)
-		{
-			if ((wsc_modified_tile[tileIndex] == 1))
-			{
-
-				uint8	*tileInCachePtr = &wsc_tile_cache[tileIndex<<6];
-				uint8	*hflippedTileInCachePtr = &wsc_hflipped_tile_cache[tileIndex<<6];
-				uint32	*tileInRamPtr   = (uint32*)&IRAM[0x4000+(tileIndex<<5)];
-				uint32	tileLine;
-
-				for (forline=0;forline<8;forline++)
-				{
-					tileLine=*tileInRamPtr++;
-					
-					tileInCachePtr[0]=(tileLine>>4)&0x0f;
-					tileInCachePtr[1]=(tileLine>>0)&0x0f;
-					tileInCachePtr[2]=(tileLine>>12)&0x0f;
-					tileInCachePtr[3]=(tileLine>>8)&0x0f;
-					tileInCachePtr[4]=(tileLine>>20)&0x0f;
-					tileInCachePtr[5]=(tileLine>>16)&0x0f;
-					tileInCachePtr[6]=(tileLine>>28)&0x0f;
-					tileInCachePtr[7]=(tileLine>>24)&0x0f;
-
-					hflippedTileInCachePtr[7]=tileInCachePtr[0];
-					hflippedTileInCachePtr[6]=tileInCachePtr[1];
-					hflippedTileInCachePtr[5]=tileInCachePtr[2];
-					hflippedTileInCachePtr[4]=tileInCachePtr[3];
-					hflippedTileInCachePtr[3]=tileInCachePtr[4];
-					hflippedTileInCachePtr[2]=tileInCachePtr[5];
-					hflippedTileInCachePtr[1]=tileInCachePtr[6];
-					hflippedTileInCachePtr[0]=tileInCachePtr[7];
-
-					tileInCachePtr+=8;
-					hflippedTileInCachePtr+=8;				
-				}
-				wsc_modified_tile[tileIndex]=0;
-			}
-			if (vFlip)
-				line=7-line;
-			if (hFlip)
-				return(&wsc_hflipped_tile_cache[(tileIndex<<6)+(line<<3)]);
-			else
-				return(&wsc_tile_cache[(tileIndex<<6)+(line<<3)]);
-		}
-		break;
-	case 0xC0:		// 16 color layered (not so easy!)
-		{
-			if ((wsc_modified_tile[tileIndex] == 1))
-			{
-				uint8	*tileInCachePtr			= &wsc_tile_cache[tileIndex<<6];
-				uint8	*hflippedTileInCachePtr = &wsc_hflipped_tile_cache[tileIndex<<6];
-				uint32	*tileInRamPtr			= (uint32*)&IRAM[0x4000+(tileIndex<<5)];
-				uint32	tileLine;
-				uint32	j;
-
-				for (forline=0;forline<8;forline++)
-				{
-					tileLine=*tileInRamPtr++;
-					
-					tileInCachePtr[0] = ((((j=tileLine&0x80808080)>>28)|(j>>21)|(j>>14)|(j>>7))&0x0F);
-					tileInCachePtr[1] = ((((j=tileLine&0x40404040)>>27)|(j>>20)|(j>>13)|(j>>6))&0x0F);
-					tileInCachePtr[2] = ((((j=tileLine&0x20202020)>>26)|(j>>19)|(j>>12)|(j>>5))&0x0F);
-					tileInCachePtr[3] = ((((j=tileLine&0x10101010)>>25)|(j>>18)|(j>>11)|(j>>4))&0x0F);
-					tileInCachePtr[4] = ((((j=tileLine&0x08080808)>>24)|(j>>17)|(j>>10)|(j>>3))&0x0F);
-					tileInCachePtr[5] = ((((j=tileLine&0x04040404)>>23)|(j>>16)|(j>>9)|(j>>2))&0x0F);
-					tileInCachePtr[6] = ((((j=tileLine&0x02020202)>>22)|(j>>15)|(j>>8)|(j>>1))&0x0F);
-					tileInCachePtr[7] = ((((j=tileLine&0x01010101)>>21)|(j>>14)|(j>>7)|(j))&0x0F);
-
-					hflippedTileInCachePtr[7]=tileInCachePtr[0];
-					hflippedTileInCachePtr[6]=tileInCachePtr[1];
-					hflippedTileInCachePtr[5]=tileInCachePtr[2];
-					hflippedTileInCachePtr[4]=tileInCachePtr[3];
-					hflippedTileInCachePtr[3]=tileInCachePtr[4];
-					hflippedTileInCachePtr[2]=tileInCachePtr[5];
-					hflippedTileInCachePtr[1]=tileInCachePtr[6];
-					hflippedTileInCachePtr[0]=tileInCachePtr[7];
-
-					tileInCachePtr+=8;
-					hflippedTileInCachePtr+=8;
-				}
-				wsc_modified_tile[tileIndex]=0;
-			}
-			if (vFlip)
-				line=7-line;
-			if (hFlip)
-				return(&wsc_hflipped_tile_cache[(tileIndex<<6)+(line<<3)]);
-			else
-				return(&wsc_tile_cache[(tileIndex<<6)+(line<<3)]);
-		}
-		break;
-	case 0x60:		// 4 color packed (so easy!)
-		{
-			if ((ws_modified_tile[tileIndex] == 1))
-			{
-				uint8	*tileInCachePtr			= &wsc_tile_cache[tileIndex<<6];
-				uint8	*hflippedTileInCachePtr	= &wsc_hflipped_tile_cache[(tileIndex<<6)];
-				uint16	*tileInRamPtr			= (uint16*)&IRAM[0x2000+(tileIndex<<4)];
-				uint16	tileLine;
-				uint32	j;
-
-				for (forline=0;forline<8;forline++)
-				{
-					tileLine=*tileInRamPtr++;
-					
-					tileInCachePtr[0]=(tileLine>>6)&0x03;
-					tileInCachePtr[1]=(tileLine>>4)&0x03;
-					tileInCachePtr[2]=(tileLine>>2)&0x03;
-					tileInCachePtr[3]=(tileLine>>0)&0x03;
-					tileInCachePtr[4]=(tileLine>>14)&0x03;
-					tileInCachePtr[5]=(tileLine>>12)&0x03;
-					tileInCachePtr[6]=(tileLine>>10)&0x03;
-					tileInCachePtr[7]=(tileLine>>8)&0x03;
-
-					hflippedTileInCachePtr[7]=tileInCachePtr[0];
-					hflippedTileInCachePtr[6]=tileInCachePtr[1];
-					hflippedTileInCachePtr[5]=tileInCachePtr[2];
-					hflippedTileInCachePtr[4]=tileInCachePtr[3];
-					hflippedTileInCachePtr[3]=tileInCachePtr[4];
-					hflippedTileInCachePtr[2]=tileInCachePtr[5];
-					hflippedTileInCachePtr[1]=tileInCachePtr[6];
-					hflippedTileInCachePtr[0]=tileInCachePtr[7];
-
-					tileInCachePtr+=8;
-					hflippedTileInCachePtr+=8;				
-				}
-				ws_modified_tile[tileIndex]=0;
-			}
-			if (vFlip)
-				line=7-line;
-			if (hFlip)
-				return(&ws_hflipped_tile_cache[(tileIndex<<6)+(line<<3)]);
-			else
-				return(&ws_tile_cache[(tileIndex<<6)+(line<<3)]);
-		}
-		break;
-	case 0x40:		// 4 color layered (not so easy!)
-		{
-			if ((ws_modified_tile[tileIndex] == 1))
-			{
-				uint8	*tileInCachePtr			= &wsc_tile_cache[tileIndex<<6];
-				uint8	*hflippedTileInCachePtr	= &wsc_hflipped_tile_cache[(tileIndex<<6)];
-				uint16	*tileInRamPtr			= (uint16*)&IRAM[0x2000+(tileIndex<<4)];
-				uint16	tileLine;
-				uint32	j;
-
-				for (forline=0;forline<8;forline++)
-				{
-					tileLine=*tileInRamPtr++;
-					
-					tileInCachePtr[0] = ((((j=tileLine&0x8080)>>14)|(j>>7))&0x03);
-					tileInCachePtr[1] = ((((j=tileLine&0x4040)>>13)|(j>>6))&0x03);
-					tileInCachePtr[2] = ((((j=tileLine&0x2020)>>12)|(j>>5))&0x03);
-					tileInCachePtr[3] = ((((j=tileLine&0x1010)>>11)|(j>>4))&0x03);
-					tileInCachePtr[4] = ((((j=tileLine&0x0808)>>10)|(j>>3))&0x03);
-					tileInCachePtr[5] = ((((j=tileLine&0x0404)>>9)|(j>>2))&0x03);
-					tileInCachePtr[6] = ((((j=tileLine&0x0202)>>8)|(j>>1))&0x03);
-					tileInCachePtr[7] = ((((j=tileLine&0x0101)>>7)|(j>>0))&0x03);
-
-					hflippedTileInCachePtr[7]=tileInCachePtr[0];
-					hflippedTileInCachePtr[6]=tileInCachePtr[1];
-					hflippedTileInCachePtr[5]=tileInCachePtr[2];
-					hflippedTileInCachePtr[4]=tileInCachePtr[3];
-					hflippedTileInCachePtr[3]=tileInCachePtr[4];
-					hflippedTileInCachePtr[2]=tileInCachePtr[5];
-					hflippedTileInCachePtr[1]=tileInCachePtr[6];
-					hflippedTileInCachePtr[0]=tileInCachePtr[7];
-
-					tileInCachePtr+=8;
-					hflippedTileInCachePtr+=8;
-				}
-				ws_modified_tile[tileIndex]=0;
-			}
-			if (vFlip)
-				line=7-line;
-			if (hFlip)
-				return(&ws_hflipped_tile_cache[(tileIndex<<6)+(line<<3)]);
-			else
-				return(&ws_tile_cache[(tileIndex<<6)+(line<<3)]);
-		}
-		break;
-	case 0x20:		// 4 mono packed (so easy!)
-		{
-			if ((ws_modified_tile[tileIndex] == 1))
-			{
-
-				uint8	*tileInCachePtr			= &ws_tile_cache[tileIndex<<6];
-				uint8	*hflippedTileInCachePtr = &ws_hflipped_tile_cache[tileIndex<<6];
-				uint32	*tileInRamPtr			= (uint32*)&IRAM[0x2000+(tileIndex<<4)];
-				uint16	tileLine;
-
-				for (forline=0;forline<8;forline++)
-				{
-					tileLine=*tileInRamPtr++;
-					
-					tileInCachePtr[0]=(tileLine>>6)&0x03;
-					tileInCachePtr[1]=(tileLine>>4)&0x03;
-					tileInCachePtr[2]=(tileLine>>2)&0x03;
-					tileInCachePtr[3]=(tileLine>>0)&0x03;
-					tileInCachePtr[4]=(tileLine>>14)&0x03;
-					tileInCachePtr[5]=(tileLine>>12)&0x03;
-					tileInCachePtr[6]=(tileLine>>10)&0x03;
-					tileInCachePtr[7]=(tileLine>>8)&0x03;
-
-					hflippedTileInCachePtr[7]=tileInCachePtr[0];
-					hflippedTileInCachePtr[6]=tileInCachePtr[1];
-					hflippedTileInCachePtr[5]=tileInCachePtr[2];
-					hflippedTileInCachePtr[4]=tileInCachePtr[3];
-					hflippedTileInCachePtr[3]=tileInCachePtr[4];
-					hflippedTileInCachePtr[2]=tileInCachePtr[5];
-					hflippedTileInCachePtr[1]=tileInCachePtr[6];
-					hflippedTileInCachePtr[0]=tileInCachePtr[7];
-
-					tileInCachePtr+=8;
-					hflippedTileInCachePtr+=8;				
-				}
-				ws_modified_tile[tileIndex]=0;
-			}
-			if (vFlip)
-				line=7-line;
-			if (hFlip)
-				return(&ws_hflipped_tile_cache[(tileIndex<<6)+(line<<3)]);
-			else
-				return(&ws_tile_cache[(tileIndex<<6)+(line<<3)]);
-		}
-		break;
-	case 0x00:		// 4 mono layered (not so easy!)
-		{
-			if ((ws_modified_tile[tileIndex] == 1))
-			{
-				uint8	*tileInCachePtr			 = &ws_tile_cache[tileIndex<<6];
-				uint8	*hflippedTileInCachePtr	 = &ws_hflipped_tile_cache[(tileIndex<<6)+7];
-				uint32	*tileInRamPtr			 = (uint32*)&IRAM[0x2000+(tileIndex<<4)];
-				uint32	tileLine;
-
-				for (forline=0;forline<4;forline++)
-				{
-					tileLine=*tileInRamPtr++;
-									
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x80)>>7)|((tileLine&0x8000)>>14);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x40)>>6)|((tileLine&0x4000)>>13);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x20)>>5)|((tileLine&0x2000)>>12);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x10)>>4)|((tileLine&0x1000)>>11);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x08)>>3)|((tileLine&0x0800)>>10);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x04)>>2)|((tileLine&0x0400)>>9);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x02)>>1)|((tileLine&0x0200)>>8);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x01)>>0)|((tileLine&0x0100)>>7);
-					hflippedTileInCachePtr+=16;
-					tileLine>>=16;
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x80)>>7)|((tileLine&0x8000)>>14);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x40)>>6)|((tileLine&0x4000)>>13);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x20)>>5)|((tileLine&0x2000)>>12);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x10)>>4)|((tileLine&0x1000)>>11);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x08)>>3)|((tileLine&0x0800)>>10);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x04)>>2)|((tileLine&0x0400)>>9);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x02)>>1)|((tileLine&0x0200)>>8);
-					*hflippedTileInCachePtr--=*tileInCachePtr++=((tileLine&0x01)>>0)|((tileLine&0x0100)>>7);
-					hflippedTileInCachePtr+=16;
-				}				
-				// tile cache updated
-				ws_modified_tile[tileIndex]=0;
-			}
-			
-			if (vFlip)
-				line=7-line;
-			if (hFlip)
-				return(&ws_hflipped_tile_cache[(tileIndex<<6)+(line<<3)]);
-			else
-				return(&ws_tile_cache[(tileIndex<<6)+(line<<3)]);
-		}
-		break;
-	default:
-		break;
-	}
-	return(NULL);
-}
-
 
 void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 {
@@ -366,8 +51,9 @@ void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 
 	if(!(LCDSLP&0x01)) return;
 
+#undef	ColorTILEInfo
 #define ColorTILEInfo (((TMap&MAP_PAL)>>9)<<4)
- 	if(DSPCTL&0x01) // BG Layer on
+ 	if(DSPCTL&0x01 && (BGLayer == 1)) // BG Layer on
 	{
 		OffsetX=SCR1X&0x07;
 		pSWrBuf=pSBuf-(OffsetX*BUFFER_MODE);
@@ -383,7 +69,7 @@ void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
+			ws_tileRow	=	WsGetTileRow(TMap, OffsetY, 0);
 
 			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
 			*pSWrBuf = ((j=(*ws_tileRow++))		? j+ColorTILEInfo : bkCol); pSWrBuf += BUFFER_MODE;
@@ -398,7 +84,7 @@ void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 
 	for (i=0;i<0x100;i++) ZBuf[i] = 0;
 
-	if(DSPCTL&0x02)			// FG Layer on
+	if(DSPCTL&0x02 && (FGLayer == 1))			// FG Layer on
 	{
 		if((DSPCTL&0x30) ==0x20) // FG Layer displayed only inside window
 		{
@@ -439,7 +125,7 @@ void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
+			ws_tileRow	=	WsGetTileRow(TMap, OffsetY, 0);
 
 			if (!pW[0]&&(j=(*ws_tileRow++)))	  { pZ[0]=1; pSWrBuf[0*BUFFER_MODE]=j+ColorTILEInfo; }
 			if (!pW[1]&&(j=(*ws_tileRow++)))	  { pZ[1]=1; pSWrBuf[1*BUFFER_MODE]=j+ColorTILEInfo; }
@@ -459,7 +145,7 @@ void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 #undef	ColorTILEInfo
 #define ColorTILEInfo ((((TMap&SPR_PAL)>>9)+8)<<4)
 
-	if(DSPCTL&0x04) // sprites on
+	if(DSPCTL&0x04 && (SpLayer == 1)) // sprites on
 	{
 		if(DSPCTL&0x08) //sprite window on
         {
@@ -481,7 +167,7 @@ void  REFRESHLINECOLOR(int Line, void* buffer) // for color tile modes
 			i=k;
 			pSWrBuf=pSBuf+(i*BUFFER_MODE);
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap, (Line-j)&0x07, 1);
+			ws_tileRow	=	WsGetTileRow(TMap, (Line-j)&0x07, 1);
 
 			index[0]=*ws_tileRow++;
 			index[1]=*ws_tileRow++;
@@ -574,7 +260,7 @@ void  REFRESHLINEMONO (int Line, void* buffer) // for color tile modes
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
+			ws_tileRow	=	WsGetTileRow(TMap, OffsetY, 0);
 
 			index[0]=*ws_tileRow++;
 			index[1]=*ws_tileRow++;
@@ -646,7 +332,7 @@ void  REFRESHLINEMONO (int Line, void* buffer) // for color tile modes
 			TMap=*(pbTMap+(TMapX++&0x3F));
 			TMap|=*(pbTMap+(TMapX++&0x3F))<<8;
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap, OffsetY, 0);
+			ws_tileRow	=	WsGetTileRow(TMap, OffsetY, 0);
 
 			index[0]=*ws_tileRow++;
 			index[1]=*ws_tileRow++;
@@ -704,7 +390,7 @@ void  REFRESHLINEMONO (int Line, void* buffer) // for color tile modes
 			i=k;
 			pSWrBuf=pSBuf+(i*BUFFER_MODE);
 
-			ws_tileRow	=	ws_tileCache_getTileRow(TMap, (Line-j)&0x07, 1);
+			ws_tileRow	=	WsGetTileRow(TMap, (Line-j)&0x07, 1);
 
 			index[0]=*ws_tileRow++;
 			index[1]=*ws_tileRow++;
@@ -741,6 +427,7 @@ void  REFRESHLINEMONO (int Line, void* buffer) // for color tile modes
 	}
 }
 
+/*
 void  RefreshLineOld  (int Line, void* buffer)
 {
 	uint16	*pSBuf;			// 서페스하″파의 (0, Y) 좌표호˚인터(8艱″실 포함하지 않고)
@@ -1472,4 +1159,5 @@ void  RefreshLineOld  (int Line, void* buffer)
 		}
 	}
 }
+*/
 

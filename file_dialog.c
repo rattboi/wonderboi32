@@ -133,6 +133,19 @@ void PrintMessage(char* string, int wait)
 	}
 }
 
+void DebugMessage(char* string)
+{
+	unsigned long *HWPALETTE=(unsigned long *)0x14A00400;
+
+	HWPALETTE[0x00] = 0xFFFF;
+
+	GpTextOut(NULL, &gtSurface[giSurface], 2, 225, string, 0x00);
+	SurfaceFlip();
+
+	while (!GpKeyGet());  //wait for keypress
+	while (GpKeyGet());  // wait for keyrelease
+}
+
 void PrintError(char* string, int wait)
 {
 	Cls(giSurface);

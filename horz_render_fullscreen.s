@@ -5,6 +5,7 @@
 
 horz_render_fullscreen:
 	mov r12, #320
+	sub r12,r12,#1
 	mov r11, #3
 horz_loop:
 	mov r3, r1

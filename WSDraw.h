@@ -10,7 +10,7 @@ extern byte 	*SprETMap;
 extern byte 	SprTMap[512];
 
 extern byte		ColTbl[0x210];
-extern uint16	Palette[16+1][16];
+extern uint32	Palette[256];
 
 extern byte 	*BGndTPal;
 extern byte 	*WndTPal;
@@ -26,7 +26,7 @@ extern int		WsDrawCreate();
 
 extern  void  	WsDrawRelease(void);
 
-extern  int  	SetDrawMode(int Mode);
+extern  void  	SetDrawMode(int Mode);
 extern  int  	GetDrawMode(void);
 
 extern  int  	WsDrawLine(int Line);
