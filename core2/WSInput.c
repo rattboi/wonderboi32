@@ -13,7 +13,6 @@
 //---------------------------------------------------------------------------
 #define JOYMAX 2
 
-//JOYINFOEX JIEX;
 int KeyStat;
 int JoyOn;
 uint32 Joy;

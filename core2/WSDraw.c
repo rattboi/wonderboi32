@@ -32,7 +32,7 @@ int PixelDepth;							// È÷¢ªÄí¼¿ ´çÀÇ ÇÏ¡È½Ç¼ö
 byte ColTbl[0x210];						// ÇÏ¢ª·¿Æ®Å×¡ÈÅ¸(16+1ÈÄ¡È¶ô, 16¾¯Æ®, 2ÊÞ¡È½Ç)
 byte Palette[16+1][16][4];				// ÇÏ¢ª·¿(16+1ÈÄ¡È¶ô, 16¾¯Æ®, 4ÊÞ¡È½Ç)
 
-byte screenbuffer[((224+16)*144)*2];
+uint16 screenbuffer[(224+16)*144];
 
 #define MAP_TILE 0x01FF
 #define MAP_PAL  0x1E00
@@ -105,7 +105,7 @@ int  WsDrawLine(int Line)
 
 //    byte buf[(224+16)*4];
 
-    RefreshLine(Line, &screenbuffer[(224+16)*Line*2]);
+    RefreshLine(Line, &screenbuffer[(224+16)*Line]);
 
 	// Draw buffer here
 
@@ -115,7 +115,7 @@ int  WsDrawLine(int Line)
 //---------------------------------------------------------------------------
 int  WsDrawFlip(void)
 {
-	video_update((unsigned char *)screenbuffer+(0*2), gtSurface[0].ptbuffer+(240*2*48)-(41*2));
+	video_update((byte*)screenbuffer+(0*2), gtSurface[0].ptbuffer+(240*2*48)-(41*2));
 
 	return 0;
 }
