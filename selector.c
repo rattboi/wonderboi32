@@ -33,7 +33,7 @@ int DoFileSelector(char *filename, unsigned char *dest)
 
 	gm_strcpy(fileSelector.currentPath, "gp:\\gpmm\\wb32\\rom");
 
-	fileSelector.pTotalsFormat = "%s bytes, %s files";
+	fileSelector.pTotalsFormat = "Total Files: %s, File Size: %s";
 	fileSelector.pFileSizeFormat = " %s";
 
 	fileSelector.pathLeft = 12;
