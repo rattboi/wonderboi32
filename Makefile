@@ -101,7 +101,7 @@ all: $(GXB)
 fxe: $(FXE)
 
 test: $(GXB)
-				maclink run $(GXB)
+				pclink -e $(GXB)
 
 clean:
 				rm -f $(OBJS) $(MAPFILE) $(BIN) $(ELF) $(FXE) $(GXB)
