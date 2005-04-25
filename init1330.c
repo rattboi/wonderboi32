@@ -244,7 +244,7 @@ void PcmPlay(unsigned char* src, int size, int rep, int bit) {
            (int)(src);     /* buffer adress */
     rDCON2=(1<<30)+        /* handshake mode */
            (0<<29)+        /* DREQ and DACK are synchronized to PCLK (APB clock) */
-           (0<<28)+        /* 1=generate irq when transfer is done */
+           (1<<28)+        /* 1=generate irq when transfer is done */
            (0<<27)+        /* unit transfer !!!! */
            (0<<26)+        /* single service !!!! */
            (0<<24)+        /* dma-req.source=I2SSDO */

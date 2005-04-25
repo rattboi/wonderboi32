@@ -12,9 +12,11 @@
 
 #include "types.h"
 
-#define MIXBUF_SIZE    16384
+#define MIXBUF_SIZE    4096
 
-static signed int *mixbuf = NULL;
+extern int IsRunning;
+
+signed char *mixbuf = NULL;
 
 #define BPS 22050
 #define BPSMAX 100000
@@ -199,7 +201,7 @@ int WsSoundCreate()
 
 void pcm_open()
 {
-	gp_initSound(22050, 0);
+	gp_initSound(22050, 8);
 }
 
 void pcm_close(void)
@@ -583,44 +585,51 @@ static void clearmixbuffer(signed int * buf, int n)
 
 void updatemixing(signed char *out_l, int todo)
 {
-	int s, l, r, f, n, i;
+	int s, l, r, f, n;
+	int i,j;
 
-	clearmixbuffer(mixbuf, todo);
-	
-	for( i = 0; i < todo; i++)
+//	clearmixbuffer(mixbuf, todo);
+	GPMEMSET(mixbuf, 0, todo);
+
+	if (IsRunning == 1)
 	{
-		l = r = 0;
-		for(i = 0; i < 4; i++)
+		for( i = 0; i < todo; i++)
 		{
-			if (snd.ch[i].on)
+			l = r = 0;
+
+			for(j = 0; j < 4; j++)
 			{
-				s = ChannelBuf[i][(snd.ch[i].pos>>16) & 1023];
-				if (snd.ch[i].pos & (1<<15)) 
-					s &= 15;
-				else 
-					s >>= 4;
-//				s -= 8;
+				if (snd.ch[j].on)
+				{
+					s = ChannelBuf[j][(snd.ch[j].pos>>16) & 1023];
+					if (snd.ch[j].pos & (1<<15)) 
+						s &= 15;
+					else 
+						s >>= 4;
+	//				s -= 8;
 
-				snd.ch[i].pos += snd.ch[i].freq;
+					snd.ch[j].pos += snd.ch[j].freq;
 
-				l += s;
-				r += s;
+					l += s;
+					r += s;
+				}
 			}
+
+	//		l *= (R_NR50 & 0x07);
+	//		r *= ((R_NR50 & 0x70)>>4);
+	//		l >>= 4;
+	//		r >>= 4;
+			
+			if (l > 127)		l = 127;
+			else if (l < -128)	l = -128;
+			if (r > 127)		r = 127;
+			else if (r < -128)	r = -128;
+
+			mixbuf[i] = ((l+r)>>1)+128;
 		}
-
-//		l *= (R_NR50 & 0x07);
-//		r *= ((R_NR50 & 0x70)>>4);
-//		l >>= 4;
-//		r >>= 4;
-		
-		if (l > 127)		l = 127;
-		else if (l < -128)	l = -128;
-		if (r > 127)		r = 127;
-		else if (r < -128)	r = -128;
-
-		mixbuf[i] = ((l+r)>>1)+128;
 	}
 
-	for(i = 0; i < todo; i++) 
-		out_l[i] = mixbuf[i];
+//	for(i = 0; i < todo; i++) 
+//		out_l[i] = mixbuf[i];
+	GPMEMCPY(out_l, mixbuf, todo);
 }

@@ -42,6 +42,7 @@ uint32 romSize;
 char ws_file[256];
 char basename[256];
 char SaveName[256];
+uint32 IsRunning;
 
 stMenu main_menu;
 stMenu config_menu;
@@ -210,13 +211,14 @@ void Emulate()
 
 	WsInputInit(vert && (GetDrawMode() == 3));
 
-//	pcm_open();
-
+	IsRunning = 1;
+	pcm_open();
 //	PROFILER_START();
 	while (WsRun() ==  0)	{ }
 //	PROFILER_STOP();
 //	PROFILER_DUMP();
 //	pcm_close();
+	IsRunning = 0;
 	
 	config_menu.options[MENU_CONFIG_VIDEO_FRAMESKIP].selected = FrameSkip;
 	config_menu.options[MENU_CONFIG_VIDEO_STRETCH].selected = GetDrawMode();
@@ -417,9 +419,11 @@ void GpMain(void *arg)
 	char g_string[256];
 	int result;
 	F_HANDLE F;
-	int running = 0;				// set to 1 if a rom is loaded
+	int isLoaded = 0;				// set to 1 if a rom is loaded
 	int first_run = 1;				// used to see if Reset should save ram
 	int horz_mode = 0;
+
+	IsRunning = 0;
 
 	CPU_alignment_and_cache();		// turn off alignment and turn instruction and data cache on
 
@@ -479,10 +483,10 @@ void GpMain(void *arg)
 					break;
 				}
 								
-				if (running == 1)					// release old memory if a rom was already loaded
+				if (isLoaded == 1)					// release old memory if a rom was already loaded
 				{
-					running = 0;
 					WsRelease();
+					isLoaded = 0;
 				}
 
 				setCpuSpeed(132);
@@ -536,12 +540,12 @@ void GpMain(void *arg)
 				}
 
 				first_run = 1;
-				running = 1;							// rom was loaded, so set to 1
+				isLoaded = 1;						// rom was loaded, so set to 1
 				
 			} // Fall through and reset, then emulate
 		case MENU_MAIN_WS_RESET:
 			{
-				if (running != 1)
+				if (isLoaded != 1)
 					break;
 					
 				if (first_run == 0)
@@ -558,7 +562,7 @@ void GpMain(void *arg)
 		case MENU_CANCEL:
 		case MENU_MAIN_PLAY:
 			{
-				if (running != 1)							// can't play if no rom is loaded
+				if (isLoaded != 1)							// can't play if no rom is loaded
 					break;
 					
 				Emulate();								// run
@@ -572,7 +576,7 @@ void GpMain(void *arg)
 			break;
 		case MENU_MAIN_LOAD_STATE:
 			{
-				if (running != 1)				// can't load state if no rom is loaded
+				if (isLoaded != 1)				// can't load state if no rom is loaded
 					break;
 
 				if (LoadState())
@@ -581,7 +585,7 @@ void GpMain(void *arg)
 			break;
 		case MENU_MAIN_SAVE_STATE:
 			{
-				if (running != 1)				// can't save state if no rom is loaded
+				if (isLoaded != 1)				// can't save state if no rom is loaded
 					break;
 
 				if (SaveState())
@@ -654,7 +658,7 @@ void GpMain(void *arg)
 			break;
 		case MENU_MAIN_SAVE_GME_CFG:
 			{
-				if (running == 0)
+				if (isLoaded == 0)
 					break;
 
 				GPSPRINTF(g_string,"gp:\\GPMM\\WB32\\CFG\\%s.cfg",basename);
